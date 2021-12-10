@@ -22,7 +22,7 @@
 
    ##clone this repository
 
-   git clone https://github.com/xdlyu/VVVnano.git analysis
+   git clone https://github.com/gqlcms/XWWNano.git analysis
 
    cd $CMSSW_BASE/src
 
