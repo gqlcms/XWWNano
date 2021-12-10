@@ -1,0 +1,29 @@
+# this is a comment
+keep *
+drop nTrigObj*
+drop TrigObj*
+drop HLT*
+keep HLT_Ele27*
+keep HLT_Ele32*
+keep HLT_Ele35*
+keep HLT_Ele115*
+keep HLT_Photon175*
+keep HLT_Photon200*
+keep HLT_*Mu50
+keep HLT_*Mu100
+keep HLT_PFMET*_PFMHT*_IDTight*
+#keepmatch HLT_PFHT[0-9]+
+#keep HLT_PFHT*
+#keep HLT_AK8PFHT*
+
+drop *boostedTau*
+drop L1*
+drop Photon*
+drop *FsrPhoton*
+drop *GenJet*
+drop *LowPtElectron*
+drop *PuppiMET*
+drop *GenDressedLepton*
+
+drop HTXS*
+#drop FatJet*
