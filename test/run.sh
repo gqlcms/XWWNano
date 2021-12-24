@@ -1,1 +1,1 @@
-python run.py -m -i /afs/cern.ch/user/x/xulyu/work/public/wjets.root -o ./ --year 2017
+python run.py -m -i /eos/cms/store/mc/RunIISummer20UL18NanoAODv9/BulkGravToWWToWhadWhad_narrow_M-8000_TuneCP5_13TeV-madgraph-pythia/NANOAODSIM/106X_upgrade2018_realistic_v16_L1v1-v2/270000/93863A01-A6F5-8247-A444-B0775B030C7D.root -o ./ --year 2018
