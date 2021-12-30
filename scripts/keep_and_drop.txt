@@ -1,0 +1,5 @@
+# this is a comment
+keep *
+drop L1*
+drop PSWeight*
+drop nPSWeight*
