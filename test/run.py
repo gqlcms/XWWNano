@@ -41,7 +41,6 @@ def main():
   if opt.CrabCondor == "condor":
     from PhysicsTools.NanoAODTools.postprocessing.analysis.modules.Condor_helper import runsAndLumis_
     if "2016" in opt.year:
-      jsonInput = runsAndLumis_("./Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt")
       runsAndLumis = lambda : runsAndLumis_("./Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt")
     if "2017" in opt.year:
       runsAndLumis = lambda : runsAndLumis_("./Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt")
@@ -70,9 +69,7 @@ def main():
 # Sequence for data
   if not (opt.ismc):
     if opt.year == "2016post" :
-      # p = PostProcessor(".", [opt.inputs], modules=[muonIDISOSF2016post(),VVV2016()], provenance=True,fwkJobReport=True, jsonInput=jsonInput)
-      p = PostProcessor(".", opt.inputs.split(","), modules=[muonIDISOSF2016post(),VVV2016()], provenance=True,fwkJobReport=True, jsonInput=jsonInput)
-      # p = PostProcessor(".", [opt.inputs], modules=[muonIDISOSF2016post(),VVV2016()], provenance=True,fwkJobReport=True, jsonInput=None)
+      p = PostProcessor(".", opt.inputs.split(","), modules=[muonIDISOSF2016post(),VVV2016()], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis())
     if opt.year == "2016pre" :
       p = PostProcessor(".", [opt.inputs], modules=[muonIDISOSF2016pre(),VVV2016()], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis())
     if opt.year == "2017":
