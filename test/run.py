@@ -69,9 +69,9 @@ def main():
 # Sequence for data
   if not (opt.ismc):
     if opt.year == "2016post" :
-      p = PostProcessor(".", opt.inputs.rstrip().split(","), modules=[muonIDISOSF2016post(),VVV2016()], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis())
+      p = PostProcessor(".", opt.inputs.rstrip(",").split(","), modules=[muonIDISOSF2016post(),VVV2016()], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis())
     if opt.year == "2016pre" :
-      p = PostProcessor(".", [opt.inputs], modules=[muonIDISOSF2016pre(),VVV2016()], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis())
+      p = PostProcessor(".", opt.inputs.rstrip(",").split(","), modules=[muonIDISOSF2016pre(),VVV2016()], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis())
     if opt.year == "2017":
       p = PostProcessor(opt.output, [opt.inputs], modules=[muonScaleRes2017(),VVV2017()], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),maxEntries=10000)
     if opt.year == "2018a":
