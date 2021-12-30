@@ -383,36 +383,44 @@ class VVVProducer(Module):
 
     lep_pt,lep_eta,lep_phi,lep_m,trackIso,muisolation=-99,-99,-99,-99,-99,-99
 
-    # What's trackIso and muisolation???
-    # Muon selection: Highpt ID
-    muons = Collection(event, 'Muon')
-    # The definition of Collection???
-    muon_v4_temp=TLorentzVector()
-    looseMuons = []
-    for imu in range(0, event.nMuon):
-      #print("h",imu,event.Muon_highPtId[imu],type(event.Muon_highPtId[imu]),event.Muon_highPtId[imu]==2,event.Muon_corrected_pt[imu])
-      if (event.Muon_highPtId[imu]=='\x02' and event.Muon_tkRelIso[imu] <0.1 and abs(muons[imu].eta)<2.4 and event.Muon_corrected_pt[imu]>20):# to be checked
-	  trackIso,muisolation=event.Muon_tkRelIso[imu],event.Muon_pfRelIso04_all[imu]
-          muon_v4_temp.SetPtEtaPhiM(event.Muon_corrected_pt[imu], muons[imu].eta, muons[imu].phi, muons[imu].mass)
-	  lep_pt,lep_eta,lep_phi,lep_m=event.Muon_corrected_pt[imu], muons[imu].eta, muons[imu].phi, muons[imu].mass
-          looseMuons.append(muon_v4_temp.Clone())
+    if self.is_mc:
+        # What's trackIso and muisolation???
+        # Muon selection: Highpt ID
+        muons = Collection(event, 'Muon')
+        # The definition of Collection???
+        muon_v4_temp=TLorentzVector()
+        looseMuons = []
+        for imu in range(0, event.nMuon):
+        if (event.Muon_highPtId[imu]=='\x02' and event.Muon_tkRelIso[imu] <0.1 and abs(muons[imu].eta)<2.4 and event.Muon_corrected_pt[imu]>20):# to be checked
+        trackIso,muisolation=event.Muon_tkRelIso[imu],event.Muon_pfRelIso04_all[imu]
+            muon_v4_temp.SetPtEtaPhiM(event.Muon_corrected_pt[imu], muons[imu].eta, muons[imu].phi, muons[imu].mass)
+        lep_pt,lep_eta,lep_phi,lep_m=event.Muon_corrected_pt[imu], muons[imu].eta, muons[imu].phi, muons[imu].mass
+            looseMuons.append(muon_v4_temp.Clone())
 
-    nLooseMu = len(looseMuons)
-    # self.out.fillBranch("nLooseMu", nLooseMu)
+        nLooseMu = len(looseMuons)
 
-    # electron selection: HEEPv7 id
-    electrons = Collection(event, 'Electron')
-    electron_v4_temp=TLorentzVector()
-    looseElectrons = []
-    for iele in range(0, event.nElectron):
-      if (event.Electron_cutBased_HEEP[iele] and abs(electrons[iele].eta)<2.5 and electrons[iele].pt>35):
-          electron_v4_temp.SetPtEtaPhiM(electrons[iele].pt, electrons[iele].eta, electrons[iele].phi, electrons[iele].mass)
-          lep_pt,lep_eta,lep_phi,lep_m=electrons[iele].pt, electrons[iele].eta, electrons[iele].phi, electrons[iele].mass
-          looseElectrons.append(electron_v4_temp.Clone())
-    nLooseEle = len(looseElectrons)
+        # electron selection: HEEPv7 id
+        electrons = Collection(event, 'Electron')
+        electron_v4_temp=TLorentzVector()
+        looseElectrons = []
+        for iele in range(0, event.nElectron):
+        if (event.Electron_cutBased_HEEP[iele] and abs(electrons[iele].eta)<2.5 and electrons[iele].pt>35):
+            electron_v4_temp.SetPtEtaPhiM(electrons[iele].pt, electrons[iele].eta, electrons[iele].phi, electrons[iele].mass)
+            lep_pt,lep_eta,lep_phi,lep_m=electrons[iele].pt, electrons[iele].eta, electrons[iele].phi, electrons[iele].mass
+            looseElectrons.append(electron_v4_temp.Clone())
+        nLooseEle = len(looseElectrons)
+    else:
+        muons = Collection(event, 'Muon')
+        nLooseMu = 0
+        for imu in range(0, event.nMuon):
+        if (event.Muon_highPtId[imu]=='\x02' and event.Muon_tkRelIso[imu] <0.1 and abs(muons[imu].eta)<2.4 and muons[imu].pt>20):
+            nLooseMu += 1
 
-    # require exact 1 lepton and pt > 55 GeV
-    # require 0 lepton now
+        electrons = Collection(event, 'Electron')
+        nLooseEle = 0
+        for iele in range(0, event.nElectron):
+        if (event.Electron_cutBased_HEEP[iele] and abs(electrons[iele].eta)<2.5 and electrons[iele].pt>35):
+            nLooseEle += 1
 
     if not ((nLooseEle+nLooseMu)==0): return False
     
