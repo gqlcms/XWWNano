@@ -6,7 +6,7 @@ config.General.transferLogs = True
 
 config.section_("JobType")
 config.JobType.pluginName  = 'Analysis'
-config.JobType.inputFiles = ['crab_cfg.py','keep_and_drop.txt',"../scripts/haddnano.py",'Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt']
+config.JobType.inputFiles = ['crab_cfg.py','../../keep_and_drop.txt',"../../../scripts/haddnano.py",'Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt']
 config.JobType.sendPythonFolder = True
 config.JobType.psetName = 'PSet.py'
 config.JobType.scriptExe = 'rundata18B.sh'
