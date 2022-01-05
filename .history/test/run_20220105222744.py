@@ -20,6 +20,7 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetUncertainties im
 ### main python file to run ###
 
 
+
 def main():
 
   usage = 'usage: %prog [options]'
@@ -28,32 +29,26 @@ def main():
   parser.add_option('-m', dest='ismc', help='to apply sf correction or not', default=True, action='store_true')
   parser.add_option('-i', '--in', dest='inputs', help='input directory with files', default=None, type='string')
   parser.add_option('-d', dest='ismc', help='to apply sf correction or not', action='store_false')
-  parser.add_option('-o', '--out', dest='output', help='output directory with files', default="./", type='string')
+  parser.add_option('-o', '--out', dest='output', help='output directory with files', default=None, type='string')
   parser.add_option('-M', '--MODE', dest='MODE', help='MODE', default="inclusive", type='string')
-  parser.add_option('--CrabCondor', '--CrabCondor', dest='CrabCondor', help='Crab Condor', default="crab", type='string')
   (opt, args) = parser.parse_args()
 
-  PrefCorrUL16_preVFP = lambda : PrefCorr(jetroot="L1PrefiringMaps.root", jetmapname="L1prefiring_jetptvseta_UL2016preVFP", photonroot="L1PrefiringMaps.root", photonmapname="L1prefiring_photonptvseta_UL2016preVFP", branchnames=["PrefireWeight","PrefireWeight_Up", "PrefireWeight_Down"])
-  PrefCorrUL16_postVFP = lambda : PrefCorr(jetroot="L1PrefiringMaps.root", jetmapname="L1prefiring_jetptvseta_UL2016postVFP", photonroot="L1PrefiringMaps.root", photonmapname="L1prefiring_photonptvseta_UL2016postVFP", branchnames=["PrefireWeight","PrefireWeight_Up", "PrefireWeight_Down"])
-  PrefCorrUL17 = lambda : PrefCorr(jetroot="L1PrefiringMaps.root", jetmapname="L1prefiring_jetptvseta_UL2017BtoF", photonroot="L1PrefiringMaps.root", photonmapname="L1prefiring_photonptvseta_UL2017BtoF", branchnames=["PrefireWeight","PrefireWeight_Up", "PrefireWeight_Down"])
-  
-  if opt.ismc:
-    if "2016" in opt.year:
-      jmeCorrections = createJMECorrector(opt.ismc, "UL2016", opt.year[4:].upper(), "Total","AK8PFPuppi")
-    if "2017" in opt.year:
-      jmeCorrections = createJMECorrector(opt.ismc, "UL2017", opt.year[4:].upper(), "Total","AK8PFPuppi")
-    if "2018" in opt.year:
-      jmeCorrections = createJMECorrector(opt.ismc, "UL2018", opt.year[4:].upper(), "Total","AK8PFPuppi")
+  print 'ismc:',opt.ismc
+
+  jmeCorrections = createJMECorrector(opt.ismc, "UL"+opt.year[:4], opt.year[4:].upper(), "Total","AK8PFPuppi")
+  # jmeCorrections = createJMECorrector(opt.ismc, opt.year[:4], opt.year[4:].upper(), "Total","AK8PFPuppi")
 
   if opt.ismc:
+    if opt.year == "2016":
+      p = PostProcessor(".", inputFiles(), modules=[PrefCorr(), VVV2016(opt.MODE)], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis())
     if opt.year == "2016post":
-      p = PostProcessor(opt.output, opt.inputs.rstrip(",").split(","), modules=[countHistogramsModule(),puAutoWeight_2016(),PrefCorrUL16_postVFP(),muonIDISOSF2016post(),muonScaleRes2016b(),eleRECOSF2016post(),eleIDSF2016post(),jmeCorrections(),VVV2016(opt.MODE)], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),outputbranchsel="keep_and_drop.txt")
+      p = PostProcessor(".", [opt.inputs], modules=[countHistogramsModule(),pufile_mcUL2016(),PrefCorr(),muonIDISOSF2016post(),muonScaleRes2016b(),eleRECOSF2016post(),eleIDSF2016post(),jmeCorrections(),btagSF2016(), VVV2016(opt.MODE)], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),outputbranchsel="keep_and_drop.txt")
     if opt.year == "2016pre":
-      p = PostProcessor(opt.output, opt.inputs.rstrip(",").split(","), modules=[countHistogramsModule(),puAutoWeight_2016(),PrefCorrUL16_preVFP(),muonIDISOSF2016pre(),muonScaleRes2016a(),eleRECOSF2016pre(),eleIDSF2016pre(),jmeCorrections(),VVV2016(opt.MODE)], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),outputbranchsel="keep_and_drop.txt")
+      p = PostProcessor(".", [opt.inputs], modules=[countHistogramsModule(),puAutoWeight_2016(),PrefCorr(),muonIDISOSF2016pre(), muonScaleRes2016a(),eleRECOSF2016pre(), eleIDSF2016pre(),jmeCorrections(),VVV2016(opt.MODE)], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),outputbranchsel="keep_and_drop.txt")
     if opt.year == "2017":
-      p = PostProcessor(opt.output, opt.inputs.rstrip(",").split(","), modules=[countHistogramsModule(),puAutoWeight_2017(),PrefCorr(),muonIDISOSF2017(),muonScaleRes2017(),eleRECOSF2017(),eleIDSF2017(), VVV2017(opt.MODE)], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),outputbranchsel="keep_and_drop.txt",maxEntries=10000)
+      p = PostProcessor(opt.output, [opt.inputs], modules=[countHistogramsModule(),puAutoWeight_2017(),PrefCorr(),muonIDISOSF2017(),muonScaleRes2017(),eleRECOSF2017(),eleIDSF2017(), VVV2017(opt.MODE)], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),outputbranchsel="keep_and_drop.txt",maxEntries=10000)
     if opt.year == "2018":
-      p = PostProcessor(opt.output, opt.inputs.rstrip(",").split(","), modules=[countHistogramsModule(),puAutoWeight_2018(),PrefCorr(),muonIDISOSF2018(),muonScaleRes2018(),eleRECOSF2018(),eleIDSF2018(), VVV2018(opt.MODE)], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),outputbranchsel="keep_and_drop.txt",maxEntries=10000)
+      p = PostProcessor(opt.output, [opt.inputs], modules=[countHistogramsModule(),puAutoWeight_2018(),PrefCorr(),muonIDISOSF2018(),muonScaleRes2018(),eleRECOSF2018(),eleIDSF2018(), VVV2018(opt.MODE)], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),outputbranchsel="keep_and_drop.txt",maxEntries=10000)
 
 
 # Sequence for data

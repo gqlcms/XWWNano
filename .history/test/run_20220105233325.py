@@ -47,7 +47,7 @@ def main():
 
   if opt.ismc:
     if opt.year == "2016post":
-      p = PostProcessor(opt.output, opt.inputs.rstrip(",").split(","), modules=[countHistogramsModule(),puAutoWeight_2016(),PrefCorrUL16_postVFP(),muonIDISOSF2016post(),muonScaleRes2016b(),eleRECOSF2016post(),eleIDSF2016post(),jmeCorrections(),VVV2016(opt.MODE)], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),outputbranchsel="keep_and_drop.txt")
+      p = PostProcessor(opt.output, opt.inputs.rstrip(",").split(","), modules=[countHistogramsModule(),puAutoWeight_2016(),PrefCorr(),muonIDISOSF2016post(),muonScaleRes2016b(),eleRECOSF2016post(),eleIDSF2016post(),jmeCorrections(),VVV2016(opt.MODE)], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),outputbranchsel="keep_and_drop.txt")
     if opt.year == "2016pre":
       p = PostProcessor(opt.output, opt.inputs.rstrip(",").split(","), modules=[countHistogramsModule(),puAutoWeight_2016(),PrefCorrUL16_preVFP(),muonIDISOSF2016pre(),muonScaleRes2016a(),eleRECOSF2016pre(),eleIDSF2016pre(),jmeCorrections(),VVV2016(opt.MODE)], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),outputbranchsel="keep_and_drop.txt")
     if opt.year == "2017":
