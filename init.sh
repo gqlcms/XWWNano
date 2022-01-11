@@ -13,7 +13,7 @@ echo $WORKING_PATH
 # cp $WORKING_PATH/analysis/others/for_pileup/puWeightProducer.py $WORKING_PATH/modules/common/
 
 # echo Updating prefiring correction
-# cp $WORKING_PATH/analysis/others/for_prefiring/*.root $CMSSW_BASE/src/PhysicsTools/NanoAODTools/data/prefire_maps/
+cp $WORKING_PATH/analysis/others/for_prefiring/*.root $CMSSW_BASE/src/PhysicsTools/NanoAODTools/data/prefire_maps/
 # cp $WORKING_PATH/analysis/others/for_prefiring/PrefireCorr.py $WORKING_PATH/modules/common/
 
 echo Updateing JME correction

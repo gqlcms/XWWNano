@@ -243,7 +243,6 @@ class VVVProducer(Module):
     self.out.branch("nLooseMu", "I")
     self.out.branch("nLooseEle", "I")
     self.out.branch("MET_et", "F")
-    self.out.branch("MET_phi", "F")
 
     self.out.branch("usenumber1", "I")
     self.out.branch("usenumber2", "I")
@@ -418,7 +417,6 @@ class VVVProducer(Module):
     
     # MET and leptonicW
     MET_et=event.MET_pt 
-    MET_phi=event.MET_phi
     fatjet1,fatjet2,fatjet3=Process_fatJets(self,event)
     Process_1Lepton_Jets(self,event)
 
