@@ -1,0 +1,1 @@
+python Tool/Transfer_Tree/Transfer_Tree.py -I "/YOUR_INFILE_PATH/InFile.root" -O "/YOUR_OUTFILE_PATH/OutFile.root" -m
