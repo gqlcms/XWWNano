@@ -73,6 +73,6 @@ cd TransferTree
 The TransferTree part is used to transfer the ntuple file to new tree with branches you needed, based on RDataFrame. See reference:<https://root.cern/doc/master/classROOT_1_1RDataFrame.html>, the example code shows how to transfer a test root file to a output file with new tree we wants.
 By running:
 ```bash
-source Tool/TransferTree/TransferTree.sh
+source ./Tool/TransferTree/TransferTree.sh
 ```
 The test input file named HWW2q_3m_Skim.root can be transfered to a output file HWW2q_3m_Tree.root, with a new tree (NewTree) and new branch (deepWH) in it.
