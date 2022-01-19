@@ -42,3 +42,27 @@
 
 cd analysis/test
 source run.sh
+## crab
+
+## <span id="Crab-mode"> Crab mode </span>
+Crab mode is designed for data/MC.
+
+```bash
+cd crab
+```
+The crab mode is based on official nanotools. See reference: <https://github.com/cms-nanoAOD/nanoAOD-tools/tree/master/crab>
+
+The `crab_help.py` is designed to simplify the repeated process. And the `input.json` is a sample for how to provide input for `crab_help.py`. `HWW_crab_script.sh` is the executed code on crab. 
+
+First you need to generate the cfg file for crab job.
+```bash
+python3 crab_help.py -f input.json -m prepare
+```
+It will create a folder that with cfg files inside automatically. Noticed that some paths in `crab_help.py` need to be changed according to different user.
+
+Then you can submit crab jobs with:
+```bash
+python3 crab_help.py -f input.json -m submit
+```
+Similarly, you can use `-m status`, `-m resubmit`, `-m kill` to batchly operate crab jobs.
+(refer to Sen's code: https://github.com/Senphy/nanoAOD-WVG)
