@@ -42,10 +42,7 @@
 
 cd analysis/test
 source run.sh
-## crab
-
-## <span id="Crab-mode"> Crab mode </span>
-Crab mode is designed for data/MC.
+## Crab mode
 
 ```bash
 cd crab
