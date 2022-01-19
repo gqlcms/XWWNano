@@ -63,3 +63,11 @@ python3 crab_help.py -f input.json -m submit
 ```
 Similarly, you can use `-m status`, `-m resubmit`, `-m kill` to batchly operate crab jobs.
 (refer to Sen's code: https://github.com/Senphy/nanoAOD-WVG)
+
+## Transfer the ntuple to tree.
+
+
+```bashr
+```bashe
+```bashe
+```bash
