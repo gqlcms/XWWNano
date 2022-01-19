@@ -62,7 +62,7 @@ Then you can submit crab jobs with:
 python3 crab_help.py -f input.json -m submit
 ```
 Similarly, you can use `-m status`, `-m resubmit`, `-m kill` to batchly operate crab jobs.
-(refer to Sen's code: https://github.com/Senphy/nanoAOD-WVG)
+(refer to Sen's code: <https://github.com/Senphy/nanoAOD-WVG>)
 
 ## TransferTree
 
@@ -70,8 +70,9 @@ Similarly, you can use `-m status`, `-m resubmit`, `-m kill` to batchly operate 
 cd TransferTree
 ```
 
-The TransferTree part is used to transfer the ntuple file to new tree with branches you needed.
-
+The TransferTree part is used to transfer the ntuple file to new tree with branches you needed, based on RDataFrame. See reference:<https://root.cern/doc/master/classROOT_1_1RDataFrame.html>, the example code shows how to transfer a test root file to a output file with new tree we wants.
+By running:
 ```bash
 source Tool/TransferTree/TransferTree.sh
 ```
+The test input file named HWW2q_3m_Skim.root can be transfered to a output file HWW2q_3m_Tree.root, with a new tree (NewTree) and new branch (deepWH) in it.
