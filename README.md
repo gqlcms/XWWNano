@@ -70,7 +70,10 @@ Similarly, you can use `-m status`, `-m resubmit`, `-m kill` to batchly operate 
 cd TransferTree
 ```
 
-The TransferTree part is used to transfer the ntuple file to new tree with branches you needed, based on RDataFrame. See reference:<https://root.cern/doc/master/classROOT_1_1RDataFrame.html>, the example code shows how to transfer a test root file to a output file with new tree we wants.
+The TransferTree part is used to transfer the ntuple file to new tree with branches you needed, based on RDataFrame. See reference:<https://root.cern/doc/master/classROOT_1_1RDataFrame.html>
+
+The example code shows how to transfer a test root file to a output file with new tree we wants.
+
 By running(Of course you can run the commands in TransferTree.sh with command line directly, and please remind to change the path according to different user):
 ```bash
 source ./Tool/TransferTree/TransferTree.sh
