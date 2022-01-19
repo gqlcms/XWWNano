@@ -64,7 +64,7 @@ python3 crab_help.py -f input.json -m submit
 Similarly, you can use `-m status`, `-m resubmit`, `-m kill` to batchly operate crab jobs.
 (refer to Sen's code: <https://github.com/Senphy/nanoAOD-WVG>)
 
-Since crab will upload the whole directory when submitting jobs, before the submission, you should place this `XWWNano` to directory except `/PhysicsTools/NanoAODTools/python/`:
+Since crab will upload the whole directory when submitting jobs, before the submission, you should place this `XWWNano` to a directory except `/PhysicsTools/NanoAODTools/python/`:
 
 ```bash
 cmsrel CMSSW_10_6_27
