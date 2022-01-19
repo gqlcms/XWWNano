@@ -68,7 +68,7 @@ Since crab will upload the whole directory when submitting jobs, before the subm
 
 ```bash
 cmsrel CMSSW_10_6_27
-cd CMSSW_10_6_19/src
+cd CMSSW_10_6_27/src
 cmsenv
 git clone https://github.com/cms-nanoAOD/nanoAOD-tools.git PhysicsTools/NanoAODTools 
 cd PhysicsTools/NanoAODTools
