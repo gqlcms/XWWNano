@@ -94,8 +94,8 @@ The TransferTree part is used to transfer the ntuple file to new tree with branc
 
 The example code shows how to transfer a test root file to an output file with new tree we wants, the main code is `Transfer_Tree.py` in `/TransferTree/Tool/Transfer_Tree/` and `deepWH_new.py` in `/TransferTree/config/Intime/`.
 
-By running(Of course you can run the commands in TransferTree.sh with command line directly, and please remind to change the path according to different user):
+By running(Of course you can run the commands in `TransferTree.sh` with command line directly, and please remind to change the path according to different user):
 ```bash
 source ./Tool/TransferTree/TransferTree.sh
 ```
-The test input file named HWW2q_3m_Skim.root can be transfered to a output file HWW2q_3m_Tree.root, with a new tree (NewTree) and new branch (deepWH) in it.
+The test input file named `HWW2q_3m_Skim.root` can be transfered to a output file `HWW2q_3m_Tree.root`, with a new tree `NewTree` and new branch `deepWH` in it.
