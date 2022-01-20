@@ -284,7 +284,7 @@ class ANALYSIS:
         #----------------- paths to root files -------------------
         #if options.y=="16"      :path="/eos/cms/store/user/.........;  lumi=36.3;
         #if options.y=="17"      :path="/eos/user/y/yusong/qilong/NTuple_Output/17/all/Tree/mu";  lumi= 41.5;
-        if options.y=="18"      :path="/eos/user/y/yuzhe/HWW/frame/Tree/";  lumi=59.81;
+        if options.y=="18"      :path="YOURPATH";  lumi=59.81;
         #if options.y=="16,17,18":path="/eos/cms/store/user/.........;  lumi=138;
 
         #====== DEFINE CANVAS ==========================
