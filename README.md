@@ -100,3 +100,18 @@ By running(Of course you can run the commands in `TransferTree.sh` with command 
 source ./Tool/TransferTree/TransferTree.sh
 ```
 The test input file named `HWW2q_3m_Skim.root` can be transfered to a output file `HWW2q_3m_Tree.root`, with a new tree `NewTree` and new branch `deepWH` in it.
+
+## Makeplots
+
+```bash
+cd Makeplots
+```
+
+The `MODE` option contains `MC`, `MCvsDATA`, `DECO`, the `y` option contains `16`,`17`,`18`, and the `REGION` option contains the selection or region defines by users, like `PS2`, etc.
+
+For example,run the `Makeplots_XWW.py` by:
+
+```bash
+python Makeplots_XWW.py --MODE DECO --REGION PS2 --y 17
+```
+Please remind to change the path according to different user.
