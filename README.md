@@ -115,3 +115,59 @@ For example,run the `Makeplots_XWW.py` by:
 python Makeplots_XWW.py --MODE DECO --REGION PS2 --y 17
 ```
 Please remind to change the path according to different user.
+
+## Powheg
+
+This directory is about the signal sample production using Powheg. For detail about Powheg, see reference: <https://twiki.cern.ch/twiki/bin/viewauth/CMS/PowhegBOXPrecompiled>
+
+Create a CMSSW work area:
+```bash
+cmsrel CMSSW_9_3_0
+cd CMSSW_9_3_0/src
+cmsenv
+```
+
+Checkout the scripts:
+```bash
+git clone https://github.com/cms-sw/genproductions.git genproductions
+cd genproductions/bin/Powheg
+```
+Get the inputs card files, while there are two modifications needed:
+```bash
+mkdir gg_H
+cd gg_H
+wget --no-check-certificate https://raw.githubusercontent.com/cms-sw/genproductions/master/bin/Powheg/examples/gg_H_quark-mass-effects_withJHUGen_NNPDF30_13TeV/gg_H_quark-mass-effects_NNPDF30_13TeV.input
+wget --no-check-certificate https://raw.githubusercontent.com/cms-sw/genproductions/master/bin/Powheg/examples/gg_H_quark-mass-effects_withJHUGen_NNPDF30_13TeV/JHUGen.input
+```
+
+The first modification is to use 325300 for 5f scheme:
+```bash
+vi gg_H_quark-mass-effects_NNPDF30_13TeV.input
+```
+
+Change `lhans1 260000       ! pdf set for hadron 1 (LHA numbering)` to `lhans1 325300       ! pdf set for hadron 1 (LHA numbering)`.
+
+The second modification is on JHUGen side, change the decay mode.(See reference: <https://spin.pha.jhu.edu/Manual.pdf>):
+
+```bash
+vi JHUGen.input
+```
+
+For 4q final state, change `Collider=1 PChannel=0 Process=0 Unweighted=1 DecayMode1=0 DecayMode2=0 OffshellX=0` to `Collider=1 PChannel=0 Process=0 Unweighted=1 DecayMode1=5 DecayMode2=5 OffshellX=0`.
+
+```bash
+cd ..
+cmsenv
+python ./run_pwg_condor.py -p f -i gg_H/gg_H_quark-mass-effects_NNPDF30_13TeV.input -m gg_H_quark-mass-effects -f my_ggH -q longlunch -n 1000
+```
+
+The definition for the input parameters:
+`-p` grid production stage [0]  (compiling source)
+`-i` intput card name [powheg.input]
+`-m` process name (process defined in POWHEG)
+`-f` working folder [my_ggH]
+`-q`  job flavor / batch queue name (run locally if not specified)
+
+Then, a tar ball with the name `my_ggH_gg_H_quark-mass-effects_<SCRAM_ARCH>_<CMSSW_VERSION>.tgz` will be created.
+
+For technology detail, See : <https://indico.cern.ch/event/1078192/contributions/4534876/attachments/2315996/3942533/ggHWW4qPowhegSitianSep24.pdf>
