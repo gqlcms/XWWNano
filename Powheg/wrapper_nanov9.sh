@@ -4,8 +4,8 @@
 echo "Starting job on " `date` #Date/time of start of job
 echo "Running on: `uname -a`" #Condor job is running on this node
 echo "System software: `cat /etc/redhat-release`" #Operating System on that node
-echo "Input arguments ---> nEvents: ${2}"
-gridpack_name="gg_H_quark-mass-effects_slc7_amd64_gcc700_CMSSW_10_6_19_my_ggH_4q.tgz"
+echo "Input arguments ---> Gridpackname:${1}, nEvents: ${2}"
+gridpack_name=${1}
 # gridpack_name="gg_H_quark-mass-effects_slc7_amd64_gcc700_CMSSW_10_6_19_my_ggH_semilep.tgz"
 curl -s -k http://stash.osgconnect.net/+yuzhe/${gridpack_name} -o ${gridpack_name}
 ### Step 1
