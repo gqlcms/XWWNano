@@ -175,6 +175,7 @@ For technology detail, See : <https://indico.cern.ch/event/1078192/contributions
 For condor submitting jobs:
 
 ```bash
+cd XWWNano/Powheg
 mkdir log
 condor submit submit_nanov9.jdl
 ```
