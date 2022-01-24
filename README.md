@@ -171,3 +171,12 @@ The definition for the input parameters:
 Then, a tar ball with the name `my_ggH_gg_H_quark-mass-effects_<SCRAM_ARCH>_<CMSSW_VERSION>.tgz` will be created.
 
 For technology detail, See : <https://indico.cern.ch/event/1078192/contributions/4534876/attachments/2315996/3942533/ggHWW4qPowhegSitianSep24.pdf>
+
+For condor submitting jobs:
+
+```bash
+mkdir log
+condor submit submit_nanov9.jdl
+```
+
+
