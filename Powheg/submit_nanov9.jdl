@@ -8,4 +8,4 @@ Output = log/$(proc).out_$(Step)
 Log = log/$(proc).log
 transfer_output_remaps = "HIG-RunIISummer20UL18NanoAODv9-00524.root = $(proc)_$(Cluster)_$(Step).root"
 when_to_transfer_output = ON_EXIT
-Queue 200 proc in (WmHjj_Wlnu_Hbb_EWK_LO,WmHjj_Wlnu_Hbb_EWK_QCD_LO,WmHjj_Wlnu_Hbb_QCD_LO,WpHjj_Wlnu_Hbb_EWK_LO,WpHjj_Wlnu_Hbb_EWK_QCD_LO,WpHjj_Wlnu_Hbb_QCD_LO,ZHjj_Zll_Hbb_EWK_LO,ZHjj_Zll_Hbb_EWK_QCD_LO,ZHjj_Zll_Hbb_QCD_LO,ZHjj_Znunu_Hbb_EWK_LO,ZHjj_Znunu_Hbb_EWK_QCD_LO,ZHjj_Znunu_Hbb_QCD_LO)
+Queue 200 proc in (gg_H_quark-mass-effects_slc7_amd64_gcc700_CMSSW_10_6_19_my_ggH_semilep.tgz,gg_H_quark-mass-effects_slc7_amd64_gcc700_CMSSW_10_6_19_my_ggH_4q.tgz)
