@@ -7,6 +7,7 @@ def r(x):
 
 HPT=[150,200,250,300,350,400,450,500,550,600,650,700,750,800,850,900,950,1000,1050,1100,1150,1200]
 #Mphi=[1000,1000,1000,1000,   180,200,200,180]
+MW2=35
 PTW1=[]
 PTW2=[]
 EW1=[]
@@ -30,13 +31,13 @@ for i in range(1,23):
     DR2.append(0)
 print("Higgs pt","   deltaR1","  deltaR2","    W1Pt","    W2Pt")
 for i in range(1,22):
-    PTW1[i]=((125*125+80*80-35*35)**2-4*125*125*80*80)**0.5/ (2*125)
+    PTW1[i]=((125*125+80*80-MW2*MW2)**2-4*125*125*80*80)**0.5/ (2*125)
     # Set W1 mass =80, Calculate W1 pt in the rest frame of H
-    PTW2[i]=((125*125+35*35-80*80)**2-4*125*125*35*35)**0.5/ (2*125)
+    PTW2[i]=((125*125+MW2*MW2-80*80)**2-4*125*125*MW2*MW2)**0.5/ (2*125)
     # Set W2 mass =35, Calculate W2 pt in the rest frame of H
-    EW1[i]=(125*125+80*80-35*35)/(2*125)
+    EW1[i]=(125*125+80*80-MW2*MW2)/(2*125)
     # Calculate W1 Energy in the rest frame of H
-    EW2[i]=(125*125+35*35-80*80)/(2*125)
+    EW2[i]=(125*125+MW2*MW2-80*80)/(2*125)
     # Calculate W2 Energy in the rest frame of H
     gH[i]=(HPT[i]**2+125*125)**0.5/125
     # Calculate Gamma of Higgs
