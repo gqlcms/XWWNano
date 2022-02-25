@@ -4,8 +4,7 @@ def r(x):
     return x + (-x) % 1#0
 #def r(x):return (math.ceil(int(x)/10.0))*10
 
-MW  =[1500,2000,2500,3000,   1500,1500,2500,2500,3500,3500]
-Mphi=[750,1000,1250,1500,     180, 300, 200, 250, 210, 350]
+
 HPT=[150,200,250,300,350,400,450,500,550,600,650,700,750,800,850,900,950,1000,1050,1100,1150,1200]
 #Mphi=[1000,1000,1000,1000,   180,200,200,180]
 PTW1=[]
@@ -53,67 +52,3 @@ for i in range(1,22):
     # Calculate delta R of W1 using arctan(px/pz) 
     
     print("    ",HPT[i],"  ",'%.4f'%DR1[i],"  ",'%.4f'%DR2[i],"   ",'%.2f'%PTW1_lab[i],"  ",'%.2f'%PTW2_lab[i])
-
-
-
-
-
-
-
-
-# PTphi         =[0,0,0,0,  0,0,0,0,0,0]
-# gphi          =[0,0,0,0,  0,0,0,0,0,0]
-# bphi          =[0,0,0,0,  0,0,0,0,0,0]
-# gw_pr         =[0,0,0,0,  0,0,0,0,0,0]
-# PTw_np_rest   =[0,0,0,0,  0,0,0,0,0,0]
-# PTw_np_lab_max=[0,0,0,0,  0,0,0,0,0,0]
-# PTw_np_lab_min=[0,0,0,0,  0,0,0,0,0,0]
-# PTw_np_BAL    =[0,0,0,0,  0,0,0,0,0,0]
-# DR            =[0,0,0,0,  0,0,0,0,0,0]
-# gw_np         =[0,0,0,0,  0,0,0,0,0,0]
-# bw_np         =[0,0,0,0,  0,0,0,0,0,0]
-# DRqq          =[0,0,0,0,  0,0,0,0,0,0]
-# PTq_BAL       =[0,0,0,0,  0,0,0,0,0,0]
-# PTq_np_lab_max=[0,0,0,0,  0,0,0,0,0,0]
-# PTq_np_lab_min=[0,0,0,0,  0,0,0,0,0,0]
-# print(  "( MWkk" , ", MR )" , " DR " ,  " DRqq " , "DR_radion")
-# for i in range(4,10):
-#     PTphi[i] = ( Mphi[i]**4 - 2*Mphi[i]**2*MW[i]**2 - 2*Mphi[i]**2*80**2 + MW[i]**4 -2*MW[i]**2*80**2 + 80**4 )**0.5 / (2*MW[i])
-#     # Pt of the radion.
-#     gphi[i]  = ( PTphi[i]**2 + Mphi[i]**2 )**0.5/Mphi[i]
-#     # Gamma of radion.
-
-#     bphi[i]  = ( 1 - 1/(gphi[i])**2  )**0.5
-#     # Beta of radion(v/c).
-#     gw_pr[i] = ( PTphi[i]**2 + 80**2 )**0.5/80
-
-#     PTw_np_rest[i] = ( Mphi[i]**2 -4*80**2 )**0.5 / 2
-#     PTw_np_lab_min[i] = gphi[i]*( PTw_np_rest[i] + bphi[i]*(80**2 + PTw_np_rest[i]**2)**0.5  )
-#     PTw_np_lab_max[i] = gphi[i]*( PTw_np_rest[i] - bphi[i]*(80**2 + PTw_np_rest[i]**2)**0.5  )
-
-#     PTw_np_BAL[i] =  (  (gphi[i]**2)*(bphi[i]**2)*(80**2 + PTw_np_rest[i]**2) + PTw_np_rest[i]**2 )**0.5
-
-#     DR[i]         = 2 * atan(  PTw_np_rest[i] / ( 0.5*PTphi[i] )  )
-#     gw_np[i]      = ( 1 + PTw_np_BAL[i]**2/80**2  )**0.5
-#     bw_np[i]      = ( 1 - 1/(gw_np[i])**2  )**0.5
-#     PTq_BAL[i]    = (  (gw_np[i]**2)*(bw_np[i]**2)*(40**2) + 40**2 )**0.5
-#     PTq_np_lab_min[i] = gw_np[i]*( 40 + bw_np[i]*( 40**2)**0.5 )
-#     PTq_np_lab_max[i] = gw_np[i]*( 40 - bw_np[i]*( 40**2)**0.5 )
-#     DRqq[i]       = 2 * atan(  40 / ( 0.5*PTw_np_BAL[i] )  )
-#     #print( i+1 , ") MW'=" , MW[i] , ", Mphi=" , Mphi[i] , "P_phi=" , '%.0f'%r(PTphi[i]) , "gamma_phi= " , '%.3f'% gphi[i] , "gamma_w_pr= " , '%.1f'% gw_pr[i] , "PTw_np_rest=" , '%.0f'% r(PTw_np_rest[i]) , "PTw_np_lab: [" , '%2.f'%max(0,r(PTw_np_lab_max[i])) , "," , '%2.f'%r(PTw_np_lab_min[i]) , "] , PTw_np_BAL=" , '%.0f'% r(PTw_np_BAL[i]) , " DR=" , '%.2f'% DR[i] , " , gw_np=" , '%.1f'% gw_np[i] , " , Pq_BAL=" , '%.0f'%r(PTq_BAL[i]) , ", DRqq=" , '%.2f'% DRqq[i], "PT...")
-
-#     print(  MW[i] ,  Mphi[i] , '%.2f'% DR[i] , '%.2f'% DRqq[i],  '%.2f'%(DRqq[i]+DR[i]) )
-
-
-# #MWkk=[ 3., 3.5, 4., 4.5, 5. ]
-# #R_MWkk=[ 0.06, 0.08, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6,  0.7, 0.9] # = 10 points
-# #for i in range(0, len(MWkk)): 
-# #    for j in range(0, len(R_MWkk)):
-# #         print( "(" '%2.f'%r( MWkk[i]*1000),",", '%2.f'%r( R_MWkk[j]*MWkk[i]*1000), "), "  )
-
-
-# #2wkk =2.5 TeV = 1 points
-
-# # R = 0.08, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6,  0.7, 0.9 = 9 points  
-
-# # R = 0.1, 0.2, 0.3, 0.4, 0.5, 0.6,  0.7, 0.9 = 
