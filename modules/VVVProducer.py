@@ -184,60 +184,60 @@ class VVVProducer(Module):
             self.out.branch("taggenzl", "F",5)
             self.out.branch("ptgenzf", "F",5)
             self.out.branch("phigenzf", "F",5)
-            self.out.branch("phigengf", "F",5)
-            self.out.branch("phigengl", "F",5)
-            self.out.branch("etagengf", "F",5)
-            self.out.branch("massgengl", "F",5)
-            self.out.branch("ptgengl", "F",5)
-            self.out.branch("mothergengf", "F",5)
-            self.out.branch("massgengf", "F",5)
-            self.out.branch("ptgengf", "F",5)
-            self.out.branch("etagengl", "F",5)
-            self.out.branch("ptgenq1f", "F",5)
-            self.out.branch("massgenq1l", "F",5)
-            self.out.branch("etagenq1f", "F",5)
-            self.out.branch("phigenq1f", "F",5)
-            self.out.branch("mothergenq1f", "F",5)
-            self.out.branch("etagenq1l", "F",5)
-            self.out.branch("phigenq1l", "F",5)
-            self.out.branch("massgenq1f", "F",5)
-            self.out.branch("ptgenq1l", "F",5)
-            self.out.branch("ptgenq2f", "F",5)
-            self.out.branch("massgenq2l", "F",5)
-            self.out.branch("etagenq2f", "F",5)
-            self.out.branch("phigenq2f", "F",5)
-            self.out.branch("mothergenq2f", "F",5)
-            self.out.branch("etagenq2l", "F",5)
-            self.out.branch("phigenq2l", "F",5)
-            self.out.branch("massgenq2f", "F",5)
-            self.out.branch("ptgenq2l", "F",5)
-            self.out.branch("ptgenq3f", "F",5)
-            self.out.branch("massgenq3l", "F",5)
-            self.out.branch("etagenq3f", "F",5)
-            self.out.branch("phigenq3f", "F",5)
-            self.out.branch("mothergenq3f", "F",5)
-            self.out.branch("etagenq3l", "F",5)
-            self.out.branch("phigenq3l", "F",5)
-            self.out.branch("massgenq3f", "F",5)
-            self.out.branch("ptgenq3l", "F",5)
-            self.out.branch("ptgenq4f", "F",5)
-            self.out.branch("massgenq4l", "F",5)
-            self.out.branch("etagenq4f", "F",5)
-            self.out.branch("phigenq4f", "F",5)
-            self.out.branch("mothergenq4f", "F",5)
-            self.out.branch("etagenq4l", "F",5)
-            self.out.branch("phigenq4l", "F",5)
-            self.out.branch("massgenq4f", "F",5)
-            self.out.branch("ptgenq4l", "F",5)
-            self.out.branch("ptgenq5f", "F",5)
-            self.out.branch("massgenq5l", "F",5)
-            self.out.branch("etagenq5f", "F",5)
-            self.out.branch("phigenq5f", "F",5)
-            self.out.branch("mothergenq5f", "F",5)
-            self.out.branch("etagenq5l", "F",5)
-            self.out.branch("phigenq5l", "F",5)
-            self.out.branch("massgenq5f", "F",5)
-            self.out.branch("ptgenq5l", "F",5)
+            self.out.branch("phigengf", "F",10)
+            self.out.branch("phigengl", "F",10)
+            self.out.branch("etagengf", "F",10)
+            self.out.branch("massgengl", "F",10)
+            self.out.branch("ptgengl", "F",10)
+            self.out.branch("mothergengf", "F",10)
+            self.out.branch("massgengf", "F",10)
+            self.out.branch("ptgengf", "F",10)
+            self.out.branch("etagengl", "F",10)
+            self.out.branch("ptgenq1f", "F",10)
+            self.out.branch("massgenq1l", "F",10)
+            self.out.branch("etagenq1f", "F",10)
+            self.out.branch("phigenq1f", "F",10)
+            self.out.branch("mothergenq1f", "F",10)
+            self.out.branch("etagenq1l", "F",10)
+            self.out.branch("phigenq1l", "F",10)
+            self.out.branch("massgenq1f", "F",10)
+            self.out.branch("ptgenq1l", "F",10)
+            self.out.branch("ptgenq2f", "F",10)
+            self.out.branch("massgenq2l", "F",10)
+            self.out.branch("etagenq2f", "F",10)
+            self.out.branch("phigenq2f", "F",10)
+            self.out.branch("mothergenq2f", "F",10)
+            self.out.branch("etagenq2l", "F",10)
+            self.out.branch("phigenq2l", "F",10)
+            self.out.branch("massgenq2f", "F",10)
+            self.out.branch("ptgenq2l", "F",10)
+            self.out.branch("ptgenq3f", "F",10)
+            self.out.branch("massgenq3l", "F",10)
+            self.out.branch("etagenq3f", "F",10)
+            self.out.branch("phigenq3f", "F",10)
+            self.out.branch("mothergenq3f", "F",10)
+            self.out.branch("etagenq3l", "F",10)
+            self.out.branch("phigenq3l", "F",10)
+            self.out.branch("massgenq3f", "F",10)
+            self.out.branch("ptgenq3l", "F",10)
+            self.out.branch("ptgenq4f", "F",10)
+            self.out.branch("massgenq4l", "F",10)
+            self.out.branch("etagenq4f", "F",10)
+            self.out.branch("phigenq4f", "F",10)
+            self.out.branch("mothergenq4f", "F",10)
+            self.out.branch("etagenq4l", "F",10)
+            self.out.branch("phigenq4l", "F",10)
+            self.out.branch("massgenq4f", "F",10)
+            self.out.branch("ptgenq4l", "F",10)
+            self.out.branch("ptgenq5f", "F",10)
+            self.out.branch("massgenq5l", "F",10)
+            self.out.branch("etagenq5f", "F",10)
+            self.out.branch("phigenq5f", "F",10)
+            self.out.branch("mothergenq5f", "F",10)
+            self.out.branch("etagenq5l", "F",10)
+            self.out.branch("phigenq5l", "F",10)
+            self.out.branch("massgenq5f", "F",10)
+            self.out.branch("ptgenq5l", "F",10)
 
 
         self.out.branch("nLooseMu", "I")
@@ -570,7 +570,7 @@ def Process_1Lepton_GenMatching_Top(self,nt):
 def Process_1Lepton_GenMatching_H(self,nt):
     for ik in range(0,nt.nGenPart):
         if (nt.GenPart_pdgId[ik] == 25 ):
-            if (not (nt.GenPart_statusFlags[ik]&(1<<13))): continue; # isLastCopy
+            if (not (nt.GenPart_statusFlags[ik]&(1<<13))): continue;# isLastCopy
             # print("Higgs's pt is",nt.GenPart_pt[ik]);
             # Select only boosted Higgs.
 #                if(nt.GenPart_pt[ik]<450):break
@@ -868,6 +868,7 @@ def Process_1Lepton_GenMatching_g(self,nt):
         if (abs(nt.GenPart_pdgId[ik]) == 21):
             if (not (nt.GenPart_statusFlags[ik]&(1<<13))): continue; 
             if( nt.GenPart_pt[ik] > 50 ):
+                if len(phigengl)==10 : break
                 ptgengl.append(nt.GenPart_pt[ik]);
                 etagengl.append(nt.GenPart_eta[ik]);
                 phigengl.append(nt.GenPart_phi[ik]);
@@ -881,15 +882,15 @@ def Process_1Lepton_GenMatching_g(self,nt):
                 if(nt.GenPart_genPartIdxMother[FirstCopy]>0):
                     mothergengf.append(nt.GenPart_pdgId[nt.GenPart_genPartIdxMother[FirstCopy]]);
 
-    phigengl.extend(np.zeros(5-len(phigengl),int))
-    etagengl.extend(np.zeros(5-len(etagengl),int))
-    massgengl.extend(np.zeros(5-len(massgengl),int))
-    ptgengl.extend(np.zeros(5-len(ptgengl),int))
-    massgengf.extend(np.zeros(5-len(massgengf),int))
-    etagengf.extend(np.zeros(5-len(etagengf),int))
-    mothergengf.extend(np.zeros(5-len(mothergengf),int))
-    ptgengf.extend(np.zeros(5-len(ptgengf),int))
-    phigengf.extend(np.zeros(5-len(phigengf),int))
+    phigengl.extend(np.zeros(10-len(phigengl),int))
+    etagengl.extend(np.zeros(10-len(etagengl),int))
+    massgengl.extend(np.zeros(10-len(massgengl),int))
+    ptgengl.extend(np.zeros(10-len(ptgengl),int))
+    massgengf.extend(np.zeros(10-len(massgengf),int))
+    etagengf.extend(np.zeros(10-len(etagengf),int))
+    mothergengf.extend(np.zeros(10-len(mothergengf),int))
+    ptgengf.extend(np.zeros(10-len(ptgengf),int))
+    phigengf.extend(np.zeros(10-len(phigengf),int))
     self.out.fillBranch("phigengl", phigengl)
     self.out.fillBranch("etagengl", etagengl)
     self.out.fillBranch("massgengl", massgengl)
@@ -915,6 +916,7 @@ def Process_1Lepton_GenMatching_q(self,nt):
         if (abs(nt.GenPart_pdgId[ik]) == 1):
             if (not (nt.GenPart_statusFlags[ik]&(1<<13))): continue; 
             if( nt.GenPart_pt[ik] > 50 ):
+                if len(phigenq1l)==10 : break
                 FirstCopy = Process_1Lepton_GenMatching_FirstCopy(nt,ik)
                 Fill_Quark = False
                 if (nt.GenPart_genPartIdxMother[FirstCopy] < 0):
@@ -936,15 +938,15 @@ def Process_1Lepton_GenMatching_q(self,nt):
                         mothergenq1f.append(-99);
                     else:
                         mothergenq1f.append(nt.GenPart_pdgId[nt.GenPart_genPartIdxMother[FirstCopy]]);
-    ptgenq1f.extend(np.zeros(5-len(ptgenq1f),int))
-    massgenq1l.extend(np.zeros(5-len(massgenq1l),int))
-    etagenq1f.extend(np.zeros(5-len(etagenq1f),int))
-    phigenq1f.extend(np.zeros(5-len(phigenq1f),int))
-    mothergenq1f.extend(np.zeros(5-len(mothergenq1f),int))
-    etagenq1l.extend(np.zeros(5-len(etagenq1l),int))
-    phigenq1l.extend(np.zeros(5-len(phigenq1l),int))
-    massgenq1f.extend(np.zeros(5-len(massgenq1f),int))
-    ptgenq1l.extend(np.zeros(5-len(ptgenq1l),int))
+    ptgenq1f.extend(np.zeros(10-len(ptgenq1f),int))
+    massgenq1l.extend(np.zeros(10-len(massgenq1l),int))
+    etagenq1f.extend(np.zeros(10-len(etagenq1f),int))
+    phigenq1f.extend(np.zeros(10-len(phigenq1f),int))
+    mothergenq1f.extend(np.zeros(10-len(mothergenq1f),int))
+    etagenq1l.extend(np.zeros(10-len(etagenq1l),int))
+    phigenq1l.extend(np.zeros(10-len(phigenq1l),int))
+    massgenq1f.extend(np.zeros(10-len(massgenq1f),int))
+    ptgenq1l.extend(np.zeros(10-len(ptgenq1l),int))
     self.out.fillBranch("ptgenq1f", ptgenq1f)
     self.out.fillBranch("massgenq1l", massgenq1l)
     self.out.fillBranch("etagenq1f", etagenq1f)
@@ -968,6 +970,7 @@ def Process_1Lepton_GenMatching_q(self,nt):
         if (abs(nt.GenPart_pdgId[ik]) == 2):
             if (not (nt.GenPart_statusFlags[ik]&(1<<13))): continue; 
             if( nt.GenPart_pt[ik] > 50 ):
+                if len(phigenq2l)==10 : break
                 FirstCopy = Process_1Lepton_GenMatching_FirstCopy(nt,ik);
                 Fill_Quark = False
                 if (nt.GenPart_genPartIdxMother[FirstCopy] < 0):
@@ -989,15 +992,15 @@ def Process_1Lepton_GenMatching_q(self,nt):
                         mothergenq2f.append(-99);
                     else:
                         mothergenq2f.append(nt.GenPart_pdgId[nt.GenPart_genPartIdxMother[FirstCopy]]);
-    ptgenq2f.extend(np.zeros(5-len(ptgenq2f),int))
-    massgenq2l.extend(np.zeros(5-len(massgenq2l),int))
-    etagenq2f.extend(np.zeros(5-len(etagenq2f),int))
-    phigenq2f.extend(np.zeros(5-len(phigenq2f),int))
-    mothergenq2f.extend(np.zeros(5-len(mothergenq2f),int))
-    etagenq2l.extend(np.zeros(5-len(etagenq2l),int))
-    phigenq2l.extend(np.zeros(5-len(phigenq2l),int))
-    massgenq2f.extend(np.zeros(5-len(massgenq2f),int))
-    ptgenq2l.extend(np.zeros(5-len(ptgenq2l),int))
+    ptgenq2f.extend(np.zeros(10-len(ptgenq2f),int))
+    massgenq2l.extend(np.zeros(10-len(massgenq2l),int))
+    etagenq2f.extend(np.zeros(10-len(etagenq2f),int))
+    phigenq2f.extend(np.zeros(10-len(phigenq2f),int))
+    mothergenq2f.extend(np.zeros(10-len(mothergenq2f),int))
+    etagenq2l.extend(np.zeros(10-len(etagenq2l),int))
+    phigenq2l.extend(np.zeros(10-len(phigenq2l),int))
+    massgenq2f.extend(np.zeros(10-len(massgenq2f),int))
+    ptgenq2l.extend(np.zeros(10-len(ptgenq2l),int))
     self.out.fillBranch("ptgenq2f", ptgenq2f)
     self.out.fillBranch("massgenq2l", massgenq2l)
     self.out.fillBranch("etagenq2f", etagenq2f)
@@ -1021,6 +1024,7 @@ def Process_1Lepton_GenMatching_q(self,nt):
         if (abs(nt.GenPart_pdgId[ik]) == 3):
             if (not (nt.GenPart_statusFlags[ik]&(1<<13))): continue; 
             if( nt.GenPart_pt[ik] > 50 ):
+                if len(phigenq3l)==10 : break
                 FirstCopy = Process_1Lepton_GenMatching_FirstCopy(nt,ik);
                 Fill_Quark = False
                 if (nt.GenPart_genPartIdxMother[FirstCopy] < 0):
@@ -1042,15 +1046,15 @@ def Process_1Lepton_GenMatching_q(self,nt):
                         mothergenq3f.append(-99);
                     else:
                         mothergenq3f.append(nt.GenPart_pdgId[nt.GenPart_genPartIdxMother[FirstCopy]]);
-    ptgenq3f.extend(np.zeros(5-len(ptgenq3f),int))
-    massgenq3l.extend(np.zeros(5-len(massgenq3l),int))
-    etagenq3f.extend(np.zeros(5-len(etagenq3f),int))
-    phigenq3f.extend(np.zeros(5-len(phigenq3f),int))
-    mothergenq3f.extend(np.zeros(5-len(mothergenq3f),int))
-    etagenq3l.extend(np.zeros(5-len(etagenq3l),int))
-    phigenq3l.extend(np.zeros(5-len(phigenq3l),int))
-    massgenq3f.extend(np.zeros(5-len(massgenq3f),int))
-    ptgenq3l.extend(np.zeros(5-len(ptgenq3l),int))
+    ptgenq3f.extend(np.zeros(10-len(ptgenq3f),int))
+    massgenq3l.extend(np.zeros(10-len(massgenq3l),int))
+    etagenq3f.extend(np.zeros(10-len(etagenq3f),int))
+    phigenq3f.extend(np.zeros(10-len(phigenq3f),int))
+    mothergenq3f.extend(np.zeros(10-len(mothergenq3f),int))
+    etagenq3l.extend(np.zeros(10-len(etagenq3l),int))
+    phigenq3l.extend(np.zeros(10-len(phigenq3l),int))
+    massgenq3f.extend(np.zeros(10-len(massgenq3f),int))
+    ptgenq3l.extend(np.zeros(10-len(ptgenq3l),int))
     self.out.fillBranch("ptgenq3f", ptgenq3f)
     self.out.fillBranch("massgenq3l", massgenq3l)
     self.out.fillBranch("etagenq3f", etagenq3f)
@@ -1074,6 +1078,7 @@ def Process_1Lepton_GenMatching_q(self,nt):
         if (abs(nt.GenPart_pdgId[ik]) == 4):
             if (not (nt.GenPart_statusFlags[ik]&(1<<13))): continue; 
             if( nt.GenPart_pt[ik] > 50 ):
+                if len(phigenq4l)==10 : break
                 FirstCopy = Process_1Lepton_GenMatching_FirstCopy(nt,ik);
                 Fill_Quark = False
                 if (nt.GenPart_genPartIdxMother[FirstCopy] < 0):
@@ -1095,15 +1100,15 @@ def Process_1Lepton_GenMatching_q(self,nt):
                         mothergenq4f.append(-99);
                     else:
                         mothergenq4f.append(nt.GenPart_pdgId[nt.GenPart_genPartIdxMother[FirstCopy]]);
-    ptgenq4f.extend(np.zeros(5-len(ptgenq4f),int))
-    massgenq4l.extend(np.zeros(5-len(massgenq4l),int))
-    etagenq4f.extend(np.zeros(5-len(etagenq4f),int))
-    phigenq4f.extend(np.zeros(5-len(phigenq4f),int))
-    mothergenq4f.extend(np.zeros(5-len(mothergenq4f),int))
-    etagenq4l.extend(np.zeros(5-len(etagenq4l),int))
-    phigenq4l.extend(np.zeros(5-len(phigenq4l),int))
-    massgenq4f.extend(np.zeros(5-len(massgenq4f),int))
-    ptgenq4l.extend(np.zeros(5-len(ptgenq4l),int))
+    ptgenq4f.extend(np.zeros(10-len(ptgenq4f),int))
+    massgenq4l.extend(np.zeros(10-len(massgenq4l),int))
+    etagenq4f.extend(np.zeros(10-len(etagenq4f),int))
+    phigenq4f.extend(np.zeros(10-len(phigenq4f),int))
+    mothergenq4f.extend(np.zeros(10-len(mothergenq4f),int))
+    etagenq4l.extend(np.zeros(10-len(etagenq4l),int))
+    phigenq4l.extend(np.zeros(10-len(phigenq4l),int))
+    massgenq4f.extend(np.zeros(10-len(massgenq4f),int))
+    ptgenq4l.extend(np.zeros(10-len(ptgenq4l),int))
     self.out.fillBranch("ptgenq4f", ptgenq4f)
     self.out.fillBranch("massgenq4l", massgenq4l)
     self.out.fillBranch("etagenq4f", etagenq4f)
@@ -1127,6 +1132,7 @@ def Process_1Lepton_GenMatching_q(self,nt):
         if (abs(nt.GenPart_pdgId[ik]) == 5):
             if (not (nt.GenPart_statusFlags[ik]&(1<<13))): continue; 
             if( nt.GenPart_pt[ik] > 50 ):
+                if len(phigenq5l)==10 : break
                 FirstCopy = Process_1Lepton_GenMatching_FirstCopy(nt,ik);
                 Fill_Quark = False
                 if (nt.GenPart_genPartIdxMother[FirstCopy] < 0):
@@ -1148,15 +1154,15 @@ def Process_1Lepton_GenMatching_q(self,nt):
                         mothergenq5f.append(-99);
                     else:
                         mothergenq5f.append(nt.GenPart_pdgId[nt.GenPart_genPartIdxMother[FirstCopy]]);
-    ptgenq5f.extend(np.zeros(5-len(ptgenq5f),int))
-    massgenq5l.extend(np.zeros(5-len(massgenq5l),int))
-    etagenq5f.extend(np.zeros(5-len(etagenq5f),int))
-    phigenq5f.extend(np.zeros(5-len(phigenq5f),int))
-    mothergenq5f.extend(np.zeros(5-len(mothergenq5f),int))
-    etagenq5l.extend(np.zeros(5-len(etagenq5l),int))
-    phigenq5l.extend(np.zeros(5-len(phigenq5l),int))
-    massgenq5f.extend(np.zeros(5-len(massgenq5f),int))
-    ptgenq5l.extend(np.zeros(5-len(ptgenq5l),int))
+    ptgenq5f.extend(np.zeros(10-len(ptgenq5f),int))
+    massgenq5l.extend(np.zeros(10-len(massgenq5l),int))
+    etagenq5f.extend(np.zeros(10-len(etagenq5f),int))
+    phigenq5f.extend(np.zeros(10-len(phigenq5f),int))
+    mothergenq5f.extend(np.zeros(10-len(mothergenq5f),int))
+    etagenq5l.extend(np.zeros(10-len(etagenq5l),int))
+    phigenq5l.extend(np.zeros(10-len(phigenq5l),int))
+    massgenq5f.extend(np.zeros(10-len(massgenq5f),int))
+    ptgenq5l.extend(np.zeros(10-len(ptgenq5l),int))
     self.out.fillBranch("ptgenq5f", ptgenq5f)
     self.out.fillBranch("massgenq5l", massgenq5l)
     self.out.fillBranch("etagenq5f", etagenq5f)
