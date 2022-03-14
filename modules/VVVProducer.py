@@ -11,10 +11,10 @@ import numpy as np
 from numpy import sign
 
 class VVVProducer(Module):
-    def __init__(self , year, MODE = "HWW" ):
+    def __init__(self , year, MODE = "inclusive" ):
         self.year = year
         self.MODE = MODE
-        self.Process_Genparticles = True
+        self.Process_Genparticles = False
 
     def beginJob(self):
         pass
