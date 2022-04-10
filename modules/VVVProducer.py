@@ -105,7 +105,77 @@ class VVVProducer(Module):
             self.out.branch("genH_b2_q2_phi","F")
             self.out.branch("genH_b2_q2_mass","F")
             self.out.branch("genH_b2_q2_pdg","F")
+            
+        if self.MODE == "VH":
+            self.out.branch('genZ_pt', 'F')
+            self.out.branch('genZ_eta', 'F')
+            self.out.branch('genZ_phi', 'F')
+            self.out.branch('genZ_mass', 'F')
+            self.out.branch('genZ_pdg', 'I')
+            self.out.branch('genW_pt', 'F')
+            self.out.branch('genW_eta', 'F')
+            self.out.branch('genW_phi', 'F')
+            self.out.branch('genW_mass', 'F')
+            self.out.branch('genW_pdg', 'I')
+            self.out.branch('genH_pt', 'F')
+            self.out.branch('genH_eta', 'F')
+            self.out.branch('genH_phi', 'F')
+            self.out.branch('genH_mass', 'F')
+            self.out.branch('genH_pdg', 'I')
+            
+            self.out.branch('genZ_child1_pt', 'F')
+            self.out.branch('genZ_child2_pt', 'F')
+            self.out.branch('genZ_child1_eta', 'F')
+            self.out.branch('genZ_child2_eta', 'F')
+            self.out.branch('genZ_child1_phi', 'F')
+            self.out.branch('genZ_child2_phi', 'F')
+            self.out.branch('genZ_child1_mass', 'F')
+            self.out.branch('genZ_child2_mass', 'F')
+            self.out.branch('genZ_child1_pdg', 'I')
+            self.out.branch('genZ_child2_pdg', 'I')
+            self.out.branch('genW_child1_pt', 'F')
+            self.out.branch('genW_child2_pt', 'F')
+            self.out.branch('genW_child1_eta', 'F')
+            self.out.branch('genW_child2_eta', 'F')
+            self.out.branch('genW_child1_phi', 'F')
+            self.out.branch('genW_child2_phi', 'F')
+            self.out.branch('genW_child1_mass', 'F')
+            self.out.branch('genW_child2_mass', 'F')
+            self.out.branch('genW_child1_pdg', 'I')
+            self.out.branch('genW_child2_pdg', 'I')
+            self.out.branch('genH_child1_pt', 'F')
+            self.out.branch('genH_child2_pt', 'F')
+            self.out.branch('genH_child1_eta', 'F')
+            self.out.branch('genH_child2_eta', 'F')
+            self.out.branch('genH_child1_phi', 'F')
+            self.out.branch('genH_child2_phi', 'F')
+            self.out.branch('genH_child1_mass', 'F')
+            self.out.branch('genH_child2_mass', 'F')
+            self.out.branch('genH_child1_pdg', 'I')
+            self.out.branch('genH_child2_pdg', 'I')
 
+            self.out.branch('genH_W+_child1_pt', 'F')
+            self.out.branch('genH_W+_child1_eta', 'F')
+            self.out.branch('genH_W+_child1_phi', 'F')
+            self.out.branch('genH_W+_child1_mass', 'F')
+            self.out.branch('genH_W+_child1_pdg', 'I')
+            self.out.branch('genH_W+_child2_pt', 'F')
+            self.out.branch('genH_W+_child2_eta', 'F')
+            self.out.branch('genH_W+_child2_phi', 'F')
+            self.out.branch('genH_W+_child2_mass', 'F')
+            self.out.branch('genH_W+_child2_pdg', 'I')
+            self.out.branch('genH_W-_child1_pt', 'F')
+            self.out.branch('genH_W-_child1_eta', 'F')
+            self.out.branch('genH_W-_child1_phi', 'F')
+            self.out.branch('genH_W-_child1_mass', 'F')
+            self.out.branch('genH_W-_child1_pdg', 'I')
+            self.out.branch('genH_W-_child2_pt', 'F')
+            self.out.branch('genH_W-_child2_eta', 'F')
+            self.out.branch('genH_W-_child2_phi', 'F')
+            self.out.branch('genH_W-_child2_mass', 'F')
+            self.out.branch('genH_W-_child2_pdg', 'I')
+
+        
         if self.Process_Genparticles : 
             self.out.branch("gentop_pt", "F")
             self.out.branch("gentop_eta", "F")
@@ -710,7 +780,7 @@ def Process_1Lepton_GenMatching_H(self,nt):
                             self.out.fillBranch("genH_w2_q2_mass", nt.GenPart_mass[H_W2_daughter_index[1]]);
                             self.out.fillBranch("genH_w2_q2_pdg", nt.GenPart_pdgId[H_W2_daughter_index[1]]);                
 
-def Process_1Lepton_GenMatching_VH(self,event):
+def Process_1Lepton_GenMatching_VH(self, event):
     for i in range(0, event.nGenPart):
         ###########################################################    
         ## process the Boson in the case of Z,W,H 
@@ -751,7 +821,7 @@ def Process_1Lepton_GenMatching_VH(self,event):
             ###########################################################    
             ## continue to process H->WW components 
             ###########################################################    
-            if not (primeID==25 and abs(child_ID)==24): ## ensure it's H->WW
+            if not (Boson=='H' and abs(child_ID)==24): ## ensure it's H->WW
                 continue
             H_W_child_index = Process_1Lepton_GenMatching_daughterindex(event, child_LastCopy)
             if len(H_W_child_index) != 2: ## ensure W has two children
