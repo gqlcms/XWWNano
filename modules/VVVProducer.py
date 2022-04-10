@@ -711,55 +711,67 @@ def Process_1Lepton_GenMatching_H(self,nt):
                             self.out.fillBranch("genH_w2_q2_pdg", nt.GenPart_pdgId[H_W2_daughter_index[1]]);                
 
 def Process_1Lepton_GenMatching_VH(self,event):
-    for ik in range(0,event.nGenPart):
-        if event.GenPart_pdgId[ik] != 25: ## 25 means Higgs
+    for i in range(0, event.nGenPart):
+        ###########################################################    
+        ## process the Boson in the case of Z,W,H 
+        ###########################################################
+        if not (event.GenPart_statusFlags[i]&(1<<13)): ## isLastCopy
             continue
-        if not (event.GenPart_statusFlags[ik]&(1<<13)): ## isLastCopy
-            continue 
-        # print("Higgs's pt is",event.GenPart_pt[ik]);
-        # Only select boosted Higgs.
-        # if(event.GenPart_pt[ik]<450):break
-        for var in ['pt', 'eta', 'phi', 'mass', 'pdg']:
-            self.out.fillBranch('genH_'+var, getattr(event, 'GenPart_'+var)[ik])
+        primeID=abs(event.GenPart_pdgId[i])
+        if not 23<=abs(primeID)<=25: ## Z: 23, W: 24, H: 25
+            continue
+        if primeID==23:
+            Boson='Z'
+        elif abs(primeID)==24:
+            Boson='W'
+        elif primeID==25:
+            Boson='H'
+        else:
+            print("ERROR!!! Something wrong with primary particle")
 
-        ## continue to process the children of Higgs
-        H_child_index = Process_1Lepton_GenMatching_daughterindex(event, ik)
-        if len(H_child_index) != 2:
+        # Only select boosted Higgs.
+        # if(event.GenPart_pt[ik]<450): break
+        
+        for var in ['pt', 'eta', 'phi', 'mass', 'pdg']:
+            self.out.fillBranch(f'gen{Boson}_{var}', getattr(event, 'GenPart_'+var)[i])
+        ###########################################################    
+        ## continue to process the children of Boson
+        ###########################################################    
+        child_index = Process_1Lepton_GenMatching_daughterindex(event, i)
+        if len(child_index) != 2:
             continue
         
-        for child in range(0, len(H_child_index)):
-            
-            ## ensure the child is W
-            H_child_pdgID = event.GenPart_pdgId[H_child_index[child]]
-            if abs(H_child_pdgID) != 24: ## 24 means W
-                break
-            
-            sign = 'p' if H_child_pdgID > 0 else 'm'
-            LastCopyWid = Process_1Lepton_GenMatching_LastCopy(event, H_child_index[child])
+        for j in range(0, len(child_index)):
+            child_ID = event.GenPart_pdgId[child_index[j]]
+            child_LastCopy = Process_1Lepton_GenMatching_LastCopy(event, child_index[j])
 
             for var in ['pt', 'eta', 'phi', 'mass', 'pdg']:
-                self.out.fillBranch('genH_'+'W'+sign+'_'+var, getattr(event, 'GenPart_'+var)[LastCopyWid])
+                self.out.fillBranch(f'gen{Boson}_child{j+1}_{var}', getattr(event, 'GenPart_'+var)[child_LastCopy])
 
-            ## continue to process the children of W
-            H_W_child_index = Process_1Lepton_GenMatching_daughterindex(event, LastCopyWid)
-            genH_W_tag=-1 ## -1 is default value
+            ###########################################################    
+            ## continue to process H->WW components 
+            ###########################################################    
+            if not (primeID==25 and abs(child_ID)==24): ## ensure it's H->WW
+                continue
+            H_W_child_index = Process_1Lepton_GenMatching_daughterindex(event, child_LastCopy)
             if len(H_W_child_index) != 2: ## ensure W has two children
                 continue
             
             H_W_child0_pdgID = event.GenPart_pdgId[H_W_child_index[0]]
             if abs(H_W_child0_pdgID)<=6:
-                genH_W_tag = 4
+                genH_W_tag = 4 ## 4 means W->qq
             elif 11<=abs(H_W_child0_pdgID)<=12: 
-                genH_W_tag = 1 ## 1 means W^+->enu_e
+                genH_W_tag = 1 ## 1 means W->enu_e
             elif 13<=abs(H_W_child0_pdgID)<=14:
-                genH_W_tag = 2 ## 2 means W^+->munu_mu
-            elif 15<=abs(H_W_child0_pdgID)<=16: 
-                genH_W_tag = 3 ## 3 means W^+->taunu_tau
-
+                genH_W_tag = 2 ## 2 means W->munu_mu
+            elif 15<=abs(H_W_child0_pdgID)<=16:
+                genH_W_tag = 3 ## 3 means W->taunu_tau
+            sign = '+' if child_ID > 0 else '-'
             self.out.fillBranch(f"genH_W{sign}_tag", genH_W_tag)
-            for i in range(len(H_child_index)):
+            
+            for k in range(len(H_W_child_index)):
                 for var in ['pt', 'eta', 'phi', 'mass', 'pdg']:
-                    self.out.fillBranch(f"genH_W{sign}_child{i+1}_{var}", getattr(event, f"GenPart_{var}")[H_W_child_index[i]])
+                    self.out.fillBranch(f"gen{Boson}_W{sign}_child{k+1}_{var}", getattr(event, f"GenPart_{var}")[H_W_child_index[k]])
 
 
 def Process_1Lepton_GenMatching_W(self,nt):
