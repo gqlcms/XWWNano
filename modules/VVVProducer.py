@@ -441,14 +441,14 @@ class VVVProducer(Module):
         # PV selection
         if (event.PV_npvsGood<1): return False
 
-        if self.is_mc:
-            if self.Process_Genparticles :
-                Process_1Lepton_GenMatching_Top(self,event);
-                Process_1Lepton_GenMatching_H(self,event);
-                Process_1Lepton_GenMatching_W(self,event);
-                Process_1Lepton_GenMatching_Z(self,event);
-                Process_1Lepton_GenMatching_g(self,event);
-                Process_1Lepton_GenMatching_q(self,event);
+        if self.is_mc and self.Process_Genparticles :
+                #Process_1Lepton_GenMatching_Top(self,event);
+                #Process_1Lepton_GenMatching_H(self,event);
+                Process_1Lepton_GenMatching_VH(self,event)
+                #Process_1Lepton_GenMatching_W(self,event);
+                #Process_1Lepton_GenMatching_Z(self,event);
+                #Process_1Lepton_GenMatching_g(self,event);
+                #Process_1Lepton_GenMatching_q(self,event);
 
         lep_pt,lep_eta,lep_phi,lep_m,trackIso,muisolation=-99,-99,-99,-99,-99,-99
 
@@ -490,9 +490,9 @@ class VVVProducer(Module):
         Process_1Lepton_Jets(self,event)
 
         Nj8 = ( fatjet1.Pt()>200 ) + ( fatjet2.Pt()>200 ) + ( fatjet3.Pt()>200 )
-        if not ( Nj8 >= 2 ) : return False
+        if not Nj8 >= 2: return False
         if not ( ( fatjet1.M()>40 ) | (fatjet2.M()>40) | (fatjet3.M()>40) ): return False
-        if not ( fatjet1.Pt()>400 ): return False
+        if not fatjet1.Pt()>400: return False
         self.out.fillBranch("Nj8", Nj8)
 
         return True
