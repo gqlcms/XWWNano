@@ -39,10 +39,10 @@
    ```
 
 ## test
-    ```bash
-    cd analysis/test
-    source run.sh
-    ```
+   ```bash
+   cd analysis/test
+   source run.sh
+   ```
 
 ## Crab mode
 
