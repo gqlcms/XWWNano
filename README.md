@@ -39,7 +39,8 @@
    ```
 
 ## test
-    ```cd analysis/test
+    ```bash
+    cd analysis/test
     source run.sh
     ```
 
