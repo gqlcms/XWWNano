@@ -7,6 +7,7 @@ jetAK8puppi_pt_2
 
 void EDBR2PKUTree::AK8_Pt_Ordered(Long64_t jentry) {
     AK8_Pt_Ordered_p4_flatVector(jentry);
+    AK8_Nsubjetness_Init(jentry);
     AK8_Pt_Ordered_p4();
     AK8_Pt_Ordered_RawScore_flatVector(jentry);
     AK8_Pt_Ordered_PnScore_flatVector(jentry);
@@ -30,12 +31,26 @@ void EDBR2PKUTree::AK8_Pt_Ordered_p4(){
     
     Mj   = FatJet_msoftdrop_1 ; 
     Mj_2 = FatJet_msoftdrop_2 ; 
-    Mj_3 = FatJet_msoftdrop_4 ; 
+    Mj_3 = FatJet_msoftdrop_3 ; 
+
+}
+
+void EDBR2PKUTree::AK8_Nsubjetness_Init(Long64_t jentry){
+    int bytes_FatJet_tau1 = b_FatJet_tau1_->GetEntry(jentry);
+    v_FatJet_tau1_ = vector<float>(FatJet_tau1_,FatJet_tau1_+bytes_FatJet_tau1/sizeof(FatJet_tau1_[0]));
+
+    int bytes_FatJet_tau2 = b_FatJet_tau2_->GetEntry(jentry);
+    v_FatJet_tau2_ = vector<float>(FatJet_tau2_,FatJet_tau2_+bytes_FatJet_tau2/sizeof(FatJet_tau2_[0]));
+    
+    int bytes_FatJet_tau3 = b_FatJet_tau3_->GetEntry(jentry);
+    v_FatJet_tau3_ = vector<float>(FatJet_tau3_,FatJet_tau3_+bytes_FatJet_tau3/sizeof(FatJet_tau3_[0]));
+    
+    int bytes_FatJet_tau4 = b_FatJet_tau4_->GetEntry(jentry);
+    v_FatJet_tau4_ = vector<float>(FatJet_tau4_,FatJet_tau4_+bytes_FatJet_tau4/sizeof(FatJet_tau4_[0]));
 
 }
 
 void EDBR2PKUTree::AK8_Pt_Ordered_p4_flatVector(Long64_t jentry){
-    
     int bytes_FatJet_pt = b_FatJet_pt_->GetEntry(jentry);
     v_FatJet_pt_ = vector<float>(FatJet_pt_,FatJet_pt_+bytes_FatJet_pt/sizeof(FatJet_pt_[0]));
     size_t nFatJet_pt = v_FatJet_pt_.size();

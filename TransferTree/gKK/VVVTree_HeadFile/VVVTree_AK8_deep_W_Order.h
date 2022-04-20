@@ -6,6 +6,8 @@ void EDBR2PKUTree::Deep_W_Ordered() {
     Deep_W_Ordered_P4();
     Deep_W_Ordered_RawScore();
     Deep_W_Ordered_CombineScore();
+    Deep_W_Ordered_ParticleNetScore();
+    Deep_W_Ordered_Nsubjetness();
 }
 
 void EDBR2PKUTree::Deep_W_Ordered_Init() {
@@ -57,7 +59,119 @@ void EDBR2PKUTree::Deep_W_Ordered_P4() {
     }
 }
 
+void EDBR2PKUTree::Deep_W_Ordered_Nsubjetness() {
+    FatJet_tau1_a = -99; FatJet_tau1_b = -99 ; FatJet_tau1_c = -99;
+    FatJet_tau2_a = -99; FatJet_tau2_b = -99 ; FatJet_tau2_c = -99;
+    FatJet_tau3_a = -99; FatJet_tau3_b = -99 ; FatJet_tau3_c = -99;
+    FatJet_tau4_a = -99; FatJet_tau4_b = -99 ; FatJet_tau4_c = -99;
 
+    float FatJet_tau1_max , FatJet_tau1_mid , FatJet_tau1_min;
+    float FatJet_tau2_max , FatJet_tau2_mid , FatJet_tau2_min;
+    float FatJet_tau3_max , FatJet_tau3_mid , FatJet_tau3_min;
+    float FatJet_tau4_max , FatJet_tau4_mid , FatJet_tau4_min;
+    if( PTj_2 > 0 && PTj_3 < 0 ){
+        Int_t *index=new Int_t[2];
+        Double_t M[2] = { Mj , Mj_2 };
+        TMath::Sort(2, M, index, 1);
+        Double_t tau1_[2] = { v_FatJet_tau1_[0] , v_FatJet_tau1_[1] }; 
+        Double_t tau2_[2] = { v_FatJet_tau2_[0] , v_FatJet_tau2_[1] }; 
+        Double_t tau3_[2] = { v_FatJet_tau3_[0] , v_FatJet_tau3_[1] }; 
+        Double_t tau4_[2] = { v_FatJet_tau4_[0] , v_FatJet_tau4_[1] }; 
+        FatJet_tau1_max = tau1_[0] ; FatJet_tau1_min = tau1_[1] ; 
+        FatJet_tau2_max = tau2_[0] ; FatJet_tau2_min = tau2_[1] ; 
+        FatJet_tau3_max = tau3_[0] ; FatJet_tau3_min = tau3_[1] ; 
+        FatJet_tau4_max = tau4_[0] ; FatJet_tau4_min = tau4_[1] ; 
+    }
+    if( PTj_3 > 0 && PTj_4 < 0 ){
+        Int_t *index=new Int_t[3];
+        Double_t M[3] = { Mj , Mj_2, Mj_3 };
+        TMath::Sort(3, M, index, 1);
+        Double_t tau1_[3] = { v_FatJet_tau1_[0] , v_FatJet_tau1_[1] , v_FatJet_tau1_[2] }; 
+        Double_t tau2_[3] = { v_FatJet_tau2_[0] , v_FatJet_tau2_[1] , v_FatJet_tau2_[2] }; 
+        Double_t tau3_[3] = { v_FatJet_tau3_[0] , v_FatJet_tau3_[1] , v_FatJet_tau3_[2] }; 
+        Double_t tau4_[3] = { v_FatJet_tau4_[0] , v_FatJet_tau4_[1] , v_FatJet_tau4_[2] }; 
+        FatJet_tau1_max = tau1_[0] ; FatJet_tau1_mid = tau1_[1] ; FatJet_tau1_min = tau1_[2] ; 
+        FatJet_tau2_max = tau2_[0] ; FatJet_tau2_mid = tau2_[1] ; FatJet_tau2_min = tau2_[2] ; 
+        FatJet_tau3_max = tau3_[0] ; FatJet_tau3_mid = tau3_[1] ; FatJet_tau3_min = tau3_[2] ; 
+        FatJet_tau4_max = tau4_[0] ; FatJet_tau4_mid = tau4_[1] ; FatJet_tau4_min = tau4_[2] ; 
+    }
+
+    if( PTj_2 > 0 && PTj_3 < 0){
+        Int_t *indexTag=new Int_t[2];
+        Double_t jetAK8puppi_deep_W_sort[2] = { jetAK8puppi_dnnDecorrW_max , jetAK8puppi_dnnDecorrW_min };
+        TMath::Sort(2, jetAK8puppi_deep_W_sort, indexTag, 1);
+
+        Double_t tau1_sort[2] = { FatJet_tau1_max , FatJet_tau1_min }; 
+        Double_t tau2_sort[2] = { FatJet_tau2_max , FatJet_tau2_min }; 
+        Double_t tau3_sort[2] = { FatJet_tau3_max , FatJet_tau3_min }; 
+        Double_t tau4_sort[2] = { FatJet_tau4_max , FatJet_tau4_min }; 
+
+        FatJet_tau1_a = tau1_sort[indexTag[0]] ; FatJet_tau1_c = tau1_sort[indexTag[1]] ;
+        FatJet_tau2_a = tau2_sort[indexTag[0]] ; FatJet_tau2_c = tau2_sort[indexTag[1]] ;
+        FatJet_tau3_a = tau3_sort[indexTag[0]] ; FatJet_tau3_c = tau3_sort[indexTag[1]] ;
+        FatJet_tau4_a = tau4_sort[indexTag[0]] ; FatJet_tau4_c = tau4_sort[indexTag[1]] ;
+    }
+    if( PTj_3 > 0 && PTj_4 < 0){
+        Int_t *indexTag=new Int_t[3];
+        Double_t jetAK8puppi_deep_W_sort[3] = { jetAK8puppi_dnnDecorrW_max , jetAK8puppi_dnnDecorrW_mid, jetAK8puppi_dnnDecorrW_min };
+        TMath::Sort(3, jetAK8puppi_deep_W_sort, indexTag, 1);
+
+        Double_t tau1_sort[3] = { FatJet_tau1_max , FatJet_tau1_mid , FatJet_tau1_min }; 
+        FatJet_tau1_a = tau1_sort[indexTag[0]] ; FatJet_tau1_b = tau1_sort[indexTag[1]] ; FatJet_tau1_c = tau1_sort[indexTag[2]] ;
+        Double_t tau2_sort[3] = { FatJet_tau2_max , FatJet_tau2_mid , FatJet_tau2_min }; 
+        FatJet_tau2_a = tau2_sort[indexTag[0]] ; FatJet_tau2_b = tau2_sort[indexTag[1]] ; FatJet_tau2_c = tau2_sort[indexTag[2]] ;
+        Double_t tau3_sort[3] = { FatJet_tau3_max , FatJet_tau3_mid , FatJet_tau3_min }; 
+        FatJet_tau3_a = tau3_sort[indexTag[0]] ; FatJet_tau3_b = tau3_sort[indexTag[1]] ; FatJet_tau3_c = tau3_sort[indexTag[2]] ;
+        Double_t tau4_sort[3] = { FatJet_tau4_max , FatJet_tau4_mid , FatJet_tau4_min }; 
+        FatJet_tau4_a = tau4_sort[indexTag[0]] ; FatJet_tau4_b = tau4_sort[indexTag[1]] ; FatJet_tau4_c = tau4_sort[indexTag[2]] ;
+    }
+}
+
+void EDBR2PKUTree::Deep_W_Ordered_ParticleNetScore() {
+    PartNet_MD_W_a = -99; PartNet_MD_W_b = -99; PartNet_MD_W_c = -99; 
+
+    float PartNet_MD_W_1 = ( FatJet_particleNetMD_Xcc_1+FatJet_particleNetMD_Xqq_1 )/( FatJet_particleNetMD_QCD_1+FatJet_particleNetMD_Xcc_1+FatJet_particleNetMD_Xqq_1 );
+    float PartNet_MD_W_2 = ( FatJet_particleNetMD_Xcc_2+FatJet_particleNetMD_Xqq_2 )/( FatJet_particleNetMD_QCD_2+FatJet_particleNetMD_Xcc_2+FatJet_particleNetMD_Xqq_2 );
+    float PartNet_MD_W_3 = ( FatJet_particleNetMD_Xcc_3+FatJet_particleNetMD_Xqq_3 )/( FatJet_particleNetMD_QCD_3+FatJet_particleNetMD_Xcc_3+FatJet_particleNetMD_Xqq_3 );
+
+    float PartNet_MD_W_max = -99 ;
+    float PartNet_MD_W_mid = -99 ;
+    float PartNet_MD_W_min = -99 ;
+
+    if( PTj_2 > 0 && PTj_3 < 0 ){
+        Int_t *index=new Int_t[2];
+        Double_t M[2] = { Mj , Mj_2 };
+        TMath::Sort(2, M, index, 1);
+        Double_t PartNet_MD_W[2] = { PartNet_MD_W_1 , PartNet_MD_W_2 }; 
+        PartNet_MD_W_max = PartNet_MD_W[0] ; PartNet_MD_W_min = PartNet_MD_W[1] ; 
+    }
+    if( PTj_3 > 0 && PTj_4 < 0 ){
+        Int_t *index=new Int_t[3];
+        Double_t M[3] = { Mj , Mj_2, Mj_3 };
+        TMath::Sort(3, M, index, 1);
+        Double_t PartNet_MD_W[3] = { PartNet_MD_W_1 , PartNet_MD_W_2 , PartNet_MD_W_3 }; 
+        PartNet_MD_W_max = PartNet_MD_W[0] ; PartNet_MD_W_mid = PartNet_MD_W[1] ; PartNet_MD_W_mid = PartNet_MD_W[2] ; 
+    }
+
+    if( PTj_2 > 0 && PTj_3 < 0){
+        Int_t *indexTag=new Int_t[2];
+        Double_t jetAK8puppi_deep_W_sort[2] = { jetAK8puppi_dnnDecorrW_max , jetAK8puppi_dnnDecorrW_min };
+        TMath::Sort(2, jetAK8puppi_deep_W_sort, indexTag, 1);
+
+        Double_t PartNet_MD_W_sort[2] = { PartNet_MD_W_max , PartNet_MD_W_min }; 
+
+        PartNet_MD_W_a = PartNet_MD_W_sort[indexTag[0]] ; PartNet_MD_W_c = PartNet_MD_W_sort[indexTag[1]] ;
+    }
+    if( PTj_3 > 0 && PTj_4 < 0){
+        Int_t *indexTag=new Int_t[3];
+        Double_t jetAK8puppi_deep_W_sort[3] = { jetAK8puppi_dnnDecorrW_max , jetAK8puppi_dnnDecorrW_mid, jetAK8puppi_dnnDecorrW_min };
+        TMath::Sort(3, jetAK8puppi_deep_W_sort, indexTag, 1);
+
+        Double_t PartNet_MD_W_sort[3] = { PartNet_MD_W_max , PartNet_MD_W_mid, PartNet_MD_W_min }; 
+
+        PartNet_MD_W_a = PartNet_MD_W_sort[indexTag[0]] ; PartNet_MD_W_b = PartNet_MD_W_sort[indexTag[1]] ; ; PartNet_MD_W_c = PartNet_MD_W_sort[indexTag[2]] ;
+    }
+}
 
 void EDBR2PKUTree::Deep_W_Ordered_CombineScore() {
     dnnTop_a = -99; dnnTop_b = -99; dnnTop_c = -99;
