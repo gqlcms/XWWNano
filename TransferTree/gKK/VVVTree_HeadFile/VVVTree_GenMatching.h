@@ -1,6 +1,7 @@
 #ifndef _VVVTree_GenMatching_
 #define _VVVTree_GenMatching_
 
+
 vector<size_t> EDBR2PKUTree::GenParticles_Daughterindex(size_t Genpart_index) {
     vector<size_t> W_daughter_index_tmp;
     for (size_t id=0; id<v_GenPart_pt_.size();id++){
@@ -109,8 +110,50 @@ void EDBR2PKUTree::loadGenpart(Long64_t jentry) {
 }
 
 void EDBR2PKUTree::GenParticles() {
+    
+    Genparticles Genparticles_ = {
+        v_GenPart_eta_,
+        v_GenPart_genPartIdxMother_,
+        v_GenPart_mass_,
+        v_GenPart_pdgId_,
+        v_GenPart_phi_,
+        v_GenPart_pt_,
+        v_GenPart_status_,
+        v_GenPart_statusFlags_,
+    } ;
+
+    GenParticle_Collection W_Collection = GenParticle_Collection(Genparticles_, 24);
+    GenParticle_Collection t_Collection = GenParticle_Collection(W_Collection, 6);
+    GenParticle_Collection Z_Collection = GenParticle_Collection(Genparticles_, 23);
+    GenParticle_Collection g_Collection = GenParticle_Collection(W_Collection, 21);
+    GenParticle_Collection d_Collection = GenParticle_Collection(W_Collection, 1);
+    GenParticle_Collection u_Collection = GenParticle_Collection(W_Collection, 2);
+    GenParticle_Collection s_Collection = GenParticle_Collection(W_Collection, 3);
+    GenParticle_Collection c_Collection = GenParticle_Collection(W_Collection, 4);
+    GenParticle_Collection d_first_Collection = GenParticle_Collection(W_Collection, 1);
+    GenParticle_Collection u_first_Collection = GenParticle_Collection(W_Collection, 2);
+    GenParticle_Collection s_first_Collection = GenParticle_Collection(W_Collection, 3);
+    GenParticle_Collection c_first_Collection = GenParticle_Collection(W_Collection, 4);
+    GenParticle_Collection g_first_Collection = GenParticle_Collection(W_Collection, 21);
+    
     int Windex = 0;
     for(size_t ik=0; ik<v_GenPart_pt_.size();ik++){
+        
+            t_Collection.AddParticle(ik);
+            W_Collection.AddParticle(ik);
+            Z_Collection.AddParticle(ik);
+            g_Collection.AddParticle(ik);
+            u_Collection.AddParticle(ik);
+            d_Collection.AddParticle(ik);
+            s_Collection.AddParticle(ik);
+            c_Collection.AddParticle(ik);
+
+            g_first_Collection.AddParticle(ik,1);
+            u_first_Collection.AddParticle(ik,1);
+            d_first_Collection.AddParticle(ik,1);
+            s_first_Collection.AddParticle(ik,1);
+            c_first_Collection.AddParticle(ik,1);
+        
         // W
         if ( abs(v_GenPart_pdgId_[ik]) == 24 ){
             if (not (v_GenPart_statusFlags_[ik]&(1<<13))) continue; // isLastCopy
@@ -144,6 +187,8 @@ void EDBR2PKUTree::GenParticles() {
                 Windex++;
             }
         }
+        
+        
         // Radion
         if ( abs(v_GenPart_pdgId_[ik]) == 9000025 ){
             int Rlid = GenParticles_Lastcopy(ik);
@@ -241,8 +286,109 @@ void EDBR2PKUTree::GenParticles() {
             }
         }
     }
+
+    TLorentzVector AK8_a, AK8_b, AK8_c;
+    AK8_a.SetPtEtaPhiM(PTj_a,Etaj_a,Phij_a,Mj_a);
+    AK8_c.SetPtEtaPhiM(PTj_c,Etaj_c,Phij_c,Mj_c);
+    AK8_b.SetPtEtaPhiM(PTj_b,Etaj_b,Phij_b,Mj_b);
+
+    matchingt_a = t_Collection.matchingAK8(AK8_a);
+    matchingW_a = W_Collection.matchingAK8(AK8_a);
+    matchingg_a = g_Collection.matchingAK8(AK8_a);
+    matchingZ_a = Z_Collection.matchingAK8(AK8_a);
+    matchingu_a = u_Collection.matchingAK8(AK8_a);
+    matchingd_a = d_Collection.matchingAK8(AK8_a);
+    matchings_a = s_Collection.matchingAK8(AK8_a);
+    matchingc_a = c_Collection.matchingAK8(AK8_a);
+    matchingg_first_a = g_first_Collection.matchingAK8(AK8_a,1);
+    matchingu_first_a = u_first_Collection.matchingAK8(AK8_a,1);
+    matchingd_first_a = d_first_Collection.matchingAK8(AK8_a,1);
+    matchings_first_a = s_first_Collection.matchingAK8(AK8_a,1);
+    matchingc_first_a = c_first_Collection.matchingAK8(AK8_a,1);
+    matchingqg_first_a = 0;
+    vector<int> matching_qg_a = { matchingg_first_a, matchingc_first_a, matchings_first_a, matchingd_first_a, matchingu_first_a };
+    for(size_t i ; i<matching_qg_a.size() ; i++){
+        if( matching_qg_a[i] == 1 ){ 
+            if( matchingqg_first_a < 1 ){ matchingqg_first_a = 1 ; }
+        }
+        else{
+            if( matchingqg_first_a < matching_qg_a[i] ){ matchingqg_first_a = matching_qg_a[i] - 1  ; }
+        }
+    }
+    matchingt_first_a = matchingt_a;
+    if( matchingt_a == 5 ){
+        if( matchingg_a == 1 || matchingc_a == 1 || matchings_a == 1 || matchingd_a == 1 || matchingu_a == 1 ){ matchingt_a = 6; }
+        if( matchingqg_first_a == 1 ){ matchingt_first_a = 6; }
+    }
+    
+    
+
+    matchingt_c = t_Collection.matchingAK8(AK8_c);
+    matchingW_c = W_Collection.matchingAK8(AK8_c);
+    matchingg_c = g_Collection.matchingAK8(AK8_c);
+    matchingZ_c = Z_Collection.matchingAK8(AK8_c);
+    matchingu_c = u_Collection.matchingAK8(AK8_c);
+    matchingd_c = d_Collection.matchingAK8(AK8_c);
+    matchings_c = s_Collection.matchingAK8(AK8_c);
+    matchingc_c = c_Collection.matchingAK8(AK8_c);
+    matchingg_first_c = g_first_Collection.matchingAK8(AK8_c,1);
+    matchingu_first_c = u_first_Collection.matchingAK8(AK8_c,1);
+    matchingd_first_c = d_first_Collection.matchingAK8(AK8_c,1);
+    matchings_first_c = s_first_Collection.matchingAK8(AK8_c,1);
+    matchingc_first_c = c_first_Collection.matchingAK8(AK8_c,1);
+    matchingqg_first_c = 0;
+    vector<int> matching_qg_c = { matchingg_first_c, matchingc_first_c, matchings_first_c, matchingd_first_c, matchingu_first_c };
+    for(size_t i ; i<matching_qg_c.size() ; i++){
+        if( matching_qg_c[i] == 1 ){ 
+            if( matchingqg_first_c < 1 ){ matchingqg_first_c = 1 ; }
+        }
+        else{
+            if( matchingqg_first_c < matching_qg_c[i] ){ matchingqg_first_c = matching_qg_c[i] - 1  ; }
+        }
+    }
+    matchingt_first_c = matchingt_c;
+    if( matchingt_c == 5 ){
+        if( matchingg_c == 1 || matchingc_c == 1 || matchings_c == 1 || matchingd_c == 1 || matchingu_c == 1 ){ matchingt_c = 6; }
+        if( matchingqg_first_c == 1 ){ matchingt_first_c = 6; }
+    }
+
+    if( PTj_b > 200 ){
+        matchingt_b = t_Collection.matchingAK8(AK8_b);
+        matchingW_b = W_Collection.matchingAK8(AK8_b);
+        matchingg_b = g_Collection.matchingAK8(AK8_b);
+        matchingZ_b = Z_Collection.matchingAK8(AK8_b);
+        matchingu_b = u_Collection.matchingAK8(AK8_b);
+        matchingd_b = d_Collection.matchingAK8(AK8_b);
+        matchings_b = s_Collection.matchingAK8(AK8_b);
+        matchingc_b = c_Collection.matchingAK8(AK8_b);
+        matchingg_first_b = g_first_Collection.matchingAK8(AK8_b,1);
+        matchingu_first_b = u_first_Collection.matchingAK8(AK8_b,1);
+        matchingd_first_b = d_first_Collection.matchingAK8(AK8_b,1);
+        matchings_first_b = s_first_Collection.matchingAK8(AK8_b,1);
+        matchingc_first_b = c_first_Collection.matchingAK8(AK8_b,1);
+        matchingqg_first_b = 0;
+        vector<int> matching_qg_b = { matchingg_first_b, matchingc_first_b, matchings_first_b, matchingd_first_b, matchingu_first_b };
+        for(size_t i ; i<matching_qg_b.size() ; i++){
+            if( matching_qg_b[i] == 1 ){ 
+                if( matchingqg_first_b < 1 ){ matchingqg_first_b = 1 ; }
+            }
+            else{
+                if( matchingqg_first_b < matching_qg_b[i] ){ matchingqg_first_b = matching_qg_b[i] - 1  ; }
+            }
+        }
+        matchingt_first_b = matchingt_b;
+        if( matchingt_b == 5 ){
+            if( matchingg_b == 1 || matchingc_b == 1 || matchings_b == 1 || matchingd_b == 1 || matchingu_b == 1 ){ matchingt_b = 6; }
+            if( matchingqg_first_b == 1 ){ matchingt_first_b = 6; }
+        }
+    }
+
+
+    
+
+    
+
 }
 
-
-
 #endif
+

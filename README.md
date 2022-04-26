@@ -39,9 +39,11 @@
    ```
 
 ## test
+   ```bash
+   cd analysis/test
+   source run.sh
+   ```
 
-cd analysis/test
-source run.sh
 ## Crab mode
 
 ```bash
@@ -184,16 +186,19 @@ condor submit submit_nanov9.jdl
 generate customized nanoAOD with addtional fatJets taggers
 1. test condor scripts, for example:
 ```
-python Condor.py --DAS DAS_2016_Common --Filesjson "/stash/user/qilongguo/work/B2G_SF/Condor/V1/production/1lepton/2016/V1/Files_MC_debug.json" --createfilejson --debugkeepN 2 --debug
+python Condor.py --DAS DAS_2016_Common --Filesjson 'json file used for storing input files' --createfilejson --debugkeepN 2 --debug
 
-python Condor.py --DAS DAS_2016_Common --Filesjson "/stash/user/qilongguo/work/B2G_SF/Condor/V1/production/1lepton/2016/V1/Files_MC_debug.json" --outputPath "/stash/user/qilongguo/public/gKK/private_NanoAOD/2016/V2/MC/" --year 2016 --excutable "exe_CUSTNANO.sh" --TaskFolder "production/Task_UL2016_1lepton_MC_22_3_2_test" --submitsh "submit_test.sh" --Condor
+python Condor.py --DAS DAS_2016_Common --Filesjson 'json file used for storing input files' --outputPath "output path" --year 2016 --excutable "exe for UL16 data" --TaskFolder "folders keep condor submit files and log files" --submitsh "submit scripts" --Condor
 
 sh submit_test.sh
 ```
 2. submit condor jobs, for example:
-python Condor.py --DAS DAS_2016_1lepton --Filesjson "/stash/user/qilongguo/work/B2G_SF/Condor/V1/production/1lepton/2016/V1/Files_MC_1lepton.json" --createfilejson
-
-python Condor.py --DAS DAS_2016_1lepton --Filesjson "/stash/user/qilongguo/work/B2G_SF/Condor/V1/production/1lepton/2016/V1/Files_MC_1lepton.json" --outputPath "/stash/user/qilongguo/public/gKK/private_NanoAOD/2016/V2/MC/" --year 2016 --excutable "exe_CUSTNANO.sh" --TaskFolder "production/Task_UL2016_1lepton_MC_22_3_4" --submitsh "submit_1lepton_MC_22_3_4.sh" --Condor
-
-sh submit_1lepton_MC_22_3_3.sh
+   mc:
 ```
+python Condor.py --DAS DAS_2016_Common --Filesjson 'json file used for storing input files' --createfilejson
+
+python Condor.py --DAS DAS_2016_Common --Filesjson 'json file used for storing input files' --outputPath "output path" --year 2016 --excutable "exe for UL16 data" --TaskFolder "folders keep condor submit files and log files" --submitsh "submit scripts" --Condor
+
+sh "submit scripts"
+```
+
