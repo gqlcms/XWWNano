@@ -1,0 +1,11 @@
+Universe = vanilla
+Executable = wrapper_nanov9.sh
+arguments = $(proc) 5000
+# request_cpus = 1
+should_transfer_files = YES
+Error = log/$(proc).err_$(Step)
+Output = log/$(proc).out_$(Step)
+Log = log/$(proc).log
+transfer_output_remaps = "HIG-RunIISummer20UL18NanoAODv9-00524.root = $(proc)_$(Cluster)_$(Step).root;HIG-RunIISummer20UL18MiniAODv2-00570.root = mini_$(proc)_$(Cluster)_$(Step).root"
+when_to_transfer_output = ON_EXIT
+Queue 10 proc in (gg_H_quark-mass-effects_slc7_amd64_gcc700_CMSSW_10_6_19_my_ggH_4q.tgz)
