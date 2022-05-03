@@ -202,3 +202,24 @@ python Condor.py --DAS DAS_2016_Common --Filesjson 'json file used for storing i
 sh "submit scripts"
 ```
 
+## HWW/gKK TransferTree
+In TransferTree directory, we have 2 TransferTree frameworks for gKK and HWW, respectively, for now:`gKK`,`HWW`.
+
+In the future, we consider to add different modes and so to merge these 2 frameworks together, and let users to run in one frameworks.
+
+Now, for example, to run the HWW TransferTree framework, similar in gKK TransferTree framework:
+First, compile the C files:
+```
+cd XWWNano/TransferTree/HWW
+cmsenv
+root -l
+```
+Then, in root space,
+```
+.L EDBR2PKUTree.C++
+```
+After compiling successfully, runEDBR2PKUTree.py can be used:
+For example, with signal ntuples:
+```
+python runEDBR2PKUTree.py  --inputfile "YOUR INPUT FILES" --outputfile "YOUR OUTPUT FILES" --year  "YOUR SAMPLE YEAR" --sampleXS "YOUR SAMPLE XS" --channel "had"  -S
+```
