@@ -13,11 +13,11 @@ drop *LowPtElectron*
 drop *GenDressedLepton*
 drop HTXS*
 
-drop HLT*
-#keepmatch HLT_PFHT[0-9]+
-keep HLT_PFHT*
-keep HLT_PFJet*
-keep HLT_AK8PF*
+# drop HLT*
+# keepmatch HLT_PFHT[0-9]+
+# keep HLT_PFHT*
+# keep HLT_PFJet*
+# keep HLT_AK8PF*
 
 # drop *PuppiMET*
 # drop CaloMET*
