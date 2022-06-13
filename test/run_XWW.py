@@ -41,10 +41,10 @@ def main():
   if opt.ismc:
     if "2016" in opt.year:
       jmeCorrections  = createJMECorrector(opt.ismc, "UL2016", opt.year[4:].upper(), "Total", "AK8PFPuppi")
-      jetmetCorrector = createJMECorrector(opt.ismc, "UL2016", jesUncert="Total", metBranchName="MET", splitJER=False, applyHEMfix=True)
+      jetmetCorrector = createJMECorrector(opt.ismc, "UL2016", jesUncert="Total", metBranchName="MET", splitJER=False)
     if "2017" in opt.year:
       jmeCorrections  = createJMECorrector(opt.ismc, "UL2017", opt.year[4:].upper(), "Total","AK8PFPuppi")
-      jetmetCorrector = createJMECorrector(opt.ismc, "UL2017", jesUncert="Total", metBranchName="MET", splitJER=False, applyHEMfix=True)
+      jetmetCorrector = createJMECorrector(opt.ismc, "UL2017", jesUncert="Total", metBranchName="MET", splitJER=False)
     if "2018" in opt.year:
       jmeCorrections  = createJMECorrector(opt.ismc, "UL2018", opt.year[4:].upper(), "Total","AK8PFPuppi")
       jetmetCorrector = createJMECorrector(opt.ismc, "UL2018", jesUncert="Total", metBranchName="MET", splitJER=False, applyHEMfix=True)

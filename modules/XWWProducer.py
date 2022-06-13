@@ -393,7 +393,7 @@ class VVVProducer(Module):
                 jet.SetPtEtaPhiM(nt.Jet_pt[inum],nt.Jet_eta[inum],nt.Jet_phi[inum],nt.Jet_mass[inum])
                 Jets.append(jet)
 
-        if len(FatJets) < 2 :
+        if len(Jets) < 2 :
             return False
 
         mjj = 0 ; etajj = 0 
@@ -403,7 +403,7 @@ class VVVProducer(Module):
                 jet2 = Jets[j]
                 if (jet1+jet2).M() > mjj :
                     mjj   = (jet1+jet2).M()
-                    eatjj = abs(jet1.Eta()-jet2.Eta())
+                    etajj = abs(jet1.Eta()-jet2.Eta())
 
         self.out.fillBranch("mjj"  , mjj);
         self.out.fillBranch("etajj", etajj);
