@@ -10,7 +10,7 @@ from PhysicsTools.NanoAODTools.postprocessing.analysis.modules.eleRECOSFProducer
 from PhysicsTools.NanoAODTools.postprocessing.analysis.modules.eleIDSFProducer import *
 from PhysicsTools.NanoAODTools.postprocessing.analysis.modules.muonScaleResProducer import *
 from PhysicsTools.NanoAODTools.postprocessing.analysis.modules.muonIDISOSFProducer import *
-from PhysicsTools.NanoAODTools.postprocessing.analysis.modules.VVVProducer import *
+from PhysicsTools.NanoAODTools.postprocessing.analysis.modules.XWWProducer import *
 #from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetUncertainties import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.PrefireCorr import *
@@ -19,6 +19,7 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2 impor
 from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetUncertainties import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer import *
 ### main python file to run ###
+
 
 def main():
 
@@ -56,7 +57,7 @@ def main():
     if opt.year == "2016pre":
       p = PostProcessor(opt.output, opt.inputs.rstrip(",").split(","), modules=[countHistogramsModule(),puAutoWeight_2016(),PrefCorrUL16_preVFP(),muonIDISOSF2016pre(),muonScaleRes2016a(),eleRECOSF2016pre(),eleIDSF2016pre(),jmeCorrections(),jetmetCorrector(),btagSFUL2016Pre(),VVV2016(opt.MODE)], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),outputbranchsel="keep_and_drop.txt")
     if opt.year == "2017":
-      p = PostProcessor(opt.output, opt.inputs.rstrip(",").split(","), modules=[countHistogramsModule(),puAutoWeight_2017(),PrefCorr(),muonIDISOSF2017(),muonScaleRes2017(),eleRECOSF2017(),eleIDSF2017(),jmeCorrections(),jetmetCorrector(),btagSFUL2017(),VVV2017(opt.MODE)], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),outputbranchsel="keep_and_drop.txt",maxEntries=10000)
+      p = PostProcessor(opt.output, opt.inputs.rstrip(",").split(","), modules=[countHistogramsModule(),puAutoWeight_2017(),PrefCorr(),muonIDISOSF2017(),muonScaleRes2017(),eleRECOSF2017(),eleIDSF2017(),jmeCorrections(),jetmetCorrector(),btagSFUL2017(),VVV2017(opt.MODE)], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),outputbranchsel="keep_and_drop.txt",maxEntries=5000)
     if opt.year == "2018":
       p = PostProcessor(opt.output, opt.inputs.rstrip(",").split(","), modules=[countHistogramsModule(),puAutoWeight_2018(),PrefCorr(),muonIDISOSF2018(),muonScaleRes2018(),eleRECOSF2018(),eleIDSF2018(),jmeCorrections(),jetmetCorrector(),btagSFUL2018(),VVV2018(opt.MODE)], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),outputbranchsel="keep_and_drop.txt",maxEntries=10000)
 
