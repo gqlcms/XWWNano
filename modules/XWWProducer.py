@@ -391,9 +391,12 @@ class VVVProducer(Module):
             if nt.Jet_pt[inum]>20 and abs(nt.Jet_eta[inum])<5.0 and nt.Jet_jetId[inum]&2>0 :
                 jet = TLorentzVector()
                 jet.SetPtEtaPhiM(nt.Jet_pt[inum],nt.Jet_eta[inum],nt.Jet_phi[inum],nt.Jet_mass[inum])
+                isexclusive = True
                 for iFJ in range(0,len(FatJets)):
-                    if jet.DeltaR(FatJets[iFJ]) > 1:
-                        Jets.append(jet)
+                    if jet.DeltaR(FatJets[iFJ]) < 1:
+                        isexclusive = False
+                if isexclusive:
+                    Jets.append(jet)
 
         if len(Jets) < 2 :
             return False
