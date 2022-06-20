@@ -361,17 +361,23 @@ class VVVProducer(Module):
         self.out.branch("ak4jet_IDTight", "I",lenVar="nJet")
 
         self.out.branch("Nj8", "I")
-        self.out.branch("Nj8_VBF","I")
-        self.out.branch("Nj8_ggF","I")
         self.out.branch("m_Jlv", "F")
         self.out.branch("m_JJlv", "F")
         self.out.branch("ST", "F")
 
         self.out.branch("PassggF", "I")
         self.out.branch("PassVBF", "I")
+        self.out.branch("nLooseMuons","I")
+        self.out.branch("nLooseMiniMuons", "I")
+        self.out.branch("nMidMiniMuons", "I")
+        self.out.branch("nTightMiniMuons", "I")
+        self.out.branch("nVeryTightMiniMuons", "I")
+        self.out.branch("nLooseEle","I")
+        self.out.branch("nLooseMiniEle", "I")
+        self.out.branch("nTightMiniEle", "I")
 
         self.is_mc = bool(inputTree.GetBranch("GenJet_pt"))
-	self.Nj8 = -99
+
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
@@ -379,30 +385,26 @@ class VVVProducer(Module):
     def Selection_VBF(self,nt):
         FatJets = []
         fatjets = Collection(nt, 'FatJet')
-        Mj_max  = 0 ; PTj_max = 0
         for inum in range(0,nt.nFatJet):
             if( nt.FatJet_pt[inum] > 200 and abs(nt.FatJet_eta[inum])<2.4 and inum<5 and (nt.FatJet_jetId[inum]&2>0) ) :
                 fatjet = TLorentzVector()
                 fatjet.SetPtEtaPhiM(nt.FatJet_pt[inum],nt.FatJet_eta[inum],nt.FatJet_phi[inum],nt.FatJet_msoftdrop[inum])
                 FatJets.append(fatjet)
-                if fatjet.M()  > Mj_max  : Mj_max  = fatjet.M()
-                if fatjet.Pt() > PTj_max : PTj_max = fatjet.Pt()
 
         if len(FatJets) < 1 :
             return False
-        #self.out.fillBranch("Nj8"  , len(FatJets));
-        
-        if PTj_max < 400 :
-            return False
 
-        if Mj_max<40:
-            return False
         Jets = []
         for inum in range(0,nt.nJet):
             if nt.Jet_pt[inum]>20 and abs(nt.Jet_eta[inum])<5.0 and nt.Jet_jetId[inum]&2>0 :
                 jet = TLorentzVector()
                 jet.SetPtEtaPhiM(nt.Jet_pt[inum],nt.Jet_eta[inum],nt.Jet_phi[inum],nt.Jet_mass[inum])
-                Jets.append(jet)
+                isexclusive = True
+                for iFJ in range(0,len(FatJets)):
+                    if jet.DeltaR(FatJets[iFJ]) < 1:
+                        isexclusive = False
+                if isexclusive:
+                    Jets.append(jet)
 
         if len(Jets) < 2 :
             return False
@@ -416,43 +418,107 @@ class VVVProducer(Module):
                     mjj   = (jet1+jet2).M()
                     etajj = abs(jet1.Eta()-jet2.Eta())
 
-	if (not (mjj>800 and etajj>3)): #mjj and etajj cut value to be checked.
-            return False
-
         self.out.fillBranch("mjj"  , mjj);
         self.out.fillBranch("etajj", etajj);
-        self.out.fillBranch("Nj8_VBF"  , len(FatJets));
-	self.Nj8 =  len(FatJets)
+
         return True
 
 
     def Selection_ggF(self,event):
-        #PassVBF =  self.Selection_VBF(event)
-        #if PassVBF : return False
         lep_pt,lep_eta,lep_phi,lep_m,trackIso,muisolation=-99,-99,-99,-99,-99,-99
 
         muons = Collection(event, 'Muon')
         muon_v4_temp=TLorentzVector()
         looseMuons = []
+        looseMiniMuons = []
+        midMiniMuons = []
+        tightMiniMuons = []
+        verytightMiniMuons = []
+
         for imu in range(0, event.nMuon):
             if (event.Muon_highPtId[imu]=='\x02' and event.Muon_tkRelIso[imu] <0.1 and abs(muons[imu].eta)<2.4 and event.Muon_corrected_pt[imu]>20):# to be checked
                 trackIso,muisolation=event.Muon_tkRelIso[imu],event.Muon_pfRelIso04_all[imu]
                 muon_v4_temp.SetPtEtaPhiM(event.Muon_corrected_pt[imu], muons[imu].eta, muons[imu].phi, muons[imu].mass)
                 lep_pt,lep_eta,lep_phi,lep_m=event.Muon_corrected_pt[imu], muons[imu].eta, muons[imu].phi, muons[imu].mass
-                looseMuons.append(muon_v4_temp.Clone())
+                looseMiniMuons.append(muon_v4_temp.Clone())
         nLooseMu = len(looseMuons)
+        self.out.fillBranch("nLooseMuons"  ,nLooseMu )
+
+        for imu in range(0, event.nMuon):
+            if (event.Muon_highPtId[imu]=='\x02' and event.Muon_miniPFRelIso_all[imu] <0.4 and abs(muons[imu].eta)<2.4 and event.Muon_corrected_pt[imu]>20):# to be checked
+                trackIso,muisolation=event.Muon_tkRelIso[imu],event.Muon_miniPFRelIso_all[imu]
+                muon_v4_temp.SetPtEtaPhiM(event.Muon_corrected_pt[imu], muons[imu].eta, muons[imu].phi, muons[imu].mass)
+                lep_pt,lep_eta,lep_phi,lep_m=event.Muon_corrected_pt[imu], muons[imu].eta, muons[imu].phi, muons[imu].mass
+                looseMuons.append(muon_v4_temp.Clone())
+        nLooseMiniMu = len(looseMiniMuons)
+        self.out.fillBranch("nLooseMiniMuons"  ,nLooseMiniMu )
+
+        for imu in range(0, event.nMuon):
+            if (event.Muon_highPtId[imu]=='\x02' and event.Muon_miniPFRelIso_all[imu] <0.2 and abs(muons[imu].eta)<2.4 and event.Muon_corrected_pt[imu]>20):# to be checked
+                trackIso,muisolation=event.Muon_tkRelIso[imu],event.Muon_miniPFRelIso_all[imu]
+                muon_v4_temp.SetPtEtaPhiM(event.Muon_corrected_pt[imu], muons[imu].eta, muons[imu].phi, muons[imu].mass)
+                lep_pt,lep_eta,lep_phi,lep_m=event.Muon_corrected_pt[imu], muons[imu].eta, muons[imu].phi, muons[imu].mass
+                midMiniMuons.append(muon_v4_temp.Clone())
+        nMidMiniMu = len(midMiniMuons)
+        self.out.fillBranch("nMidMiniMuons"  ,nMidMiniMu )
+
+        for imu in range(0, event.nMuon):
+            if (event.Muon_highPtId[imu]=='\x02' and event.Muon_miniPFRelIso_all[imu] <0.1 and abs(muons[imu].eta)<2.4 and event.Muon_corrected_pt[imu]>20):# to be checked
+                trackIso,muisolation=event.Muon_tkRelIso[imu],event.Muon_miniPFRelIso_all[imu]
+                muon_v4_temp.SetPtEtaPhiM(event.Muon_corrected_pt[imu], muons[imu].eta, muons[imu].phi, muons[imu].mass)
+                lep_pt,lep_eta,lep_phi,lep_m=event.Muon_corrected_pt[imu], muons[imu].eta, muons[imu].phi, muons[imu].mass
+                tightMiniMuons.append(muon_v4_temp.Clone())
+        nTightMiniMu = len(tightMiniMuons)
+        self.out.fillBranch("nTightMiniMuons"  ,nTightMiniMu )
+
+        for imu in range(0, event.nMuon):
+            if (event.Muon_highPtId[imu]=='\x02' and event.Muon_miniPFRelIso_all[imu] <0.05 and abs(muons[imu].eta)<2.4 and event.Muon_corrected_pt[imu]>20):# to be checked
+                trackIso,muisolation=event.Muon_tkRelIso[imu],event.Muon_miniPFRelIso_all[imu]
+                muon_v4_temp.SetPtEtaPhiM(event.Muon_corrected_pt[imu], muons[imu].eta, muons[imu].phi, muons[imu].mass)
+                lep_pt,lep_eta,lep_phi,lep_m=event.Muon_corrected_pt[imu], muons[imu].eta, muons[imu].phi, muons[imu].mass
+                verytightMiniMuons.append(muon_v4_temp.Clone())
+        nVeryTightMiniMu = len(verytightMiniMuons)
+        self.out.fillBranch("nVeryTightMiniMuons"  ,nVeryTightMiniMu )
+
+
 
         electrons = Collection(event, 'Electron')
         electron_v4_temp=TLorentzVector()
         looseElectrons = []
+        looseMiniElectrons = []
+        TightMiniElectrons = []
         for iele in range(0, event.nElectron):
             if (event.Electron_cutBased_HEEP[iele] and abs(electrons[iele].eta)<2.5 and electrons[iele].pt>35):
                 electron_v4_temp.SetPtEtaPhiM(electrons[iele].pt, electrons[iele].eta, electrons[iele].phi, electrons[iele].mass)
                 lep_pt,lep_eta,lep_phi,lep_m=electrons[iele].pt, electrons[iele].eta, electrons[iele].phi, electrons[iele].mass
                 looseElectrons.append(electron_v4_temp.Clone())
         nLooseEle = len(looseElectrons)
+        self.out.fillBranch("nLooseEle"  ,nLooseEle )
 
-        if not ((nLooseEle+nLooseMu)==0): return False
+        looseElectrons = []
+        for iele in range(0, event.nElectron):
+            if (event.Electron_cutBased_HEEP[iele] and abs(electrons[iele].eta)<2.5 and electrons[iele].pt>35 and event.Electron_miniPFRelIso_all[iele]<0.4):
+                electron_v4_temp.SetPtEtaPhiM(electrons[iele].pt, electrons[iele].eta, electrons[iele].phi, electrons[iele].mass)
+                lep_pt,lep_eta,lep_phi,lep_m=electrons[iele].pt, electrons[iele].eta, electrons[iele].phi, electrons[iele].mass
+                looseMiniElectrons.append(electron_v4_temp.Clone())
+        nMiniLooseEle = len(looseMiniElectrons)
+        self.out.fillBranch("nLooseMiniEle"  ,nMiniLooseEle )
+
+        looseElectrons = []
+        for iele in range(0, event.nElectron):
+            if (event.Electron_cutBased_HEEP[iele] and abs(electrons[iele].eta)<2.5 and electrons[iele].pt>35 and event.Electron_miniPFRelIso_all[iele]<0.1):
+                electron_v4_temp.SetPtEtaPhiM(electrons[iele].pt, electrons[iele].eta, electrons[iele].phi, electrons[iele].mass)
+                lep_pt,lep_eta,lep_phi,lep_m=electrons[iele].pt, electrons[iele].eta, electrons[iele].phi, electrons[iele].mass
+                TightMiniElectrons.append(electron_v4_temp.Clone())
+        nMiniTightEle = len(TightMiniElectrons)
+        self.out.fillBranch("nTightMiniEle"  ,nMiniTightEle )
+
+
+
+
+
+
+        # if not ((nLooseEle+nLooseMu)==0): return False
             
         FatJets = []
         fatjets = Collection(event, 'FatJet')
@@ -468,15 +534,14 @@ class VVVProducer(Module):
         if len(FatJets) < 2 :
             return False
 
-        #self.out.fillBranch("Nj8"  , len(FatJets));
+        self.out.fillBranch("Nj8"  , len(FatJets));
 
         if Mj_max < 40 :
             return False
 
         if PTj_max < 400 :
             return False
-        self.out.fillBranch("Nj8_ggF"  , len(FatJets));
-        self.Nj8 =  len(FatJets)
+
         return True
 
     def analyze(self, event):
@@ -507,7 +572,6 @@ class VVVProducer(Module):
         self.out.fillBranch("PassVBF", VBF)
         
         if PassVBF or PassggF:
-            self.out.fillBranch("Nj8"  , self.Nj8);
             return True
 
         return False
@@ -1369,17 +1433,17 @@ def Process_fatJets(self,nt):
         self.out.fillBranch("jetAK8puppi_tau42", nt.FatJet_tau4[usenumber3]/(nt.FatJet_tau2[usenumber3]+1e-10));
         self.out.fillBranch("jetAK8puppi_sd", nt.FatJet_msoftdrop[usenumber3]);
         self.out.fillBranch("jetAK8puppi_sd_NoJEC", Process_1Lepton_Fatjet_SoftdropMass_NoJEC(nt,usenumber3));
-        #self.out.fillBranch("FatJetAK8_particleNetMD_QCD", nt.FatJet_particleNetMD_QCD[usenumber3])
-        #self.out.fillBranch("FatJetAK8_particleNetMD_Xbb", nt.FatJet_particleNetMD_Xbb[usenumber3])
-        #self.out.fillBranch("FatJetAK8_particleNetMD_Xcc", nt.FatJet_particleNetMD_Xcc[usenumber3])
-        #self.out.fillBranch("FatJetAK8_particleNetMD_Xqq", nt.FatJet_particleNetMD_Xqq[usenumber3])
-        #self.out.fillBranch("FatJetAK8_particleNet_H4qvsQCD", nt.FatJet_particleNet_H4qvsQCD[usenumber3]) #to be checked, MD or not
-        #self.out.fillBranch("FatJetAK8_particleNet_HbbvsQCD", nt.FatJet_particleNet_HbbvsQCD[usenumber3])
-        #self.out.fillBranch("FatJetAK8_particleNet_HccvsQCD", nt.FatJet_particleNet_HccvsQCD[usenumber3])
-        #self.out.fillBranch("FatJetAK8_particleNet_QCD", nt.FatJet_particleNet_QCD[usenumber3])
-        #self.out.fillBranch("FatJetAK8_particleNet_TvsQCD", nt.FatJet_particleNet_TvsQCD[usenumber3])
-        #self.out.fillBranch("FatJetAK8_particleNet_WvsQCD", nt.FatJet_particleNet_WvsQCD[usenumber3])
-        #self.out.fillBranch("FatJetAK8_particleNet_ZvsQCD", nt.FatJet_particleNet_ZvsQCD[usenumber3])
+        self.out.fillBranch("FatJetAK8_particleNetMD_QCD", nt.FatJet_particleNetMD_QCD[usenumber3])
+        self.out.fillBranch("FatJetAK8_particleNetMD_Xbb", nt.FatJet_particleNetMD_Xbb[usenumber3])
+        self.out.fillBranch("FatJetAK8_particleNetMD_Xcc", nt.FatJet_particleNetMD_Xcc[usenumber3])
+        self.out.fillBranch("FatJetAK8_particleNetMD_Xqq", nt.FatJet_particleNetMD_Xqq[usenumber3])
+        self.out.fillBranch("FatJetAK8_particleNet_H4qvsQCD", nt.FatJet_particleNet_H4qvsQCD[usenumber3]) #to be checked, MD or not
+        self.out.fillBranch("FatJetAK8_particleNet_HbbvsQCD", nt.FatJet_particleNet_HbbvsQCD[usenumber3])
+        self.out.fillBranch("FatJetAK8_particleNet_HccvsQCD", nt.FatJet_particleNet_HccvsQCD[usenumber3])
+        self.out.fillBranch("FatJetAK8_particleNet_QCD", nt.FatJet_particleNet_QCD[usenumber3])
+        self.out.fillBranch("FatJetAK8_particleNet_TvsQCD", nt.FatJet_particleNet_TvsQCD[usenumber3])
+        self.out.fillBranch("FatJetAK8_particleNet_WvsQCD", nt.FatJet_particleNet_WvsQCD[usenumber3])
+        self.out.fillBranch("FatJetAK8_particleNet_ZvsQCD", nt.FatJet_particleNet_ZvsQCD[usenumber3])
         fatjet1.SetPtEtaPhiM(nt.FatJet_pt[usenumber3],nt.FatJet_eta[usenumber3],nt.FatJet_phi[usenumber3],nt.FatJet_msoftdrop[usenumber3])# to be checked, whether to use sd or sd_NoJEC
         
     usenumber2 = -1; pt_larger=0;
@@ -1412,17 +1476,17 @@ def Process_fatJets(self,nt):
         self.out.fillBranch("jetAK8puppi_tau42_2", nt.FatJet_tau4[usenumber2]/(nt.FatJet_tau2[usenumber2]+1e-10));
         self.out.fillBranch("jetAK8puppi_sd_2", nt.FatJet_msoftdrop[usenumber2]);
         self.out.fillBranch("jetAK8puppi_sd_NoJEC_2", Process_1Lepton_Fatjet_SoftdropMass_NoJEC(nt,usenumber2));
-        #self.out.fillBranch("FatJetAK8_particleNetMD_QCD_2", nt.FatJet_particleNetMD_QCD[usenumber2])
-        #self.out.fillBranch("FatJetAK8_particleNetMD_Xbb_2", nt.FatJet_particleNetMD_Xbb[usenumber2])
-        #self.out.fillBranch("FatJetAK8_particleNetMD_Xcc_2", nt.FatJet_particleNetMD_Xcc[usenumber2])
-        #self.out.fillBranch("FatJetAK8_particleNetMD_Xqq_2", nt.FatJet_particleNetMD_Xqq[usenumber2])
-        #self.out.fillBranch("FatJetAK8_particleNet_H4qvsQCD_2", nt.FatJet_particleNet_H4qvsQCD[usenumber2])
-        #self.out.fillBranch("FatJetAK8_particleNet_HbbvsQCD_2", nt.FatJet_particleNet_HbbvsQCD[usenumber2])
-        #self.out.fillBranch("FatJetAK8_particleNet_HccvsQCD_2", nt.FatJet_particleNet_HccvsQCD[usenumber2])
-        #self.out.fillBranch("FatJetAK8_particleNet_QCD_2", nt.FatJet_particleNet_QCD[usenumber2])
-        #self.out.fillBranch("FatJetAK8_particleNet_TvsQCD_2", nt.FatJet_particleNet_TvsQCD[usenumber2])
-        #self.out.fillBranch("FatJetAK8_particleNet_WvsQCD_2", nt.FatJet_particleNet_WvsQCD[usenumber2])
-        #self.out.fillBranch("FatJetAK8_particleNet_ZvsQCD_2", nt.FatJet_particleNet_ZvsQCD[usenumber2])
+        self.out.fillBranch("FatJetAK8_particleNetMD_QCD_2", nt.FatJet_particleNetMD_QCD[usenumber2])
+        self.out.fillBranch("FatJetAK8_particleNetMD_Xbb_2", nt.FatJet_particleNetMD_Xbb[usenumber2])
+        self.out.fillBranch("FatJetAK8_particleNetMD_Xcc_2", nt.FatJet_particleNetMD_Xcc[usenumber2])
+        self.out.fillBranch("FatJetAK8_particleNetMD_Xqq_2", nt.FatJet_particleNetMD_Xqq[usenumber2])
+        self.out.fillBranch("FatJetAK8_particleNet_H4qvsQCD_2", nt.FatJet_particleNet_H4qvsQCD[usenumber2])
+        self.out.fillBranch("FatJetAK8_particleNet_HbbvsQCD_2", nt.FatJet_particleNet_HbbvsQCD[usenumber2])
+        self.out.fillBranch("FatJetAK8_particleNet_HccvsQCD_2", nt.FatJet_particleNet_HccvsQCD[usenumber2])
+        self.out.fillBranch("FatJetAK8_particleNet_QCD_2", nt.FatJet_particleNet_QCD[usenumber2])
+        self.out.fillBranch("FatJetAK8_particleNet_TvsQCD_2", nt.FatJet_particleNet_TvsQCD[usenumber2])
+        self.out.fillBranch("FatJetAK8_particleNet_WvsQCD_2", nt.FatJet_particleNet_WvsQCD[usenumber2])
+        self.out.fillBranch("FatJetAK8_particleNet_ZvsQCD_2", nt.FatJet_particleNet_ZvsQCD[usenumber2])
         fatjet2.SetPtEtaPhiM(nt.FatJet_pt[usenumber2],nt.FatJet_eta[usenumber2],nt.FatJet_phi[usenumber2],nt.FatJet_msoftdrop[usenumber2])# to be checked, whether to use sd or sd_NoJEC
 
     usenumber1 = int(-1); pt_larger=0;
@@ -1456,17 +1520,17 @@ def Process_fatJets(self,nt):
         self.out.fillBranch("jetAK8puppi_tau42_3", nt.FatJet_tau4[usenumber1]/(nt.FatJet_tau2[usenumber1]+1e-10));
         self.out.fillBranch("jetAK8puppi_sd_3", nt.FatJet_msoftdrop[usenumber1]);
         self.out.fillBranch("jetAK8puppi_sd_NoJEC_3", Process_1Lepton_Fatjet_SoftdropMass_NoJEC(nt,usenumber1));
-        #self.out.fillBranch("FatJetAK8_particleNetMD_QCD_3", nt.FatJet_particleNetMD_QCD[usenumber1])
-        #self.out.fillBranch("FatJetAK8_particleNetMD_Xbb_3", nt.FatJet_particleNetMD_Xbb[usenumber1])
-        #self.out.fillBranch("FatJetAK8_particleNetMD_Xcc_3", nt.FatJet_particleNetMD_Xcc[usenumber1])
-        #self.out.fillBranch("FatJetAK8_particleNetMD_Xqq_3", nt.FatJet_particleNetMD_Xqq[usenumber1])
-        #self.out.fillBranch("FatJetAK8_particleNet_H4qvsQCD_3", nt.FatJet_particleNet_H4qvsQCD[usenumber1])
-        #self.out.fillBranch("FatJetAK8_particleNet_HbbvsQCD_3", nt.FatJet_particleNet_HbbvsQCD[usenumber1])
-        #self.out.fillBranch("FatJetAK8_particleNet_HccvsQCD_3", nt.FatJet_particleNet_HccvsQCD[usenumber1])
-        #self.out.fillBranch("FatJetAK8_particleNet_QCD_3", nt.FatJet_particleNet_QCD[usenumber1])
-        #self.out.fillBranch("FatJetAK8_particleNet_TvsQCD_3", nt.FatJet_particleNet_TvsQCD[usenumber1])
-        #self.out.fillBranch("FatJetAK8_particleNet_WvsQCD_3", nt.FatJet_particleNet_WvsQCD[usenumber1])
-        #self.out.fillBranch("FatJetAK8_particleNet_ZvsQCD_3", nt.FatJet_particleNet_ZvsQCD[usenumber1])
+        self.out.fillBranch("FatJetAK8_particleNetMD_QCD_3", nt.FatJet_particleNetMD_QCD[usenumber1])
+        self.out.fillBranch("FatJetAK8_particleNetMD_Xbb_3", nt.FatJet_particleNetMD_Xbb[usenumber1])
+        self.out.fillBranch("FatJetAK8_particleNetMD_Xcc_3", nt.FatJet_particleNetMD_Xcc[usenumber1])
+        self.out.fillBranch("FatJetAK8_particleNetMD_Xqq_3", nt.FatJet_particleNetMD_Xqq[usenumber1])
+        self.out.fillBranch("FatJetAK8_particleNet_H4qvsQCD_3", nt.FatJet_particleNet_H4qvsQCD[usenumber1])
+        self.out.fillBranch("FatJetAK8_particleNet_HbbvsQCD_3", nt.FatJet_particleNet_HbbvsQCD[usenumber1])
+        self.out.fillBranch("FatJetAK8_particleNet_HccvsQCD_3", nt.FatJet_particleNet_HccvsQCD[usenumber1])
+        self.out.fillBranch("FatJetAK8_particleNet_QCD_3", nt.FatJet_particleNet_QCD[usenumber1])
+        self.out.fillBranch("FatJetAK8_particleNet_TvsQCD_3", nt.FatJet_particleNet_TvsQCD[usenumber1])
+        self.out.fillBranch("FatJetAK8_particleNet_WvsQCD_3", nt.FatJet_particleNet_WvsQCD[usenumber1])
+        self.out.fillBranch("FatJetAK8_particleNet_ZvsQCD_3", nt.FatJet_particleNet_ZvsQCD[usenumber1])
         fatjet3.SetPtEtaPhiM(nt.FatJet_pt[usenumber1],nt.FatJet_eta[usenumber1],nt.FatJet_phi[usenumber1],nt.FatJet_msoftdrop[usenumber1])# to be checked, whether to use sd or sd_NoJEC
     else :
         self.out.fillBranch("IDLoose_3", -99)
@@ -1550,7 +1614,7 @@ def Process_1Lepton_Jets(self,nt):
             ak4jet_mass.append(nt.Jet_mass[inum])
             ak4jet_icsv.append(nt.Jet_btagCSVV2[inum])
             ak4jet_deepcsvb.append(nt.Jet_btagDeepB[inum])
-            #ak4jet_deepcsvc.append(nt.Jet_btagDeepCvL[inum]) #DeepCSV c vs b+bb discriminator
+            ak4jet_deepcsvc.append(nt.Jet_btagDeepCvL[inum]) #DeepCSV c vs b+bb discriminator
     ak4jet_hf.extend(np.zeros(nt.nJet-len(ak4jet_hf),int))
     ak4jet_pf.extend(np.zeros(nt.nJet-len(ak4jet_pf),int))
     ak4jet_pt.extend(np.zeros(nt.nJet-len(ak4jet_pt),int))
