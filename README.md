@@ -227,6 +227,8 @@ python runEDBR2PKUTree.py  --inputfile "YOUR INPUT FILES" --outputfile "YOUR OUT
 
 ## Condor
 In `condor` directory under cmsconnect.
+
+For submitting jobs without VBF modules.
 1. Create json file
 ```
 python Condor.py --DAS "Samples dir on cmsconnect" --Filesjson "json file dir on cmsconnect" --createfilejson
@@ -234,5 +236,15 @@ python Condor.py --DAS "Samples dir on cmsconnect" --Filesjson "json file dir on
 2.Create submit.cmd to be submitted on condor, using UL18A for example.
 ```
 python Condor.py --DAS "Samples dir on cmsconnect" --Filesjson "json file dir on cmsconnect" --outputPath "" --year 2018 --excutable "exe_Ntuple_data.sh" --TaskFolder "dir on cmsconnect for condor log" --submitsh "sh file dir on cmsconnect" --Condor --Input "x509up_u100637,Scripts/fetchFiles.py" --AddtionalArgs "-a '-o ./ -d --year UL2018A'" --MODE XWWNano
+```
+
+For submitting jobs with VBF modules.
+1. Create json file
+```
+python Condor.py --DAS "Samples dir on cmsconnect" --Filesjson "json file dir on cmsconnect" --createfilejson
+```
+2.Create submit.cmd to be submitted on condor, using UL18A for example.
+```
+python Condor.py --DAS "Samples dir on cmsconnect" --Filesjson "json file dir on cmsconnect" --outputPath "" --year 2018 --excutable "exe_Ntuple_data_XWW.sh" --TaskFolder "dir on cmsconnect for condor log" --submitsh "sh file dir on cmsconnect" --Condor --Input "x509up_u100637,Scripts/fetchFiles.py" --AddtionalArgs "-a '-o ./ -d --year UL2018A'" --MODE XWWNano
 ```
 Please notice to change the vom id for different users.
