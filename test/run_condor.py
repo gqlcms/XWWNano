@@ -32,6 +32,36 @@ def main():
   parser.add_option('-M', '--MODE', dest='MODE', help='MODE', default="inclusive", type='string')
   parser.add_option('--CrabCondor', '--CrabCondor', dest='CrabCondor', help='Crab Condor', default="crab", type='string')
   (opt, args) = parser.parse_args()
+  import FWCore.PythonUtilities.LumiList as LumiList
+  import FWCore.ParameterSet.Config as cms
+
+  if "2016" in opt.year:
+    lumimask = "Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt"
+  if "2017" in opt.year:
+    lumimask = "Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt"
+  if "2018" in opt.year:
+    lumimask = "Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt"
+  
+
+  lumisToProcess = cms.untracked.VLuminosityBlockRange( LumiList.LumiList(filename=lumimask).getCMSSWString().split(',') )
+  # print lumisToProcess
+
+  runsAndLumis_special = {}
+  for l in lumisToProcess:
+      if "-" in l:
+          start, stop = l.split("-")
+          rstart, lstart = start.split(":")
+          rstop, lstop = stop.split(":")
+      else:
+          rstart, lstart = l.split(":")
+          rstop, lstop = l.split(":")
+      if rstart != rstop:
+          raise Exception(
+              "Cannot convert '%s' to runs and lumis json format" % l)
+      if rstart not in runsAndLumis_special:
+          runsAndLumis_special[rstart] = []
+      runsAndLumis_special[rstart].append([int(lstart), int(lstop)])
+  jsoninput = runsAndLumis_special
 
   PrefCorrUL16_preVFP = lambda : PrefCorr(jetroot="L1PrefiringMaps.root", jetmapname="L1prefiring_jetptvseta_UL2016preVFP", photonroot="L1PrefiringMaps.root", photonmapname="L1prefiring_photonptvseta_UL2016preVFP", branchnames=["PrefireWeight","PrefireWeight_Up", "PrefireWeight_Down"])
   PrefCorrUL16_postVFP = lambda : PrefCorr(jetroot="L1PrefiringMaps.root", jetmapname="L1prefiring_jetptvseta_UL2016postVFP", photonroot="L1PrefiringMaps.root", photonmapname="L1prefiring_photonptvseta_UL2016postVFP", branchnames=["PrefireWeight","PrefireWeight_Up", "PrefireWeight_Down"])
@@ -68,15 +98,16 @@ def main():
       jmeCorrections  = createJMECorrector(opt.ismc,  dataYear=opt.year[:6], runPeriod=opt.year[6:],  jesUncert="Total", jetType="AK8PFPuppi",)
       jetmetCorrector = createJMECorrector(opt.ismc,   dataYear=opt.year[:6], runPeriod=opt.year[6:], metBranchName="MET")
     if opt.year in ["UL2016_preVFPB","UL2016_preVFPC","UL2016_preVFPD","UL2016_preVFPE","UL2016_preVFPF"]:
-      p = PostProcessor(".", inputFiles(), modules=[muonScaleRes2016a(),jetmetCorrector(),jmeCorrections(),VVV2016()], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis())
+      p = PostProcessor(opt.output, [opt.inputs], modules=[muonScaleRes2016a(),jetmetCorrector(),jmeCorrections(),VVV2016()], provenance=True,fwkJobReport=True, jsonInput=jsoninput)
+
     if opt.year in ["UL2016_preVFPB","UL2016_preVFPC","UL2016_preVFPD","UL2016_preVFPE","UL2016_preVFPF"]:
-      p = PostProcessor(".", inputFiles(), modules=[muonScaleRes2016b(),jetmetCorrector(),jmeCorrections(),VVV2016()], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis())
+      p = PostProcessor(opt.output, [opt.inputs], modules=[muonScaleRes2016b(),jetmetCorrector(),jmeCorrections(),VVV2016()], provenance=True,fwkJobReport=True, jsonInput=jsoninput)
     
     if opt.year in ['UL2017B','UL2017C','UL2017D','UL2017E','UL2017F',]:
-      p = PostProcessor(opt.output, [opt.inputs], modules=[muonScaleRes2017(),jetmetCorrector(),jmeCorrections(),VVV2017()], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),maxEntries=10000)
+      p = PostProcessor(opt.output, [opt.inputs], modules=[muonScaleRes2017(),jetmetCorrector(),jmeCorrections(),VVV2017()], provenance=True,fwkJobReport=True, jsonInput=jsoninput)
 
     if opt.year in ['UL2018A','UL2018B','UL2018C','UL2018D']:
-      p = PostProcessor(".", inputFiles(), modules=[muonScaleRes2018(),jetmetCorrector(),jmeCorrections(),VVV2018()], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis())
+      p = PostProcessor(opt.output, [opt.inputs], modules=[muonScaleRes2018(),jetmetCorrector(),jmeCorrections(),VVV2018()], provenance=True,fwkJobReport=True, jsonInput=jsoninput)
   
   p.run()
 
