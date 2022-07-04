@@ -18,13 +18,13 @@
 struct Genparticles
 {
     vector<float> v_GenPart_eta_;
-    vector<int> v_GenPart_genPartIdxMother_;
+    vector<int>   v_GenPart_genPartIdxMother_;
     vector<float> v_GenPart_mass_;
-    vector<int> v_GenPart_pdgId_;
+    vector<int>   v_GenPart_pdgId_;
     vector<float> v_GenPart_phi_;
     vector<float> v_GenPart_pt_;
-    vector<int> v_GenPart_status_;
-    vector<int> v_GenPart_statusFlags_;
+    vector<int>   v_GenPart_status_;
+    vector<int>   v_GenPart_statusFlags_;
 } ;
 
 struct pdgId_index

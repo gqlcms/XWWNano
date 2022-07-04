@@ -19,7 +19,7 @@ bool EDBR2PKUTree::Filter_Event_1LeptonEFT(TString YEAR, Int_t IS_Data) {
     bool Fill = true;
     if(YEAR.EqualTo("2016")){
         if ( channelName.Contains("muon") ){
-            Fill = Fill && (Lep1fatJet2_HLT_IsoMu24 == 1);
+            Fill = Fill && (Lep1fatJet2_HLT_IsoMu24 == 1 && abs(Lep1fatJet2_LeptonPDGID) == 13 && Lep1fatJet2_Muon_pfRelIso04_all < 0.1 );
             if( IS_Data >  0 ){
                 Fill = Fill && Common_noiseFlagMC ;
             }
@@ -28,6 +28,17 @@ bool EDBR2PKUTree::Filter_Event_1LeptonEFT(TString YEAR, Int_t IS_Data) {
                 // Fill = Fill && Common_noiseFlag && Common_passGoodRun;
             }
         }
+        if ( channelName.Contains("electron") ){
+            Fill = Fill && ( Lep1fatJet2_HLT_Ele27_WPTight_Gsf == 1 && abs(Lep1fatJet2_LeptonPDGID) == 11 );
+            if( IS_Data >  0 ){
+                Fill = Fill && Common_noiseFlagMC ;
+            }
+            if( IS_Data == 0 ){
+                Fill = Fill && Common_noiseFlag ;
+                // Fill = Fill && Common_noiseFlag && Common_passGoodRun;
+            }
+        }
+        
     }
     return Fill;
 }
@@ -44,6 +55,19 @@ void EDBR2PKUTree::VVVEFT_AK8_init(){
 }
 
 void EDBR2PKUTree::VVVEFT_leptonicW(){
+    // if(YEAR_g.Contains("2016APV")){
+    //     int runnb = 0;
+    //     int npv = 0; // need to be updated
+    //     bool isMC  = false;
+    //     if(IsData > 0){
+    //         runnb = 0;
+
+    //     }
+    //     std::pair<double,double> METXYCorr_Met_MetPhi(Lep1fatJet2_MET_pt, Lep1fatJet2_MET_phi, runnb, YEAR_g, isMC, npv, isUL = true, ispuppi=false){
+    // }
+    // if(YEAR_g.Contains("2016nonAPV")){
+        
+    // }
     leptonicWMT = TMath::Sqrt(2*Lep1fatJet2_LeptonPt*Lep1fatJet2_MET_pt*(1.0-TMath::Cos(Lep1fatJet2_LeptonPhi-Lep1fatJet2_MET_phi)));
 }
 

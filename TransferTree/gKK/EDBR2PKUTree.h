@@ -19,7 +19,8 @@
 //#include "DataFormats/Math/interface/deltaR.h"
 
 #include "VVVTree_HeadFile/goodrun.h"
-
+#include "VVVTree_HeadFile/fatJets.h"
+#include "VVVTree_HeadFile/Jets.h"
 
 #include <iostream>
 #include <fstream>
@@ -27,6 +28,7 @@ using namespace std;
 
 #define NFATJET_MAX 20 // for FatJet collection
 #define NJET_MAX 100 // for FatJet collection
+#define NLEPTON_MAX 100 // for FatJet collection
 #define NGENPART_MAX 502 // for FatJet collection
 
 // Header file for the classes stored in the TTree if any.
@@ -47,11 +49,40 @@ class EDBR2PKUTree {
       // TChain          *fChain;   //!pointer to the analyzed TTree or TChain
       Int_t           fCurrent; //!current Tree number in a TChain
       TString channelName;
+      TString YEAR_g;
 
-   bool Exclusive_Collection(TLorentzVector object, vector<TLorentzVector> collectionP4 , float deltaR_);
    
+   
+   /// define EDBR2PKUTree functions
+   void loadVectorBranches_run();
+   void loadVectorBranches_genWeight();
+   void initFatJet_Collection_2016();
+   void GKK_process_1_2016(Long64_t jentry, TString YEAR);
+   void GKK_process_2_2016(Long64_t jentry, TString YEAR);
+   void FatJets_P4_PTOrder_2016();
+   void FatJets_P4_MASSOrder_2016();
+   void FatJets_P4_DEEP_MD_W_Order_2016();
+   void FatJets_P4_PNet_MD_W_Order_2016();
+   void METf_2016();
+
+   void GKK_process_1(Long64_t jentry, TString YEAR);
+   void GKK_process_2(Long64_t jentry, TString YEAR);
+   void FatJets_P4_PTOrder();
+   void FatJets_P4_MASSOrder();
+   void FatJets_P4_DEEP_MD_W_Order();
+   void FatJets_P4_PNet_MD_W_Order();
+   void FatJets_DEEP_MD_W_Order();
+   void FatJets_PNet_MD_W_Order();
+   void initJet_Collection(TString YEAR);
+   void Nbtagf();
+
+   void loadVectorBranches_MET();
+   void loadVectorBranches_Flag();
+   void loadVectorBranches_HLT();
+   void loadVectorBranches_Vertices();
 
    // gkk
+   void initFatJet_Collection();
    void DeepW_Rank_Variable();
    void Added_Pt_ranked_Variables();
    void Added_Mass_ranked_Variables();
@@ -86,7 +117,6 @@ class EDBR2PKUTree {
    void HT_ST();
    void Nj4_Nj8();
    // void NAK4();
-   void Nbtagf(TString YEAR, Int_t IS_Data);
    void Weightf(Double_t XS, Int_t Nevents, Double_t LUMI);
    void GlobalInit(TString YEAR, Int_t IS_Data);
    void goldenjsoninit(TString YEAR, Int_t IS_Data);
@@ -94,8 +124,6 @@ class EDBR2PKUTree {
    void Deep_W_Ordered_ParticleNetScore();
    void AK8_Nsubjetness_Init(Long64_t jentry);
    void Deep_W_Ordered_Nsubjetness();
-
-    
 
    vector<size_t> GenParticles_Daughterindex(size_t Genpart_index);
    int GenParticles_Lastcopy(size_t Genpart_index);
@@ -122,6 +150,36 @@ class EDBR2PKUTree {
    void VVVEFT_weight(Double_t XS, Int_t Nevents, Double_t LUMI);
    bool Filter_Event_1LeptonEFT(TString YEAR, Int_t IS_Data);
 
+   void B2GSF_preprocess();
+   void loadVectorBranches_FatJets();
+   void OutputBranches_GKK_0Lepton();
+   void B2GSF_GetEntry(Long64_t jentry);
+   void Electron_GetEntry(Long64_t jentry);
+   void Muon_GetEntry(Long64_t jentry);
+   void Muon_flatVector(Long64_t jentry);
+   void loadVectorBranches_Electron();
+   void Jets_GetEntry(Long64_t jentry);
+   void OutputBranches_VVV_EFT_1lepton();
+   void B2GSF_1lepton_Lepton();
+   void fatJets_GetEntry(Long64_t jentry);
+   void loadVectorBranches_Muon();
+   bool B2GSF_prefilter();
+   void loadVectorBranches_1Lepton();
+   void Electron_flatVector(Long64_t jentry);
+   bool B2GSF_FillTree();
+   void B2GSF_1lepton_fatJets();
+   void loadVectorBranches_B2GSF_1Lepton();
+   void loadVectorBranches_GKK_0Lepton();
+   void OutputBranches_B2GSF();
+   void loadVectorBranches_Genparticles();
+   void loadVectorBranches_Jets();
+
+   /// define EDBR2PKUTree functions
+
+
+FatJet_Collection FatJets ;
+Jet_Collection Jets ;
+
 std::vector<std::string> outputbranches;
 
 Int_t IsData;
@@ -143,6 +201,7 @@ double DR01,DR02,DR03,DR04,DR05;
 
 Float_t Mj;
 Float_t Mj_2;
+Float_t Mj_3;
 
 bool goodRun;
 bool Flag;
@@ -163,11 +222,9 @@ float jetAK8puppi_sd_3;
 Float_t MET_pt;
 Float_t MET_et; // no use at all
 
-float genWeight;
+Float_t genWeight;
 
-Int_t usenumber3;
-Int_t usenumber2;
-Int_t usenumber1;
+
 
 Int_t matchingt_a;
 Int_t matchingW_a;
@@ -344,6 +401,71 @@ float gen_gKK_g_mass_f;
 int gen_tau_decay_2;
 int gen_tau_decay_3;
 
+std::vector<float> Jet_mass_nom_out;
+std::vector<float> Jet_pt_nom_out;
+
+// define flat branch
+Float_t MET_T1Smear_pt;
+Float_t MET_T1Smear_phi;
+
+Float_t MET_phi_NoXYCorr;
+Float_t MET_et_NoXYCorr;
+
+TBranch        *b_MET_T1Smear_pt;
+TBranch        *b_MET_T1Smear_phi;
+
+bool Flag_ecalBadCalibFilter;
+TBranch        *b_Flag_ecalBadCalibFilter;
+
+
+
+TBranch        *b_HLT_PFHT1050;
+bool HLT_PFHT1050;
+TBranch        *b_HLT_AK8PFJet380_TrimMass30;
+bool HLT_AK8PFJet380_TrimMass30;
+TBranch        *b_HLT_AK8PFJet400_TrimMass30;
+bool HLT_AK8PFJet400_TrimMass30;
+TBranch        *b_HLT_AK8PFJet420_TrimMass30;
+bool HLT_AK8PFJet420_TrimMass30;
+TBranch        *b_HLT_AK8PFHT750_TrimMass50;
+bool HLT_AK8PFHT750_TrimMass50;
+TBranch        *b_HLT_AK8PFHT800_TrimMass50;
+bool HLT_AK8PFHT800_TrimMass50;
+TBranch        *b_HLT_AK8PFHT850_TrimMass50;
+bool HLT_AK8PFHT850_TrimMass50;
+TBranch        *b_HLT_AK8PFHT900_TrimMass50;
+bool HLT_AK8PFHT900_TrimMass50;
+
+
+
+Int_t PV_npvs;
+TBranch *b_PV_npvs;
+
+TBranch        *b_MET_T1Smear_phi_XYcorr;
+Float_t MET_T1Smear_phi_XYcorr;
+TBranch        *b_MET_T1Smear_pt_XYcorr;
+Float_t MET_T1Smear_pt_XYcorr;
+
+std::vector<float> Jet_pt_out;
+std::vector<float> Jet_eta_out;
+std::vector<float> Jet_phi_out;
+std::vector<float> Jet_mass_out;
+std::vector<float> Jet_btagDeepFlavB_out;
+std::vector<int> Jet_jetId_out;
+std::vector<int> Jet_hadronFlavour_out;
+
+
+// vector branches
+float Jet_pt_nom_[NJET_MAX];
+vector<float> v_Jet_pt_nom_;
+TBranch *b_Jet_pt_nom_;
+
+float Jet_mass_nom_[NJET_MAX];
+vector<float> v_Jet_mass_nom_;
+TBranch *b_Jet_mass_nom_;
+
+
+
 float GenPart_eta_[NGENPART_MAX];
 vector<float> v_GenPart_eta_;
 TBranch *b_GenPart_eta_;
@@ -375,8 +497,71 @@ TBranch *b_GenPart_status_;
 int GenPart_statusFlags_[NGENPART_MAX];
 vector<int> v_GenPart_statusFlags_;
 TBranch *b_GenPart_statusFlags_;
-    
 
+
+// for fatJets
+
+float FatJet_msoftdrop_raw_[NFATJET_MAX];
+vector<float> v_FatJet_msoftdrop_raw_;
+TBranch *b_FatJet_msoftdrop_raw_;
+
+float FatJet_msoftdrop_nom_[NFATJET_MAX];
+vector<float> v_FatJet_msoftdrop_nom_;
+TBranch *b_FatJet_msoftdrop_nom_;
+
+float FatJet_msoftdrop_corr_JMR_[NFATJET_MAX];
+vector<float> v_FatJet_msoftdrop_corr_JMR_;
+TBranch *b_FatJet_msoftdrop_corr_JMR_;
+
+float FatJet_msoftdrop_corr_JMS_[NFATJET_MAX];
+vector<float> v_FatJet_msoftdrop_corr_JMS_;
+TBranch *b_FatJet_msoftdrop_corr_JMS_;
+
+float FatJet_msoftdrop_corr_PUPPI_[NFATJET_MAX];
+vector<float> v_FatJet_msoftdrop_corr_PUPPI_;
+TBranch *b_FatJet_msoftdrop_corr_PUPPI_;
+
+float FatJet_ParticleNetMDraw_probQCDb_[NFATJET_MAX];
+vector<float> v_FatJet_ParticleNetMDraw_probQCDb_;
+TBranch *b_FatJet_ParticleNetMDraw_probQCDb_;
+
+float FatJet_ParticleNetMDraw_probQCDbb_[NFATJET_MAX];
+vector<float> v_FatJet_ParticleNetMDraw_probQCDbb_;
+TBranch *b_FatJet_ParticleNetMDraw_probQCDbb_;
+
+float FatJet_ParticleNetMDraw_probQCDc_[NFATJET_MAX];
+vector<float> v_FatJet_ParticleNetMDraw_probQCDc_;
+TBranch *b_FatJet_ParticleNetMDraw_probQCDc_;
+
+float FatJet_ParticleNetMDraw_probQCDcc_[NFATJET_MAX];
+vector<float> v_FatJet_ParticleNetMDraw_probQCDcc_;
+TBranch *b_FatJet_ParticleNetMDraw_probQCDcc_;
+
+float FatJet_ParticleNetMDraw_probQCDothers_[NFATJET_MAX];
+vector<float> v_FatJet_ParticleNetMDraw_probQCDothers_;
+TBranch *b_FatJet_ParticleNetMDraw_probQCDothers_;
+
+float FatJet_ParticleNetMDraw_probXbb_[NFATJET_MAX];
+vector<float> v_FatJet_ParticleNetMDraw_probXbb_;
+TBranch *b_FatJet_ParticleNetMDraw_probXbb_;
+
+float FatJet_ParticleNetMDraw_probXcc_[NFATJET_MAX];
+vector<float> v_FatJet_ParticleNetMDraw_probXcc_;
+TBranch *b_FatJet_ParticleNetMDraw_probXcc_;
+
+float FatJet_ParticleNetMDraw_probXqq_[NFATJET_MAX];
+vector<float> v_FatJet_ParticleNetMDraw_probXqq_;
+TBranch *b_FatJet_ParticleNetMDraw_probXqq_;
+
+float FatJet_pt_nom_[NFATJET_MAX];
+vector<float> v_FatJet_pt_nom_;
+TBranch *b_FatJet_pt_nom_;
+
+
+
+int FatJet_jetId_[NFATJET_MAX];
+vector<int> v_FatJet_jetId_;
+TBranch *b_FatJet_jetId_ = 0;
 
 float FatJet_pt_[NFATJET_MAX];
 vector<float> v_FatJet_pt_;
@@ -531,6 +716,7 @@ vector<float> v_FatJet_deepTag_probZqq_;
 TBranch *b_FatJet_deepTag_probZqq_;
 
 
+
 // particle-net 
 
 float FatJet_particleNetMD_QCD_[NFATJET_MAX];
@@ -623,12 +809,12 @@ float Jet_eta_[NJET_MAX];
 vector<float> v_Jet_eta_;
 TBranch *b_Jet_eta_;
     
-float Jet_hadronFlavour_[NJET_MAX];
-vector<float> v_Jet_hadronFlavour_;
+int Jet_hadronFlavour_[NJET_MAX];
+vector<int> v_Jet_hadronFlavour_;
 TBranch *b_Jet_hadronFlavour_;
     
-float Jet_jetId_[NJET_MAX];
-vector<float> v_Jet_jetId_;
+int Jet_jetId_[NJET_MAX];
+vector<int> v_Jet_jetId_;
 TBranch *b_Jet_jetId_;
     
 float Jet_mass_[NJET_MAX];
@@ -816,9 +1002,7 @@ float FatJet_deepTag_probZqq_1;
 float FatJet_deepTag_probZqq_2;
 float FatJet_deepTag_probZqq_3;
 
-TBranch *b_usenumber3;
-TBranch *b_usenumber2;
-TBranch *b_usenumber1;
+
 
 
 
@@ -883,10 +1067,68 @@ float M2J_jmaxmin;
 float M2J_jmaxmid;
 float M2J_jmidmin;
 
+// define output var
+Float_t Mj_corr_Pneta;
+Float_t Mj_corr_Pnetb;
+Float_t Mj_corr_Pnetc;
+Float_t Mj_corr_a;
+Float_t Mj_corr_b;
+Float_t Mj_corr_c;
+Float_t Mj_corr_max;
+Float_t Mj_corr_mid;
+Float_t Mj_corr_min;
+Float_t Mj_corr;
+Float_t Mj_corr_2;
+Float_t Mj_corr_3;
+
+
 float Mj_a , Mj_b , Mj_c;
 float PTj_a, PTj_b, PTj_c;
 float Etaj_a, Etaj_b, Etaj_c;
 float Phij_a, Phij_b, Phij_c;
+
+float Mj_Pneta , Mj_Pnetb , Mj_Pnetc;
+float PTj_Pneta, PTj_Pnetb, PTj_Pnetc;
+float Etaj_Pneta, Etaj_Pnetb, Etaj_Pnetc;
+float Phij_Pneta, Phij_Pnetb, Phij_Pnetc;
+
+float PartNet_MD_W_Pneta, PartNet_MD_W_Pnetb, PartNet_MD_W_Pnetc;
+
+Float_t dnnDecorr_probTbcq_Pnetc;
+Float_t dnnDecorr_probTbqq_Pnetc;
+Float_t dnnDecorr_probTbc_Pnetc;
+Float_t dnnDecorr_probTbq_Pnetc;
+Float_t dnnDecorr_probWcq_Pnetc;
+Float_t dnnDecorr_probWqq_Pnetc;
+Float_t dnnDecorr_probZbb_Pnetc;
+Float_t dnnDecorr_probZcc_Pnetc;
+Float_t dnnDecorr_probZqq_Pnetc;
+Float_t dnnDecorr_probHbb_Pnetc;
+Float_t dnnDecorr_probHcc_Pnetc;
+Float_t dnnDecorr_probHqqqq_Pnetc;
+Float_t dnnDecorr_probQCDbb_Pnetc;
+Float_t dnnDecorr_probQCDcc_Pnetc;
+Float_t dnnDecorr_probQCDb_Pnetc;
+Float_t dnnDecorr_probQCDc_Pnetc;
+Float_t dnnDecorr_probQCDothers_Pnetc;
+
+
+Float_t FatJet_tau1_Pneta;
+Float_t FatJet_tau2_Pneta;
+Float_t FatJet_tau3_Pneta;
+Float_t FatJet_tau4_Pneta;
+Float_t FatJet_tau1_Pnetb;
+Float_t FatJet_tau2_Pnetb;
+Float_t FatJet_tau3_Pnetb;
+Float_t FatJet_tau4_Pnetb;
+Float_t FatJet_tau1_Pnetc;
+Float_t FatJet_tau2_Pnetc;
+Float_t FatJet_tau3_Pnetc;
+Float_t FatJet_tau4_Pnetc;
+
+
+
+
 
 float dnn_probTbcq_a, dnn_probTbcq_b, dnn_probTbcq_c;
 float dnn_probTbqq_a, dnn_probTbqq_b, dnn_probTbqq_c;
@@ -1456,7 +1698,6 @@ Float_t jet_eta;
 Float_t jet_phi;
 Float_t jet_mass_pruned;
 Float_t Mj_un;
-Float_t Mj_corr;
 //   Float_t jet_mass_softdrop;
 Float_t jet_tau2tau1;
 Float_t tau21;
@@ -1689,13 +1930,11 @@ Double_t        jetAK8puppi_sdcorr_2;
 //Double_t MassVV[3];
 Double_t        MJJ_midmin;
 Double_t        Mj_un_2;
-Double_t        Mj_corr_2;
 Double_t        PTj_2;
 Float_t         PTj_23;
 Float_t         ST;
 Float_t         HT;
-Float_t         Nj4;
-Float_t         Nj8;
+Int_t         Nj4;
 Double_t        tau21_2;
 Float_t        ak4Ptex1;
 Float_t        ak4Etaex1;
@@ -1804,10 +2043,8 @@ Float_t         Etaj_4;
 Float_t         Phij_3;
 Float_t         Phij_4;
 Double_t        jetAK8puppi_sdcorr_3;
-Double_t        Mj_3;
 Double_t        Mj_4;
 Double_t        Mj_un_3;
-Double_t        Mj_corr_3;
 Double_t        PTj_3;
 Double_t        tau21_3;
 Double_t        tau42_3;
@@ -2226,6 +2463,16 @@ bool Flag_EcalDeadCellTriggerPrimitiveFilter;
 bool Flag_BadPFMuonFilter;
 bool Flag_eeBadScFilter;
 
+bool HLT_PFHT650_WideJetMJJ900DEtaJJ1p5;
+bool HLT_PFHT650_WideJetMJJ950DEtaJJ1p5;
+bool HLT_PFHT800;
+bool HLT_PFHT900;
+bool HLT_PFJet450;
+bool HLT_AK8PFJet450;
+bool HLT_AK8PFJet500;
+bool HLT_PFJet500;
+bool HLT_AK8PFJet360_TrimMass30;
+bool HLT_AK8PFHT700_TrimR0p1PT0p03Mass50;
 
 // for 1lepton VVV EFT
 
@@ -2396,6 +2643,9 @@ int matchingc_2;
 int matching_gq_2;
 
 // calculated variables
+Int_t Nj4_ex;
+Int_t Nj4_in;
+
 int nb_l_deep_ex;
 int nb_m_deep_ex;
 int nb_t_deep_ex;
@@ -2403,13 +2653,13 @@ int nb_l_deep_in;
 int nb_m_deep_in;
 int nb_t_deep_in;
 
-
-
 float MJJlv;
 
 float leptonicWMT;
 
 // vector branches
+std::vector<float> *  Common_LHEReweightingWeight=0;
+
 std::vector<float> *  Lep1fatJet2_Jet_btagDeepB=0;
 std::vector<float> *  Lep1fatJet2_Jet_btagDeepC=0;
 std::vector<float> *  Lep1fatJet2_Jet_btagDeepFlavC=0;
@@ -2602,6 +2852,18 @@ TBranch        *b_Flag_HBHENoiseIsoFilter;
 TBranch        *b_Flag_EcalDeadCellTriggerPrimitiveFilter;
 TBranch        *b_Flag_BadPFMuonFilter;
 TBranch        *b_Flag_eeBadScFilter;
+
+TBranch        *b_HLT_PFHT650_WideJetMJJ900DEtaJJ1p5;
+TBranch        *b_HLT_PFHT650_WideJetMJJ950DEtaJJ1p5;
+TBranch        *b_HLT_PFHT800;
+TBranch        *b_HLT_PFHT900;
+TBranch        *b_HLT_PFJet450;
+TBranch        *b_HLT_AK8PFJet450;
+TBranch        *b_HLT_AK8PFJet500;
+TBranch        *b_HLT_PFJet500;
+TBranch        *b_HLT_AK8PFJet360_TrimMass30;
+TBranch        *b_HLT_AK8PFHT700_TrimR0p1PT0p03Mass50;
+
 
 //Subjet
 TLorentzVector  *ak8sj11;
@@ -3161,6 +3423,141 @@ TBranch  *b_genantit_w_q2_phi;
 TBranch  *b_genantit_w_q2_pt;
 
 
+// =============== Nano ===============
+// =============== Nano ===============
+
+// =============== vector ==============
+// ele
+int Electron_charge_[NLEPTON_MAX];
+vector<int> v_Electron_charge_;
+TBranch *b_Electron_charge_;
+
+int Electron_jetIdx_[NLEPTON_MAX];
+vector<int> v_Electron_jetIdx_;
+TBranch *b_Electron_jetIdx_;
+
+int Electron_pdgId_[NLEPTON_MAX];
+vector<int> v_Electron_pdgId_;
+TBranch *b_Electron_pdgId_;
+
+float Electron_jetRelIso_[NLEPTON_MAX];
+vector<float> v_Electron_jetRelIso_;
+TBranch *b_Electron_jetRelIso_;
+
+float Electron_eta_[NLEPTON_MAX];
+vector<float> v_Electron_eta_;
+TBranch *b_Electron_eta_;
+
+float Electron_mass_[NLEPTON_MAX];
+vector<float> v_Electron_mass_;
+TBranch *b_Electron_mass_;
+
+float Electron_pfRelIso03_all_[NLEPTON_MAX];
+vector<float> v_Electron_pfRelIso03_all_;
+TBranch *b_Electron_pfRelIso03_all_;
+
+float Electron_phi_[NLEPTON_MAX];
+vector<float> v_Electron_phi_;
+TBranch *b_Electron_phi_;
+
+float Electron_pt_[NLEPTON_MAX];
+vector<float> v_Electron_pt_;
+TBranch *b_Electron_pt_;
+
+// mu
+int Muon_charge_[NLEPTON_MAX];
+vector<int> v_Muon_charge_;
+TBranch *b_Muon_charge_;
+
+int Muon_highPtId_[NLEPTON_MAX];
+vector<int> v_Muon_highPtId_;
+TBranch *b_Muon_highPtId_;
+
+int Muon_jetIdx_[NLEPTON_MAX];
+vector<int> v_Muon_jetIdx_;
+TBranch *b_Muon_jetIdx_;
+
+int Muon_pdgId_[NLEPTON_MAX];
+vector<int> v_Muon_pdgId_;
+TBranch *b_Muon_pdgId_;
+
+float Muon_eta_[NLEPTON_MAX];
+vector<float> v_Muon_eta_;
+TBranch *b_Muon_eta_;
+
+float Muon_jetRelIso_[NLEPTON_MAX];
+vector<float> v_Muon_jetRelIso_;
+TBranch *b_Muon_jetRelIso_;
+
+float Muon_mass_[NLEPTON_MAX];
+vector<float> v_Muon_mass_;
+TBranch *b_Muon_mass_;
+
+float Muon_pfRelIso03_all_[NLEPTON_MAX];
+vector<float> v_Muon_pfRelIso03_all_;
+TBranch *b_Muon_pfRelIso03_all_;
+
+float Muon_pfRelIso04_all_[NLEPTON_MAX];
+vector<float> v_Muon_pfRelIso04_all_;
+TBranch *b_Muon_pfRelIso04_all_;
+
+float Muon_phi_[NLEPTON_MAX];
+vector<float> v_Muon_phi_;
+TBranch *b_Muon_phi_;
+
+float Muon_pt_[NLEPTON_MAX];
+vector<float> v_Muon_pt_;
+TBranch *b_Muon_pt_;
+
+float Muon_tkRelIso_[NLEPTON_MAX];
+vector<float> v_Muon_tkRelIso_;
+TBranch *b_Muon_tkRelIso_;
+
+
+// =============== vector ==============
+
+// =============== number ==============
+float usenumber1;
+TBranch  *b_usenumber1;
+
+float usenumber2;
+TBranch  *b_usenumber2;
+
+float usenumber3;
+TBranch  *b_usenumber3;
+
+float leptonid;
+TBranch  *b_leptonid;
+
+float leptonpgdid;
+TBranch  *b_leptonpgdid;
+
+// =============== number ==============
+
+// =============== Nano ===============
+// =============== Nano ===============
+
+// =============== added branches =============
+// ========= Common ========
+Int_t         Nj8;
+
+
+
+// =========== B2G SF ==========
+Int_t NLepton;
+Int_t LeptonID;
+
+float PT_l;
+float Eta_l;
+float Phi_l;
+float M_l;
+// =========== B2G SF ==========
+
+// =============== added branches =============
+
+// =============== Looper ===============
+
+
 
 
 
@@ -3190,11 +3587,12 @@ TBranch  *b_genantit_w_q2_pt;
 
 #ifdef EDBR2PKUTree_cxx
 // EDBR2PKUTree::EDBR2PKUTree(TChain *tree, TString dataset, Int_t IsData, std::vector<std::string> outputbranches_, TString channel_) : fChain(0) 
-EDBR2PKUTree::EDBR2PKUTree(TTree *tree, TString dataset, Int_t IsData, std::vector<std::string> outputbranches_, TString channel_) : fChain(0) 
+EDBR2PKUTree::EDBR2PKUTree(TTree *tree, TString dataset, Int_t IsData_, std::vector<std::string> outputbranches_, TString channel_) : fChain(0) 
 {
    channelName = channel_;
    cout << "channelName : " << channelName << endl;
    m_dataset = dataset;
+   IsData    = IsData_;
    Init(tree, IsData);
    outputbranches = outputbranches_;
    Outputbranches();
@@ -3244,21 +3642,6 @@ void EDBR2PKUTree::Init(TTree *tree, Int_t IsData)
    // code, but the routine can be extended by the user if needed.
    // Init() will be called many times when running on PROOF
    // (once per file to be processed).
-   ak8sj11 = 0;
-   ak8sj21 = 0;
-   ak8sj31 = 0;
-   ak8sj12 = 0;
-   ak8sj22 = 0;
-   ak8sj32 = 0;
-   ak8sj13 = 0;
-   ak8sj23 = 0;
-   ak8sj33 = 0;
-   ak8sj14 = 0;
-   ak8sj24 = 0;
-   ak8sj34 = 0;
-   ak8sj15 = 0;
-   ak8sj25 = 0;
-   ak8sj35 = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
@@ -3270,1639 +3653,21 @@ void EDBR2PKUTree::Init(TTree *tree, Int_t IsData)
    // ExTree->SetAutoSave(0);
    file_cutflow =new ofstream(m_dataset+"_eventnum.txt");
 
-if ( channelName.EqualTo("had") ){
-if (IsData > 0){
-   ExTree->Branch("matchingt_a", &matchingt_a, "matchingt_a/I");
-   ExTree->Branch("matchingW_a", &matchingW_a, "matchingW_a/I");
-   ExTree->Branch("matchingg_a", &matchingg_a, "matchingg_a/I");
-   ExTree->Branch("matchingZ_a", &matchingZ_a, "matchingZ_a/I");
-   ExTree->Branch("matchingu_a", &matchingu_a, "matchingu_a/I");
-   ExTree->Branch("matchingd_a", &matchingd_a, "matchingd_a/I");
-   ExTree->Branch("matchings_a", &matchings_a, "matchings_a/I");
-   ExTree->Branch("matchingc_a", &matchingc_a, "matchingc_a/I");
-   ExTree->Branch("matchingg_first_a", &matchingg_first_a, "matchingg_first_a/I");
-   ExTree->Branch("matchingu_first_a", &matchingu_first_a, "matchingu_first_a/I");
-   ExTree->Branch("matchingd_first_a", &matchingd_first_a, "matchingd_first_a/I");
-   ExTree->Branch("matchings_first_a", &matchings_first_a, "matchings_first_a/I");
-   ExTree->Branch("matchingc_first_a", &matchingc_first_a, "matchingc_first_a/I");
-   ExTree->Branch("matchingqg_first_a", &matchingqg_first_a, "matchingqg_first_a/I");
-   ExTree->Branch("matchingt_first_a", &matchingt_first_a, "matchingt_first_a/I");
+   loadVectorBranches();
 
-   ExTree->Branch("matchingt_b", &matchingt_b, "matchingt_b/I");
-   ExTree->Branch("matchingW_b", &matchingW_b, "matchingW_b/I");
-   ExTree->Branch("matchingg_b", &matchingg_b, "matchingg_b/I");
-   ExTree->Branch("matchingZ_b", &matchingZ_b, "matchingZ_b/I");
-   ExTree->Branch("matchingu_b", &matchingu_b, "matchingu_b/I");
-   ExTree->Branch("matchingd_b", &matchingd_b, "matchingd_b/I");
-   ExTree->Branch("matchings_b", &matchings_b, "matchings_b/I");
-   ExTree->Branch("matchingc_b", &matchingc_b, "matchingc_b/I");
-   ExTree->Branch("matchingg_first_b", &matchingg_first_b, "matchingg_first_b/I");
-   ExTree->Branch("matchingu_first_b", &matchingu_first_b, "matchingu_first_b/I");
-   ExTree->Branch("matchingd_first_b", &matchingd_first_b, "matchingd_first_b/I");
-   ExTree->Branch("matchings_first_b", &matchings_first_b, "matchings_first_b/I");
-   ExTree->Branch("matchingc_first_b", &matchingc_first_b, "matchingc_first_b/I");
-   ExTree->Branch("matchingqg_first_b", &matchingqg_first_b, "matchingqg_first_b/I");
-   ExTree->Branch("matchingt_first_b", &matchingt_first_b, "matchingt_first_b/I");
+   if( channelName.EqualTo("had") ){
+      OutputBranches_GKK_0Lepton();
+   }
 
-   ExTree->Branch("matchingt_c", &matchingt_c, "matchingt_c/I");
-   ExTree->Branch("matchingW_c", &matchingW_c, "matchingW_c/I");
-   ExTree->Branch("matchingg_c", &matchingg_c, "matchingg_c/I");
-   ExTree->Branch("matchingZ_c", &matchingZ_c, "matchingZ_c/I");
-   ExTree->Branch("matchingu_c", &matchingu_c, "matchingu_c/I");
-   ExTree->Branch("matchingd_c", &matchingd_c, "matchingd_c/I");
-   ExTree->Branch("matchings_c", &matchings_c, "matchings_c/I");
-   ExTree->Branch("matchingc_c", &matchingc_c, "matchingc_c/I");
-   ExTree->Branch("matchingg_first_c", &matchingg_first_c, "matchingg_first_c/I");
-   ExTree->Branch("matchingu_first_c", &matchingu_first_c, "matchingu_first_c/I");
-   ExTree->Branch("matchingd_first_c", &matchingd_first_c, "matchingd_first_c/I");
-   ExTree->Branch("matchings_first_c", &matchings_first_c, "matchings_first_c/I");
-   ExTree->Branch("matchingc_first_c", &matchingc_first_c, "matchingc_first_c/I");
-   ExTree->Branch("matchingqg_first_c", &matchingqg_first_c, "matchingqg_first_c/I");
-   ExTree->Branch("matchingt_first_c", &matchingt_first_c, "matchingt_first_c/I");
+   if( channelName.EqualTo("B2GSF_1lepton") ){
+      OutputBranches_B2GSF();
+   }
 
+   if ( channelName.Contains("VVV_EFT_1lepton") ){
+      OutputBranches_VVV_EFT_1lepton();
+   }
 
 
-   ExTree->Branch("R4q_max", &R4q_max, "R4q_max/I");
-   ExTree->Branch("R3q_max", &R3q_max, "R3q_max/I");
-   ExTree->Branch("R2q_max", &R2q_max, "R2q_max/I");
-   ExTree->Branch("Rlqq_max", &Rlqq_max, "Rlqq_max/I");
-   ExTree->Branch("Rlq_max", &Rlq_max, "Rlq_max/I");
-   ExTree->Branch("w_max", &w_max, "w_max/I");
-   ExTree->Branch("u_max", &u_max, "u_max/I");
-   ExTree->Branch("R4q_min", &R4q_min, "R4q_min/I");
-   ExTree->Branch("R3q_min", &R3q_min, "R3q_min/I");
-   ExTree->Branch("R2q_min", &R2q_min, "R2q_min/I");
-   ExTree->Branch("Rlqq_min", &Rlqq_min, "Rlqq_min/I");
-   ExTree->Branch("Rlq_min", &Rlq_min, "Rlq_min/I");
-   ExTree->Branch("w_min", &w_min, "w_min/I");
-   ExTree->Branch("u_min", &u_min, "u_min/I");
-   ExTree->Branch("gKK_g_max", &gKK_g_max, "gKK_g_max/I");
-   ExTree->Branch("gKK_g_min", &gKK_g_min, "gKK_g_min/I");
-   ExTree->Branch("R3q_taudecay_max", &R3q_taudecay_max, "R3q_taudecay_max/I");
-   ExTree->Branch("R2q_qq_taudecay_max", &R2q_qq_taudecay_max, "R2q_qq_taudecay_max/I");
-   ExTree->Branch("R2q_qtau_taudecay_max", &R2q_qtau_taudecay_max, "R2q_qtau_taudecay_max/I");
-   ExTree->Branch("R2q_tautau_taudecay_max", &R2q_tautau_taudecay_max, "R2q_tautau_taudecay_max/I");
-   ExTree->Branch("Rlqq_emu_taudecay_max", &Rlqq_emu_taudecay_max, "Rlqq_emu_taudecay_max/I");
-   ExTree->Branch("Rlqq_tau_taudecay_max", &Rlqq_tau_taudecay_max, "Rlqq_tau_taudecay_max/I");
-   ExTree->Branch("Rlq_taudecay_max", &Rlq_taudecay_max, "Rlq_taudecay_max/I");
-   ExTree->Branch("w_taudecay_max", &w_taudecay_max, "w_taudecay_max/I");
-   ExTree->Branch("u_taudecay_max", &u_taudecay_max, "u_taudecay_max/I");
-   ExTree->Branch("R3q_taudecay_min", &R3q_taudecay_min, "R3q_taudecay_min/I");
-   ExTree->Branch("R2q_qq_taudecay_min", &R2q_qq_taudecay_min, "R2q_qq_taudecay_min/I");
-   ExTree->Branch("R2q_qtau_taudecay_min", &R2q_qtau_taudecay_min, "R2q_qtau_taudecay_min/I");
-   ExTree->Branch("R2q_tautau_taudecay_min", &R2q_tautau_taudecay_min, "R2q_tautau_taudecay_min/I");
-   ExTree->Branch("Rlqq_emu_taudecay_min", &Rlqq_emu_taudecay_min, "Rlqq_emu_taudecay_min/I");
-   ExTree->Branch("Rlqq_tau_taudecay_min", &Rlqq_tau_taudecay_min, "Rlqq_tau_taudecay_min/I");
-   ExTree->Branch("Rlq_taudecay_min", &Rlq_taudecay_min, "Rlq_taudecay_min/I");
-   ExTree->Branch("w_taudecay_min", &w_taudecay_min, "w_taudecay_min/I");
-   ExTree->Branch("u_taudecay_min", &u_taudecay_min, "u_taudecay_min/I");
-   ExTree->Branch("R3q_tauhad_max", &R3q_tauhad_max, "R3q_tauhad_max/I");
-   ExTree->Branch("R2q_qtau_tauhad_max", &R2q_qtau_tauhad_max, "R2q_qtau_tauhad_max/I");
-   ExTree->Branch("R2q_tautau_tauhad_max", &R2q_tautau_tauhad_max, "R2q_tautau_tauhad_max/I");
-   ExTree->Branch("Rlqq_emu_tauhad_max", &Rlqq_emu_tauhad_max, "Rlqq_emu_tauhad_max/I");
-   ExTree->Branch("Rlq_tauhad_max", &Rlq_tauhad_max, "Rlq_tauhad_max/I");
-   ExTree->Branch("w_tauhad_max", &w_tauhad_max, "w_tauhad_max/I");
-   ExTree->Branch("u_tauhad_max", &u_tauhad_max, "u_tauhad_max/I");
-   ExTree->Branch("R3q_tauhad_min", &R3q_tauhad_min, "R3q_tauhad_min/I");
-   ExTree->Branch("R2q_qtau_tauhad_min", &R2q_qtau_tauhad_min, "R2q_qtau_tauhad_min/I");
-   ExTree->Branch("R2q_tautau_tauhad_min", &R2q_tautau_tauhad_min, "R2q_tautau_tauhad_min/I");
-   ExTree->Branch("Rlqq_emu_tauhad_min", &Rlqq_emu_tauhad_min, "Rlqq_emu_tauhad_min/I");
-   ExTree->Branch("Rlq_tauhad_min", &Rlq_tauhad_min, "Rlq_tauhad_min/I");
-   ExTree->Branch("w_tauhad_min", &w_tauhad_min, "w_tauhad_min/I");
-   ExTree->Branch("u_tauhad_min", &u_tauhad_min, "u_tauhad_min/I");
-   ExTree->Branch("R3q_td_max", &R3q_td_max, "R3q_td_max/I");
-   ExTree->Branch("rest_td_max", &rest_td_max, "rest_td_max/I");
-   ExTree->Branch("R2q_Rlqq_td_max", &R2q_Rlqq_td_max, "R2q_Rlqq_td_max/I");
-   ExTree->Branch("R3q_td_min", &R3q_td_min, "R3q_td_min/I");
-   ExTree->Branch("rest_td_min", &rest_td_min, "rest_td_min/I");
-   ExTree->Branch("R2q_Rlqq_td_min", &R2q_Rlqq_td_min, "R2q_Rlqq_td_min/I");
-   ExTree->Branch("R4q_mid", &R4q_mid, "R4q_mid/I");
-   ExTree->Branch("R3q_mid", &R3q_mid, "R3q_mid/I");
-   ExTree->Branch("R2q_mid", &R2q_mid, "R2q_mid/I");
-   ExTree->Branch("Rlqq_mid", &Rlqq_mid, "Rlqq_mid/I");
-   ExTree->Branch("Rlq_mid", &Rlq_mid, "Rlq_mid/I");
-   ExTree->Branch("w_mid", &w_mid, "w_mid/I");
-   ExTree->Branch("u_mid", &u_mid, "u_mid/I");
-   ExTree->Branch("gKK_g_mid", &gKK_g_mid, "gKK_g_mid/I");
-   ExTree->Branch("R3q_taudecay_mid", &R3q_taudecay_mid, "R3q_taudecay_mid/I");
-   ExTree->Branch("R2q_qq_taudecay_mid", &R2q_qq_taudecay_mid, "R2q_qq_taudecay_mid/I");
-   ExTree->Branch("R2q_qtau_taudecay_mid", &R2q_qtau_taudecay_mid, "R2q_qtau_taudecay_mid/I");
-   ExTree->Branch("R2q_tautau_taudecay_mid", &R2q_tautau_taudecay_mid, "R2q_tautau_taudecay_mid/I");
-   ExTree->Branch("Rlqq_emu_taudecay_mid", &Rlqq_emu_taudecay_mid, "Rlqq_emu_taudecay_mid/I");
-   ExTree->Branch("Rlqq_tau_taudecay_mid", &Rlqq_tau_taudecay_mid, "Rlqq_tau_taudecay_mid/I");
-   ExTree->Branch("Rlq_taudecay_mid", &Rlq_taudecay_mid, "Rlq_taudecay_mid/I");
-   ExTree->Branch("w_taudecay_mid", &w_taudecay_mid, "w_taudecay_mid/I");
-   ExTree->Branch("u_taudecay_mid", &u_taudecay_mid, "u_taudecay_mid/I");
-   ExTree->Branch("R3q_tauhad_mid", &R3q_tauhad_mid, "R3q_tauhad_mid/I");
-   ExTree->Branch("R2q_qtau_tauhad_mid", &R2q_qtau_tauhad_mid, "R2q_qtau_tauhad_mid/I");
-   ExTree->Branch("R2q_tautau_tauhad_mid", &R2q_tautau_tauhad_mid, "R2q_tautau_tauhad_mid/I");
-   ExTree->Branch("Rlqq_emu_tauhad_mid", &Rlqq_emu_tauhad_mid, "Rlqq_emu_tauhad_mid/I");
-   ExTree->Branch("Rlq_tauhad_mid", &Rlq_tauhad_mid, "Rlq_tauhad_mid/I");
-   ExTree->Branch("w_tauhad_mid", &w_tauhad_mid, "w_tauhad_mid/I");
-   ExTree->Branch("u_tauhad_mid", &u_tauhad_mid, "u_tauhad_mid/I");
-   ExTree->Branch("R3q_td_mid", &R3q_td_mid, "R3q_td_mid/I");
-   ExTree->Branch("rest_td_mid", &rest_td_mid, "rest_td_mid/I");
-   ExTree->Branch("R2q_Rlqq_td_mid", &R2q_Rlqq_td_mid, "R2q_Rlqq_td_mid/I");
-
-
-   ExTree->Branch("gen_gKK_g_pt_f",&gen_gKK_g_pt_f,"gen_gKK_g_pt_f/F");
-   ExTree->Branch("gen_gKK_g_eta_f",&gen_gKK_g_eta_f,"gen_gKK_g_eta_f/F");
-   ExTree->Branch("gen_gKK_g_phi_f",&gen_gKK_g_phi_f,"gen_gKK_g_phi_f/F");
-   ExTree->Branch("gen_gKK_g_mass_f",&gen_gKK_g_mass_f,"gen_gKK_g_mass_f/F");
-
-   ExTree->Branch("gen_tau_decay_2",&gen_tau_decay_2,"gen_tau_decay_2/I");
-   ExTree->Branch("gen_tau_decay_3",&gen_tau_decay_3,"gen_tau_decay_3/I");
-
-   ExTree->Branch("z_max",&z_max,"z_max/I");
-   ExTree->Branch("t_max",&t_max,"t_max/I");
-   ExTree->Branch("t_max_tag",&t_max_tag,"t_max_tag/I");
-   ExTree->Branch("w_max",&w_max,"w_max/I");
-   ExTree->Branch("g_max",&g_max,"g_max/I");
-   ExTree->Branch("q_max",&q_max,"q_max/I");
-   ExTree->Branch("u_max",&u_max,"u_max/I");
-   ExTree->Branch("z_mid",&z_mid,"z_mid/I");
-   ExTree->Branch("t_mid",&t_mid,"t_mid/I");
-   ExTree->Branch("t_mid_tag",&t_mid_tag,"t_mid_tag/I");
-   ExTree->Branch("w_mid",&w_mid,"w_mid/I");
-   ExTree->Branch("g_mid",&g_mid,"g_mid/I");
-   ExTree->Branch("q_mid",&q_mid,"q_mid/I");
-   ExTree->Branch("u_mid",&u_mid,"u_mid/I");
-   ExTree->Branch("z_min",&z_min,"z_min/I");
-   ExTree->Branch("t_min",&t_min,"t_min/I");
-   ExTree->Branch("t_min_tag",&t_min_tag,"t_min_tag/I");
-   ExTree->Branch("w_min",&w_min,"w_min/I");
-   ExTree->Branch("g_min",&g_min,"g_min/I");
-   ExTree->Branch("q_min",&q_min,"q_min/I");
-   ExTree->Branch("u_min",&u_min,"u_min/I");
-   ExTree->Branch("z_4",&z_4,"z_4/I");
-   ExTree->Branch("t_4",&t_4,"t_4/I");
-   ExTree->Branch("t_4_tag",&t_4_tag,"t_4_tag/I");
-   ExTree->Branch("w_4",&w_4,"w_4/I");
-   ExTree->Branch("g_4",&g_4,"g_4/I");
-   ExTree->Branch("q_4",&q_4,"q_4/I");
-   ExTree->Branch("u_4",&u_4,"u_4/I");
-
-   ExTree->Branch("t34_max_tag",&t34_max_tag,"t34_max_tag/I");
-   ExTree->Branch("t34_mid_tag",&t34_mid_tag,"t34_mid_tag/I");
-   ExTree->Branch("t34_min_tag",&t34_min_tag,"t34_min_tag/I");
-   ExTree->Branch("t34_4_tag",&t34_4_tag,"t34_4_tag/I");
-
-   ExTree->Branch("R4q_a",&R4q_a,"R4q_a/I");
-   ExTree->Branch("R4q_b",&R4q_b,"R4q_b/I");
-   ExTree->Branch("R4q_c",&R4q_c,"R4q_c/I");
-   ExTree->Branch("R3q_a",&R3q_a,"R3q_a/I");
-   ExTree->Branch("R3q_b",&R3q_b,"R3q_b/I");
-   ExTree->Branch("R3q_c",&R3q_c,"R3q_c/I");
-   ExTree->Branch("R2q_a",&R2q_a,"R2q_a/I");
-   ExTree->Branch("R2q_b",&R2q_b,"R2q_b/I");
-   ExTree->Branch("R2q_c",&R2q_c,"R2q_c/I");
-   ExTree->Branch("w_a",&w_a,"w_a/I");
-   ExTree->Branch("w_b",&w_b,"w_b/I");
-   ExTree->Branch("w_c",&w_c,"w_c/I");
-   ExTree->Branch("z_a",&z_a,"z_a/I");
-   ExTree->Branch("z_b",&z_b,"z_b/I");
-   ExTree->Branch("z_c",&z_c,"z_c/I");
-   ExTree->Branch("Rlqq_a",&Rlqq_a,"Rlqq_a/I");
-   ExTree->Branch("Rlqq_b",&Rlqq_b,"Rlqq_b/I");
-   ExTree->Branch("Rlqq_c",&Rlqq_c,"Rlqq_c/I");
-   ExTree->Branch("Rlq_a",&Rlq_a,"Rlq_a/I");
-   ExTree->Branch("Rlq_b",&Rlq_b,"Rlq_b/I");
-   ExTree->Branch("Rlq_c",&Rlq_c,"Rlq_c/I");
-   ExTree->Branch("gKK_g_a",&gKK_g_a,"gKK_g_a/I");
-   ExTree->Branch("gKK_g_b",&gKK_g_b,"gKK_g_b/I");
-   ExTree->Branch("gKK_g_c",&gKK_g_c,"gKK_g_c/I");
-   ExTree->Branch("u_a",&u_a,"u_a/I");
-   ExTree->Branch("u_b",&u_b,"u_b/I");
-   ExTree->Branch("u_c",&u_c,"u_c/I");
-   ExTree->Branch("R3q_taudecay_a",&R3q_taudecay_a,"R3q_taudecay_a/I");
-   ExTree->Branch("R3q_taudecay_b",&R3q_taudecay_b,"R3q_taudecay_b/I");
-   ExTree->Branch("R3q_taudecay_c",&R3q_taudecay_c,"R3q_taudecay_c/I");
-
-}
-
-ExTree->Branch("goodRun", &goodRun, "goodRun/b");
-ExTree->Branch("Flag", &Flag, "Flag/b");
-
-ExTree->Branch("MET_eta", &MET_eta, "MET_eta/F");
-ExTree->Branch("MET_et", &MET_et, "MET_et/F");
-
-ExTree->Branch("Mj",&Mj,"Mj/F");
-ExTree->Branch("Mj_2",&Mj_2,"Mj_2/F");
-ExTree->Branch("Mj_3",&Mj_3,"Mj_3/F");
-ExTree->Branch("Mj_4",&Mj_4,"Mj_4/F");
-
-ExTree->Branch("FatJet_particleNetMD_QCD_1",&FatJet_particleNetMD_QCD_1,"FatJet_particleNetMD_QCD_1/F");
-ExTree->Branch("FatJet_particleNetMD_QCD_2",&FatJet_particleNetMD_QCD_2,"FatJet_particleNetMD_QCD_2/F");
-ExTree->Branch("FatJet_particleNetMD_QCD_3",&FatJet_particleNetMD_QCD_3,"FatJet_particleNetMD_QCD_3/F");
-    
-ExTree->Branch("FatJet_particleNetMD_Xbb_1",&FatJet_particleNetMD_Xbb_1,"FatJet_particleNetMD_Xbb_1/F");
-ExTree->Branch("FatJet_particleNetMD_Xbb_2",&FatJet_particleNetMD_Xbb_2,"FatJet_particleNetMD_Xbb_2/F");
-ExTree->Branch("FatJet_particleNetMD_Xbb_3",&FatJet_particleNetMD_Xbb_3,"FatJet_particleNetMD_Xbb_3/F");
-    
-ExTree->Branch("FatJet_particleNetMD_Xcc_1",&FatJet_particleNetMD_Xcc_1,"FatJet_particleNetMD_Xcc_1/F");
-ExTree->Branch("FatJet_particleNetMD_Xcc_2",&FatJet_particleNetMD_Xcc_2,"FatJet_particleNetMD_Xcc_2/F");
-ExTree->Branch("FatJet_particleNetMD_Xcc_3",&FatJet_particleNetMD_Xcc_3,"FatJet_particleNetMD_Xcc_3/F");
-    
-ExTree->Branch("FatJet_particleNetMD_Xqq_1",&FatJet_particleNetMD_Xqq_1,"FatJet_particleNetMD_Xqq_1/F");
-ExTree->Branch("FatJet_particleNetMD_Xqq_2",&FatJet_particleNetMD_Xqq_2,"FatJet_particleNetMD_Xqq_2/F");
-ExTree->Branch("FatJet_particleNetMD_Xqq_3",&FatJet_particleNetMD_Xqq_3,"FatJet_particleNetMD_Xqq_3/F");
-    
-ExTree->Branch("FatJet_particleNet_H4qvsQCD_1",&FatJet_particleNet_H4qvsQCD_1,"FatJet_particleNet_H4qvsQCD_1/F");
-ExTree->Branch("FatJet_particleNet_H4qvsQCD_2",&FatJet_particleNet_H4qvsQCD_2,"FatJet_particleNet_H4qvsQCD_2/F");
-ExTree->Branch("FatJet_particleNet_H4qvsQCD_3",&FatJet_particleNet_H4qvsQCD_3,"FatJet_particleNet_H4qvsQCD_3/F");
-    
-ExTree->Branch("FatJet_particleNet_HbbvsQCD_1",&FatJet_particleNet_HbbvsQCD_1,"FatJet_particleNet_HbbvsQCD_1/F");
-ExTree->Branch("FatJet_particleNet_HbbvsQCD_2",&FatJet_particleNet_HbbvsQCD_2,"FatJet_particleNet_HbbvsQCD_2/F");
-ExTree->Branch("FatJet_particleNet_HbbvsQCD_3",&FatJet_particleNet_HbbvsQCD_3,"FatJet_particleNet_HbbvsQCD_3/F");
-    
-ExTree->Branch("FatJet_particleNet_HccvsQCD_1",&FatJet_particleNet_HccvsQCD_1,"FatJet_particleNet_HccvsQCD_1/F");
-ExTree->Branch("FatJet_particleNet_HccvsQCD_2",&FatJet_particleNet_HccvsQCD_2,"FatJet_particleNet_HccvsQCD_2/F");
-ExTree->Branch("FatJet_particleNet_HccvsQCD_3",&FatJet_particleNet_HccvsQCD_3,"FatJet_particleNet_HccvsQCD_3/F");
-    
-ExTree->Branch("FatJet_particleNet_QCD_1",&FatJet_particleNet_QCD_1,"FatJet_particleNet_QCD_1/F");
-ExTree->Branch("FatJet_particleNet_QCD_2",&FatJet_particleNet_QCD_2,"FatJet_particleNet_QCD_2/F");
-ExTree->Branch("FatJet_particleNet_QCD_3",&FatJet_particleNet_QCD_3,"FatJet_particleNet_QCD_3/F");
-    
-ExTree->Branch("FatJet_particleNet_TvsQCD_1",&FatJet_particleNet_TvsQCD_1,"FatJet_particleNet_TvsQCD_1/F");
-ExTree->Branch("FatJet_particleNet_TvsQCD_2",&FatJet_particleNet_TvsQCD_2,"FatJet_particleNet_TvsQCD_2/F");
-ExTree->Branch("FatJet_particleNet_TvsQCD_3",&FatJet_particleNet_TvsQCD_3,"FatJet_particleNet_TvsQCD_3/F");
-    
-ExTree->Branch("FatJet_particleNet_WvsQCD_1",&FatJet_particleNet_WvsQCD_1,"FatJet_particleNet_WvsQCD_1/F");
-ExTree->Branch("FatJet_particleNet_WvsQCD_2",&FatJet_particleNet_WvsQCD_2,"FatJet_particleNet_WvsQCD_2/F");
-ExTree->Branch("FatJet_particleNet_WvsQCD_3",&FatJet_particleNet_WvsQCD_3,"FatJet_particleNet_WvsQCD_3/F");
-    
-ExTree->Branch("FatJet_particleNet_ZvsQCD_1",&FatJet_particleNet_ZvsQCD_1,"FatJet_particleNet_ZvsQCD_1/F");
-ExTree->Branch("FatJet_particleNet_ZvsQCD_2",&FatJet_particleNet_ZvsQCD_2,"FatJet_particleNet_ZvsQCD_2/F");
-ExTree->Branch("FatJet_particleNet_ZvsQCD_3",&FatJet_particleNet_ZvsQCD_3,"FatJet_particleNet_ZvsQCD_3/F");
-    
-ExTree->Branch("FatJet_particleNet_mass_1",&FatJet_particleNet_mass_1,"FatJet_particleNet_mass_1/F");
-ExTree->Branch("FatJet_particleNet_mass_2",&FatJet_particleNet_mass_2,"FatJet_particleNet_mass_2/F");
-ExTree->Branch("FatJet_particleNet_mass_3",&FatJet_particleNet_mass_3,"FatJet_particleNet_mass_3/F");
-
-ExTree->Branch("PartNet_MD_W_a",&PartNet_MD_W_a,"PartNet_MD_W_a/F");
-ExTree->Branch("PartNet_MD_W_b",&PartNet_MD_W_b,"PartNet_MD_W_b/F");
-ExTree->Branch("PartNet_MD_W_c",&PartNet_MD_W_c,"PartNet_MD_W_c/F");
-
-ExTree->Branch("FatJet_tau1_a",&FatJet_tau1_a,"FatJet_tau1_a/F");
-ExTree->Branch("FatJet_tau1_b",&FatJet_tau1_b,"FatJet_tau1_b/F");
-ExTree->Branch("FatJet_tau1_c",&FatJet_tau1_c,"FatJet_tau1_c/F");
-ExTree->Branch("FatJet_tau2_a",&FatJet_tau2_a,"FatJet_tau2_a/F");
-ExTree->Branch("FatJet_tau2_b",&FatJet_tau2_b,"FatJet_tau2_b/F");
-ExTree->Branch("FatJet_tau2_c",&FatJet_tau2_c,"FatJet_tau2_c/F");
-ExTree->Branch("FatJet_tau3_a",&FatJet_tau3_a,"FatJet_tau3_a/F");
-ExTree->Branch("FatJet_tau3_b",&FatJet_tau3_b,"FatJet_tau3_b/F");
-ExTree->Branch("FatJet_tau3_c",&FatJet_tau3_c,"FatJet_tau3_c/F");
-ExTree->Branch("FatJet_tau4_a",&FatJet_tau4_a,"FatJet_tau4_a/F");
-ExTree->Branch("FatJet_tau4_b",&FatJet_tau4_b,"FatJet_tau4_b/F");
-ExTree->Branch("FatJet_tau4_c",&FatJet_tau4_c,"FatJet_tau4_c/F");
-    
-
-ExTree->Branch("num_ak4jetsex", &num_ak4jetsex, "num_ak4jetsex/I");
-ExTree->Branch("num_ak4jetsin", &num_ak4jetsin, "num_ak4jetsin/I");
-
-
-ExTree->Branch("lumiWeight", &lumiWeight, "lumiWeight/D");
-ExTree->Branch("pileupWeight", &pileupWeight, "pileupWeight/D");
-
-   
-ExTree->Branch("MJJ", &MJJ, "MJJ/D");
-   
-ExTree->Branch("event",&event,"event/L");
-ExTree->Branch("lumi",&ls,"lumi/I");
-ExTree->Branch("nPV",&nVtx,"nPV/I");
-
-ExTree->Branch("weight", &weight, "weight/D");
-  
-ExTree->Branch("Mj_max",&Mj_max,"Mj_max/F");
-ExTree->Branch("Mj_mid",&Mj_mid,"Mj_mid/F");
-ExTree->Branch("Mj_min",&Mj_min,"Mj_min/F");
-ExTree->Branch("PTj_max",&PTj_max,"PTj_max/F");
-ExTree->Branch("PTj_mid",&PTj_mid,"PTj_mid/F");
-ExTree->Branch("PTj_min",&PTj_min,"PTj_min/F");
-  
-
-ExTree->Branch("Etaj_max",&Etaj_max,"Etaj_max/F");
-ExTree->Branch("Etaj_mid",&Etaj_mid,"Etaj_mid/F");
-ExTree->Branch("Etaj_min",&Etaj_min,"Etaj_min/F");
-ExTree->Branch("Phij_max",&Phij_max,"Phij_max/F");
-ExTree->Branch("Phij_mid",&Phij_mid,"Phij_mid/F");
-ExTree->Branch("Phij_min",&Phij_min,"Phij_min/F");
-  
-ExTree->Branch("PTj",&PTj,"PTj/F");
-ExTree->Branch("PTj_2",&PTj_2,"PTj_2/D");
-ExTree->Branch("PTj_3",&PTj_3,"PTj_3/D");
-ExTree->Branch("PTj_4",&PTj_4,"PTj_4/F");
-ExTree->Branch("Etaj",&Etaj,"Etaj/F");
-ExTree->Branch("Etaj_2",&Etaj_2,"Etaj_2/F");
-ExTree->Branch("Etaj_3",&Etaj_3,"Etaj_3/F");
-ExTree->Branch("Etaj_4",&Etaj_4,"Etaj_4/F");
-ExTree->Branch("Phij",&Phij,"Phij/F");
-ExTree->Branch("Phij_2",&Phij_2,"Phij_2/F");
-ExTree->Branch("Phij_4",&Phij_4,"Phij_4/F");
-ExTree->Branch("Phij_3",&Phij_3,"Phij_3/F");
-
-
-ExTree->Branch("ST",&ST,"ST/F");
-ExTree->Branch("HT",&HT,"HT/F");
-ExTree->Branch("Nj4",&Nj4,"Nj4/F");
-ExTree->Branch("Nj8",&Nj8,"Nj8/F");
-ExTree->Branch("MJJJ",&MJJJ,"MJJJ/F");
-   
-
-
-
-
-
-ExTree->Branch("MET_et",&MET_et,"MET_et/D");
-ExTree->Branch("MET_phi",&MET_phi,"MET_phi/F");
-
-
-ExTree->Branch("dnn_probTbcq_a",&dnn_probTbcq_a,"dnn_probTbcq_a/F");
-ExTree->Branch("dnn_probTbcq_b",&dnn_probTbcq_b,"dnn_probTbcq_b/F");
-ExTree->Branch("dnn_probTbcq_c",&dnn_probTbcq_c,"dnn_probTbcq_c/F");
-ExTree->Branch("dnn_probTbqq_a",&dnn_probTbqq_a,"dnn_probTbqq_a/F");
-ExTree->Branch("dnn_probTbqq_b",&dnn_probTbqq_b,"dnn_probTbqq_b/F");
-ExTree->Branch("dnn_probTbqq_c",&dnn_probTbqq_c,"dnn_probTbqq_c/F");
-ExTree->Branch("dnn_probTbc_a",&dnn_probTbc_a,"dnn_probTbc_a/F");
-ExTree->Branch("dnn_probTbc_b",&dnn_probTbc_b,"dnn_probTbc_b/F");
-ExTree->Branch("dnn_probTbc_c",&dnn_probTbc_c,"dnn_probTbc_c/F");
-ExTree->Branch("dnn_probTbq_a",&dnn_probTbq_a,"dnn_probTbq_a/F");
-ExTree->Branch("dnn_probTbq_b",&dnn_probTbq_b,"dnn_probTbq_b/F");
-ExTree->Branch("dnn_probTbq_c",&dnn_probTbq_c,"dnn_probTbq_c/F");
-ExTree->Branch("dnn_probWcq_a",&dnn_probWcq_a,"dnn_probWcq_a/F");
-ExTree->Branch("dnn_probWcq_b",&dnn_probWcq_b,"dnn_probWcq_b/F");
-ExTree->Branch("dnn_probWcq_c",&dnn_probWcq_c,"dnn_probWcq_c/F");
-ExTree->Branch("dnn_probWqq_a",&dnn_probWqq_a,"dnn_probWqq_a/F");
-ExTree->Branch("dnn_probWqq_b",&dnn_probWqq_b,"dnn_probWqq_b/F");
-ExTree->Branch("dnn_probWqq_c",&dnn_probWqq_c,"dnn_probWqq_c/F");
-ExTree->Branch("dnn_probZbb_a",&dnn_probZbb_a,"dnn_probZbb_a/F");
-ExTree->Branch("dnn_probZbb_b",&dnn_probZbb_b,"dnn_probZbb_b/F");
-ExTree->Branch("dnn_probZbb_c",&dnn_probZbb_c,"dnn_probZbb_c/F");
-ExTree->Branch("dnn_probZcc_a",&dnn_probZcc_a,"dnn_probZcc_a/F");
-ExTree->Branch("dnn_probZcc_b",&dnn_probZcc_b,"dnn_probZcc_b/F");
-ExTree->Branch("dnn_probZcc_c",&dnn_probZcc_c,"dnn_probZcc_c/F");
-ExTree->Branch("dnn_probZqq_a",&dnn_probZqq_a,"dnn_probZqq_a/F");
-ExTree->Branch("dnn_probZqq_b",&dnn_probZqq_b,"dnn_probZqq_b/F");
-ExTree->Branch("dnn_probZqq_c",&dnn_probZqq_c,"dnn_probZqq_c/F");
-ExTree->Branch("dnn_probHbb_a",&dnn_probHbb_a,"dnn_probHbb_a/F");
-ExTree->Branch("dnn_probHbb_b",&dnn_probHbb_b,"dnn_probHbb_b/F");
-ExTree->Branch("dnn_probHbb_c",&dnn_probHbb_c,"dnn_probHbb_c/F");
-ExTree->Branch("dnn_probHcc_a",&dnn_probHcc_a,"dnn_probHcc_a/F");
-ExTree->Branch("dnn_probHcc_b",&dnn_probHcc_b,"dnn_probHcc_b/F");
-ExTree->Branch("dnn_probHcc_c",&dnn_probHcc_c,"dnn_probHcc_c/F");
-ExTree->Branch("dnn_probHqqqq_a",&dnn_probHqqqq_a,"dnn_probHqqqq_a/F");
-ExTree->Branch("dnn_probHqqqq_b",&dnn_probHqqqq_b,"dnn_probHqqqq_b/F");
-ExTree->Branch("dnn_probHqqqq_c",&dnn_probHqqqq_c,"dnn_probHqqqq_c/F");
-ExTree->Branch("dnn_probQCDbb_a",&dnn_probQCDbb_a,"dnn_probQCDbb_a/F");
-ExTree->Branch("dnn_probQCDbb_b",&dnn_probQCDbb_b,"dnn_probQCDbb_b/F");
-ExTree->Branch("dnn_probQCDbb_c",&dnn_probQCDbb_c,"dnn_probQCDbb_c/F");
-ExTree->Branch("dnn_probQCDcc_a",&dnn_probQCDcc_a,"dnn_probQCDcc_a/F");
-ExTree->Branch("dnn_probQCDcc_b",&dnn_probQCDcc_b,"dnn_probQCDcc_b/F");
-ExTree->Branch("dnn_probQCDcc_c",&dnn_probQCDcc_c,"dnn_probQCDcc_c/F");
-ExTree->Branch("dnn_probQCDb_a",&dnn_probQCDb_a,"dnn_probQCDb_a/F");
-ExTree->Branch("dnn_probQCDb_b",&dnn_probQCDb_b,"dnn_probQCDb_b/F");
-ExTree->Branch("dnn_probQCDb_c",&dnn_probQCDb_c,"dnn_probQCDb_c/F");
-ExTree->Branch("dnn_probQCDc_a",&dnn_probQCDc_a,"dnn_probQCDc_a/F");
-ExTree->Branch("dnn_probQCDc_b",&dnn_probQCDc_b,"dnn_probQCDc_b/F");
-ExTree->Branch("dnn_probQCDc_c",&dnn_probQCDc_c,"dnn_probQCDc_c/F");
-ExTree->Branch("dnn_probQCDothers_a",&dnn_probQCDothers_a,"dnn_probQCDothers_a/F");
-ExTree->Branch("dnn_probQCDothers_b",&dnn_probQCDothers_b,"dnn_probQCDothers_b/F");
-ExTree->Branch("dnn_probQCDothers_c",&dnn_probQCDothers_c,"dnn_probQCDothers_c/F");
-ExTree->Branch("dnnDecorr_probTbcq_a",&dnnDecorr_probTbcq_a,"dnnDecorr_probTbcq_a/F");
-ExTree->Branch("dnnDecorr_probTbcq_b",&dnnDecorr_probTbcq_b,"dnnDecorr_probTbcq_b/F");
-ExTree->Branch("dnnDecorr_probTbcq_c",&dnnDecorr_probTbcq_c,"dnnDecorr_probTbcq_c/F");
-ExTree->Branch("dnnDecorr_probTbqq_a",&dnnDecorr_probTbqq_a,"dnnDecorr_probTbqq_a/F");
-ExTree->Branch("dnnDecorr_probTbqq_b",&dnnDecorr_probTbqq_b,"dnnDecorr_probTbqq_b/F");
-ExTree->Branch("dnnDecorr_probTbqq_c",&dnnDecorr_probTbqq_c,"dnnDecorr_probTbqq_c/F");
-ExTree->Branch("dnnDecorr_probTbc_a",&dnnDecorr_probTbc_a,"dnnDecorr_probTbc_a/F");
-ExTree->Branch("dnnDecorr_probTbc_b",&dnnDecorr_probTbc_b,"dnnDecorr_probTbc_b/F");
-ExTree->Branch("dnnDecorr_probTbc_c",&dnnDecorr_probTbc_c,"dnnDecorr_probTbc_c/F");
-ExTree->Branch("dnnDecorr_probTbq_a",&dnnDecorr_probTbq_a,"dnnDecorr_probTbq_a/F");
-ExTree->Branch("dnnDecorr_probTbq_b",&dnnDecorr_probTbq_b,"dnnDecorr_probTbq_b/F");
-ExTree->Branch("dnnDecorr_probTbq_c",&dnnDecorr_probTbq_c,"dnnDecorr_probTbq_c/F");
-ExTree->Branch("dnnDecorr_probWcq_a",&dnnDecorr_probWcq_a,"dnnDecorr_probWcq_a/F");
-ExTree->Branch("dnnDecorr_probWcq_b",&dnnDecorr_probWcq_b,"dnnDecorr_probWcq_b/F");
-ExTree->Branch("dnnDecorr_probWcq_c",&dnnDecorr_probWcq_c,"dnnDecorr_probWcq_c/F");
-ExTree->Branch("dnnDecorr_probWqq_a",&dnnDecorr_probWqq_a,"dnnDecorr_probWqq_a/F");
-ExTree->Branch("dnnDecorr_probWqq_b",&dnnDecorr_probWqq_b,"dnnDecorr_probWqq_b/F");
-ExTree->Branch("dnnDecorr_probWqq_c",&dnnDecorr_probWqq_c,"dnnDecorr_probWqq_c/F");
-ExTree->Branch("dnnDecorr_probZbb_a",&dnnDecorr_probZbb_a,"dnnDecorr_probZbb_a/F");
-ExTree->Branch("dnnDecorr_probZbb_b",&dnnDecorr_probZbb_b,"dnnDecorr_probZbb_b/F");
-ExTree->Branch("dnnDecorr_probZbb_c",&dnnDecorr_probZbb_c,"dnnDecorr_probZbb_c/F");
-ExTree->Branch("dnnDecorr_probZcc_a",&dnnDecorr_probZcc_a,"dnnDecorr_probZcc_a/F");
-ExTree->Branch("dnnDecorr_probZcc_b",&dnnDecorr_probZcc_b,"dnnDecorr_probZcc_b/F");
-ExTree->Branch("dnnDecorr_probZcc_c",&dnnDecorr_probZcc_c,"dnnDecorr_probZcc_c/F");
-ExTree->Branch("dnnDecorr_probZqq_a",&dnnDecorr_probZqq_a,"dnnDecorr_probZqq_a/F");
-ExTree->Branch("dnnDecorr_probZqq_b",&dnnDecorr_probZqq_b,"dnnDecorr_probZqq_b/F");
-ExTree->Branch("dnnDecorr_probZqq_c",&dnnDecorr_probZqq_c,"dnnDecorr_probZqq_c/F");
-ExTree->Branch("dnnDecorr_probHbb_a",&dnnDecorr_probHbb_a,"dnnDecorr_probHbb_a/F");
-ExTree->Branch("dnnDecorr_probHbb_b",&dnnDecorr_probHbb_b,"dnnDecorr_probHbb_b/F");
-ExTree->Branch("dnnDecorr_probHbb_c",&dnnDecorr_probHbb_c,"dnnDecorr_probHbb_c/F");
-ExTree->Branch("dnnDecorr_probHcc_a",&dnnDecorr_probHcc_a,"dnnDecorr_probHcc_a/F");
-ExTree->Branch("dnnDecorr_probHcc_b",&dnnDecorr_probHcc_b,"dnnDecorr_probHcc_b/F");
-ExTree->Branch("dnnDecorr_probHcc_c",&dnnDecorr_probHcc_c,"dnnDecorr_probHcc_c/F");
-ExTree->Branch("dnnDecorr_probHqqqq_a",&dnnDecorr_probHqqqq_a,"dnnDecorr_probHqqqq_a/F");
-ExTree->Branch("dnnDecorr_probHqqqq_b",&dnnDecorr_probHqqqq_b,"dnnDecorr_probHqqqq_b/F");
-ExTree->Branch("dnnDecorr_probHqqqq_c",&dnnDecorr_probHqqqq_c,"dnnDecorr_probHqqqq_c/F");
-ExTree->Branch("dnnDecorr_probQCDbb_a",&dnnDecorr_probQCDbb_a,"dnnDecorr_probQCDbb_a/F");
-ExTree->Branch("dnnDecorr_probQCDbb_b",&dnnDecorr_probQCDbb_b,"dnnDecorr_probQCDbb_b/F");
-ExTree->Branch("dnnDecorr_probQCDbb_c",&dnnDecorr_probQCDbb_c,"dnnDecorr_probQCDbb_c/F");
-ExTree->Branch("dnnDecorr_probQCDcc_a",&dnnDecorr_probQCDcc_a,"dnnDecorr_probQCDcc_a/F");
-ExTree->Branch("dnnDecorr_probQCDcc_b",&dnnDecorr_probQCDcc_b,"dnnDecorr_probQCDcc_b/F");
-ExTree->Branch("dnnDecorr_probQCDcc_c",&dnnDecorr_probQCDcc_c,"dnnDecorr_probQCDcc_c/F");
-ExTree->Branch("dnnDecorr_probQCDb_a",&dnnDecorr_probQCDb_a,"dnnDecorr_probQCDb_a/F");
-ExTree->Branch("dnnDecorr_probQCDb_b",&dnnDecorr_probQCDb_b,"dnnDecorr_probQCDb_b/F");
-ExTree->Branch("dnnDecorr_probQCDb_c",&dnnDecorr_probQCDb_c,"dnnDecorr_probQCDb_c/F");
-ExTree->Branch("dnnDecorr_probQCDc_a",&dnnDecorr_probQCDc_a,"dnnDecorr_probQCDc_a/F");
-ExTree->Branch("dnnDecorr_probQCDc_b",&dnnDecorr_probQCDc_b,"dnnDecorr_probQCDc_b/F");
-ExTree->Branch("dnnDecorr_probQCDc_c",&dnnDecorr_probQCDc_c,"dnnDecorr_probQCDc_c/F");
-ExTree->Branch("dnnDecorr_probQCDothers_a",&dnnDecorr_probQCDothers_a,"dnnDecorr_probQCDothers_a/F");
-ExTree->Branch("dnnDecorr_probQCDothers_b",&dnnDecorr_probQCDothers_b,"dnnDecorr_probQCDothers_b/F");
-ExTree->Branch("dnnDecorr_probQCDothers_c",&dnnDecorr_probQCDothers_c,"dnnDecorr_probQCDothers_c/F");
-
-ExTree->Branch("Mj_a",&Mj_a,"Mj_a/F");
-ExTree->Branch("Mj_b",&Mj_b,"Mj_b/F");
-ExTree->Branch("Mj_c",&Mj_c,"Mj_c/F");
-ExTree->Branch("PTj_a",&PTj_a,"PTj_a/F");
-ExTree->Branch("PTj_b",&PTj_b,"PTj_b/F");
-ExTree->Branch("PTj_c",&PTj_c,"PTj_c/F");
-ExTree->Branch("Etaj_a",&Etaj_a,"Etaj_a/F");
-ExTree->Branch("Etaj_b",&Etaj_b,"Etaj_b/F");
-ExTree->Branch("Etaj_c",&Etaj_c,"Etaj_c/F");
-ExTree->Branch("Phij_a",&Phij_a,"Phij_a/F");
-ExTree->Branch("Phij_b",&Phij_b,"Phij_b/F");
-ExTree->Branch("Phij_c",&Phij_c,"Phij_c/F");
-
-
-ExTree->Branch("dnnTop_a",&dnnTop_a,"dnnTop_a/F");
-ExTree->Branch("dnnTop_b",&dnnTop_b,"dnnTop_b/F");
-ExTree->Branch("dnnTop_c",&dnnTop_c,"dnnTop_c/F");
-ExTree->Branch("dnnW_a",&dnnW_a,"dnnW_a/F");
-ExTree->Branch("dnnW_b",&dnnW_b,"dnnW_b/F");
-ExTree->Branch("dnnW_c",&dnnW_c,"dnnW_c/F");
-ExTree->Branch("dnnH4q_a",&dnnH4q_a,"dnnH4q_a/F");
-ExTree->Branch("dnnH4q_b",&dnnH4q_b,"dnnH4q_b/F");
-ExTree->Branch("dnnH4q_c",&dnnH4q_c,"dnnH4q_c/F");
-ExTree->Branch("dnnZ_a",&dnnZ_a,"dnnZ_a/F");
-ExTree->Branch("dnnZ_b",&dnnZ_b,"dnnZ_b/F");
-ExTree->Branch("dnnZ_c",&dnnZ_c,"dnnZ_c/F");
-ExTree->Branch("dnnZbb_a",&dnnZbb_a,"dnnZbb_a/F");
-ExTree->Branch("dnnZbb_b",&dnnZbb_b,"dnnZbb_b/F");
-ExTree->Branch("dnnZbb_c",&dnnZbb_c,"dnnZbb_c/F");
-ExTree->Branch("dnnHbb_a",&dnnHbb_a,"dnnHbb_a/F");
-ExTree->Branch("dnnHbb_b",&dnnHbb_b,"dnnHbb_b/F");
-ExTree->Branch("dnnHbb_c",&dnnHbb_c,"dnnHbb_c/F");
-ExTree->Branch("dnnDecorrTop_a",&dnnDecorrTop_a,"dnnDecorrTop_a/F");
-ExTree->Branch("dnnDecorrTop_b",&dnnDecorrTop_b,"dnnDecorrTop_b/F");
-ExTree->Branch("dnnDecorrTop_c",&dnnDecorrTop_c,"dnnDecorrTop_c/F");
-ExTree->Branch("dnnDecorrW_a",&dnnDecorrW_a,"dnnDecorrW_a/F");
-ExTree->Branch("dnnDecorrW_b",&dnnDecorrW_b,"dnnDecorrW_b/F");
-ExTree->Branch("dnnDecorrW_c",&dnnDecorrW_c,"dnnDecorrW_c/F");
-ExTree->Branch("dnnDecorrH4q_a",&dnnDecorrH4q_a,"dnnDecorrH4q_a/F");
-ExTree->Branch("dnnDecorrH4q_b",&dnnDecorrH4q_b,"dnnDecorrH4q_b/F");
-ExTree->Branch("dnnDecorrH4q_c",&dnnDecorrH4q_c,"dnnDecorrH4q_c/F");
-ExTree->Branch("dnnDecorrZ_a",&dnnDecorrZ_a,"dnnDecorrZ_a/F");
-ExTree->Branch("dnnDecorrZ_b",&dnnDecorrZ_b,"dnnDecorrZ_b/F");
-ExTree->Branch("dnnDecorrZ_c",&dnnDecorrZ_c,"dnnDecorrZ_c/F");
-ExTree->Branch("dnnDecorrZbb_a",&dnnDecorrZbb_a,"dnnDecorrZbb_a/F");
-ExTree->Branch("dnnDecorrZbb_b",&dnnDecorrZbb_b,"dnnDecorrZbb_b/F");
-ExTree->Branch("dnnDecorrZbb_c",&dnnDecorrZbb_c,"dnnDecorrZbb_c/F");
-ExTree->Branch("dnnDecorrHbb_a",&dnnDecorrHbb_a,"dnnDecorrHbb_a/F");
-ExTree->Branch("dnnDecorrHbb_b",&dnnDecorrHbb_b,"dnnDecorrHbb_b/F");
-ExTree->Branch("dnnDecorrHbb_c",&dnnDecorrHbb_c,"dnnDecorrHbb_c/F");
-ExTree->Branch("dnnDecorrbb_a",&dnnDecorrbb_a,"dnnDecorrbb_a/F");
-ExTree->Branch("dnnDecorrbb_b",&dnnDecorrbb_b,"dnnDecorrbb_b/F");
-ExTree->Branch("dnnDecorrbb_c",&dnnDecorrbb_c,"dnnDecorrbb_c/F");
-ExTree->Branch("dnnDecorrcc_a",&dnnDecorrcc_a,"dnnDecorrcc_a/F");
-ExTree->Branch("dnnDecorrcc_b",&dnnDecorrcc_b,"dnnDecorrcc_b/F");
-ExTree->Branch("dnnDecorrcc_c",&dnnDecorrcc_c,"dnnDecorrcc_c/F");
-ExTree->Branch("dnnDecorrbbnog_a",&dnnDecorrbbnog_a,"dnnDecorrbbnog_a/F");
-ExTree->Branch("dnnDecorrbbnog_b",&dnnDecorrbbnog_b,"dnnDecorrbbnog_b/F");
-ExTree->Branch("dnnDecorrbbnog_c",&dnnDecorrbbnog_c,"dnnDecorrbbnog_c/F");
-ExTree->Branch("dnnDecorrccnog_a",&dnnDecorrccnog_a,"dnnDecorrccnog_a/F");
-ExTree->Branch("dnnDecorrccnog_b",&dnnDecorrccnog_b,"dnnDecorrccnog_b/F");
-ExTree->Branch("dnnDecorrccnog_c",&dnnDecorrccnog_c,"dnnDecorrccnog_c/F");
-ExTree->Branch("dnnqcd_a",&dnnqcd_a,"dnnqcd_a/F");
-ExTree->Branch("dnnqcd_b",&dnnqcd_b,"dnnqcd_b/F");
-ExTree->Branch("dnnqcd_c",&dnnqcd_c,"dnnqcd_c/F");
-ExTree->Branch("dnntop_a",&dnntop_a,"dnntop_a/F");
-ExTree->Branch("dnntop_b",&dnntop_b,"dnntop_b/F");
-ExTree->Branch("dnntop_c",&dnntop_c,"dnntop_c/F");
-ExTree->Branch("dnnw_a",&dnnw_a,"dnnw_a/F");
-ExTree->Branch("dnnw_b",&dnnw_b,"dnnw_b/F");
-ExTree->Branch("dnnw_c",&dnnw_c,"dnnw_c/F");
-ExTree->Branch("dnnz_a",&dnnz_a,"dnnz_a/F");
-ExTree->Branch("dnnz_b",&dnnz_b,"dnnz_b/F");
-ExTree->Branch("dnnz_c",&dnnz_c,"dnnz_c/F");
-ExTree->Branch("dnnzbb_a",&dnnzbb_a,"dnnzbb_a/F");
-ExTree->Branch("dnnzbb_b",&dnnzbb_b,"dnnzbb_b/F");
-ExTree->Branch("dnnzbb_c",&dnnzbb_c,"dnnzbb_c/F");
-ExTree->Branch("dnnhbb_a",&dnnhbb_a,"dnnhbb_a/F");
-ExTree->Branch("dnnhbb_b",&dnnhbb_b,"dnnhbb_b/F");
-ExTree->Branch("dnnhbb_c",&dnnhbb_c,"dnnhbb_c/F");
-ExTree->Branch("dnnh4q_a",&dnnh4q_a,"dnnh4q_a/F");
-ExTree->Branch("dnnh4q_b",&dnnh4q_b,"dnnh4q_b/F");
-ExTree->Branch("dnnh4q_c",&dnnh4q_c,"dnnh4q_c/F");
-ExTree->Branch("dnnDecorrqcd_a",&dnnDecorrqcd_a,"dnnDecorrqcd_a/F");
-ExTree->Branch("dnnDecorrqcd_b",&dnnDecorrqcd_b,"dnnDecorrqcd_b/F");
-ExTree->Branch("dnnDecorrqcd_c",&dnnDecorrqcd_c,"dnnDecorrqcd_c/F");
-ExTree->Branch("dnnDecorrtop_a",&dnnDecorrtop_a,"dnnDecorrtop_a/F");
-ExTree->Branch("dnnDecorrtop_b",&dnnDecorrtop_b,"dnnDecorrtop_b/F");
-ExTree->Branch("dnnDecorrtop_c",&dnnDecorrtop_c,"dnnDecorrtop_c/F");
-ExTree->Branch("dnnDecorrw_a",&dnnDecorrw_a,"dnnDecorrw_a/F");
-ExTree->Branch("dnnDecorrw_b",&dnnDecorrw_b,"dnnDecorrw_b/F");
-ExTree->Branch("dnnDecorrw_c",&dnnDecorrw_c,"dnnDecorrw_c/F");
-ExTree->Branch("dnnDecorrz_a",&dnnDecorrz_a,"dnnDecorrz_a/F");
-ExTree->Branch("dnnDecorrz_b",&dnnDecorrz_b,"dnnDecorrz_b/F");
-ExTree->Branch("dnnDecorrz_c",&dnnDecorrz_c,"dnnDecorrz_c/F");
-ExTree->Branch("dnnDecorrzbb_a",&dnnDecorrzbb_a,"dnnDecorrzbb_a/F");
-ExTree->Branch("dnnDecorrzbb_b",&dnnDecorrzbb_b,"dnnDecorrzbb_b/F");
-ExTree->Branch("dnnDecorrzbb_c",&dnnDecorrzbb_c,"dnnDecorrzbb_c/F");
-ExTree->Branch("dnnDecorrhbb_a",&dnnDecorrhbb_a,"dnnDecorrhbb_a/F");
-ExTree->Branch("dnnDecorrhbb_b",&dnnDecorrhbb_b,"dnnDecorrhbb_b/F");
-ExTree->Branch("dnnDecorrhbb_c",&dnnDecorrhbb_c,"dnnDecorrhbb_c/F");
-ExTree->Branch("dnnDecorrh4q_a",&dnnDecorrh4q_a,"dnnDecorrh4q_a/F");
-ExTree->Branch("dnnDecorrh4q_b",&dnnDecorrh4q_b,"dnnDecorrh4q_b/F");
-ExTree->Branch("dnnDecorrh4q_c",&dnnDecorrh4q_c,"dnnDecorrh4q_c/F");
-
-ExTree->Branch("nb_l_deep_ex",&nb_l_deep_ex,"nb_l_deep_ex/I");
-ExTree->Branch("nb_m_deep_ex",&nb_m_deep_ex,"nb_m_deep_ex/I");
-ExTree->Branch("nb_t_deep_ex",&nb_t_deep_ex,"nb_t_deep_ex/I");
-ExTree->Branch("nb_l_deep_in",&nb_l_deep_in,"nb_l_deep_in/I");
-ExTree->Branch("nb_m_deep_in",&nb_m_deep_in,"nb_m_deep_in/I");
-ExTree->Branch("nb_t_deep_in",&nb_t_deep_in,"nb_t_deep_in/I");
-}
-
-if ( channelName.Contains("VVV_EFT_1lepton") ){
-   
-ExTree->Branch("Lep1fatJet2_LeptonPt",&Lep1fatJet2_LeptonPt,"Lep1fatJet2_LeptonPt/F");
-ExTree->Branch("Lep1fatJet2_LeptonEta",&Lep1fatJet2_LeptonEta,"Lep1fatJet2_LeptonEta/F");
-ExTree->Branch("Lep1fatJet2_LeptonPhi",&Lep1fatJet2_LeptonPhi,"Lep1fatJet2_LeptonPhi/F");
-ExTree->Branch("Lep1fatJet2_LeptonE",&Lep1fatJet2_LeptonE,"Lep1fatJet2_LeptonE/F");
-ExTree->Branch("Lep1fatJet2_LeptonPDGID",&Lep1fatJet2_LeptonPDGID,"Lep1fatJet2_LeptonPDGID/I");
-ExTree->Branch("Lep1fatJet2_Muon_pfRelIso04_all",&Lep1fatJet2_Muon_pfRelIso04_all,"Lep1fatJet2_Muon_pfRelIso04_all/F");
-
-    // MET
-ExTree->Branch("Lep1fatJet2_MET_pt",&Lep1fatJet2_MET_pt,"Lep1fatJet2_MET_pt/F");
-ExTree->Branch("Lep1fatJet2_MET_phi",&Lep1fatJet2_MET_phi,"Lep1fatJet2_MET_phi/F");
-ExTree->Branch("Common_MET_pt_JER",&Common_MET_pt_JER,"Common_MET_pt_JER/F");
-ExTree->Branch("Common_MET_phi_JER",&Common_MET_phi_JER,"Common_MET_phi_JER/F");
-
-    // neutrino
-ExTree->Branch("Lep1fatJet2_NeutrinoPt",&Lep1fatJet2_NeutrinoPt,"Lep1fatJet2_NeutrinoPt/F");
-ExTree->Branch("Lep1fatJet2_NeutrinoEta",&Lep1fatJet2_NeutrinoEta,"Lep1fatJet2_NeutrinoEta/F");
-ExTree->Branch("Lep1fatJet2_Neutrinophi",&Lep1fatJet2_Neutrinophi,"Lep1fatJet2_Neutrinophi/F");
-ExTree->Branch("Lep1fatJet2_NeutrinoE",&Lep1fatJet2_NeutrinoE,"Lep1fatJet2_NeutrinoE/F");
-
-    // Leptonic W
-ExTree->Branch("Lep1fatJet2_LeptonicWPt",&Lep1fatJet2_LeptonicWPt,"Lep1fatJet2_LeptonicWPt/F");
-ExTree->Branch("Lep1fatJet2_LeptonicWEta",&Lep1fatJet2_LeptonicWEta,"Lep1fatJet2_LeptonicWEta/F");
-ExTree->Branch("Lep1fatJet2_LeptonicWPhi",&Lep1fatJet2_LeptonicWPhi,"Lep1fatJet2_LeptonicWPhi/F");
-ExTree->Branch("Lep1fatJet2_LeptonicWM",&Lep1fatJet2_LeptonicWM,"Lep1fatJet2_LeptonicWM/F");
-ExTree->Branch("Lep1fatJet2_LeptonicWMt",&Lep1fatJet2_LeptonicWMt,"Lep1fatJet2_LeptonicWMt/F");
-   
-// fatJet
-
-ExTree->Branch("Lep1fatJet2_FatJet_pt",&Lep1fatJet2_FatJet_pt,"Lep1fatJet2_FatJet_pt/F");
-ExTree->Branch("Lep1fatJet2_FatJet_eta",&Lep1fatJet2_FatJet_eta,"Lep1fatJet2_FatJet_eta/F");
-ExTree->Branch("Lep1fatJet2_FatJet_phi",&Lep1fatJet2_FatJet_phi,"Lep1fatJet2_FatJet_phi/F");
-ExTree->Branch("Lep1fatJet2_FatJet_msoftdrop",&Lep1fatJet2_FatJet_msoftdrop,"Lep1fatJet2_FatJet_msoftdrop/F");
-ExTree->Branch("Lep1fatJet2_FatJet_jetId",&Lep1fatJet2_FatJet_jetId,"Lep1fatJet2_FatJet_jetId/I");
-ExTree->Branch("Lep1fatJet2_FatJet_tau1",&Lep1fatJet2_FatJet_tau1,"Lep1fatJet2_FatJet_tau1/F");
-ExTree->Branch("Lep1fatJet2_FatJet_tau2",&Lep1fatJet2_FatJet_tau2,"Lep1fatJet2_FatJet_tau2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_tau3",&Lep1fatJet2_FatJet_tau3,"Lep1fatJet2_FatJet_tau3/F");
-ExTree->Branch("Lep1fatJet2_FatJet_tau4",&Lep1fatJet2_FatJet_tau4,"Lep1fatJet2_FatJet_tau4/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_H4qvsQCD",&Lep1fatJet2_FatJet_deepTagMD_H4qvsQCD,"Lep1fatJet2_FatJet_deepTagMD_H4qvsQCD/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_HbbvsQCD",&Lep1fatJet2_FatJet_deepTagMD_HbbvsQCD,"Lep1fatJet2_FatJet_deepTagMD_HbbvsQCD/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_TvsQCD",&Lep1fatJet2_FatJet_deepTagMD_TvsQCD,"Lep1fatJet2_FatJet_deepTagMD_TvsQCD/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_WvsQCD",&Lep1fatJet2_FatJet_deepTagMD_WvsQCD,"Lep1fatJet2_FatJet_deepTagMD_WvsQCD/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_ZHbbvsQCD",&Lep1fatJet2_FatJet_deepTagMD_ZHbbvsQCD,"Lep1fatJet2_FatJet_deepTagMD_ZHbbvsQCD/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_ZHccvsQCD",&Lep1fatJet2_FatJet_deepTagMD_ZHccvsQCD,"Lep1fatJet2_FatJet_deepTagMD_ZHccvsQCD/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_ZbbvsQCD",&Lep1fatJet2_FatJet_deepTagMD_ZbbvsQCD,"Lep1fatJet2_FatJet_deepTagMD_ZbbvsQCD/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_ZvsQCD",&Lep1fatJet2_FatJet_deepTagMD_ZvsQCD,"Lep1fatJet2_FatJet_deepTagMD_ZvsQCD/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_bbvsLight",&Lep1fatJet2_FatJet_deepTagMD_bbvsLight,"Lep1fatJet2_FatJet_deepTagMD_bbvsLight/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_ccvsLight",&Lep1fatJet2_FatJet_deepTagMD_ccvsLight,"Lep1fatJet2_FatJet_deepTagMD_ccvsLight/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTag_H",&Lep1fatJet2_FatJet_deepTag_H,"Lep1fatJet2_FatJet_deepTag_H/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTag_QCD",&Lep1fatJet2_FatJet_deepTag_QCD,"Lep1fatJet2_FatJet_deepTag_QCD/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTag_QCDothers",&Lep1fatJet2_FatJet_deepTag_QCDothers,"Lep1fatJet2_FatJet_deepTag_QCDothers/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTag_TvsQCD",&Lep1fatJet2_FatJet_deepTag_TvsQCD,"Lep1fatJet2_FatJet_deepTag_TvsQCD/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTag_WvsQCD",&Lep1fatJet2_FatJet_deepTag_WvsQCD,"Lep1fatJet2_FatJet_deepTag_WvsQCD/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTag_ZvsQCD",&Lep1fatJet2_FatJet_deepTag_ZvsQCD,"Lep1fatJet2_FatJet_deepTag_ZvsQCD/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNetMD_QCD",&Lep1fatJet2_FatJet_particleNetMD_QCD,"Lep1fatJet2_FatJet_particleNetMD_QCD/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNetMD_Xbb",&Lep1fatJet2_FatJet_particleNetMD_Xbb,"Lep1fatJet2_FatJet_particleNetMD_Xbb/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNetMD_Xcc",&Lep1fatJet2_FatJet_particleNetMD_Xcc,"Lep1fatJet2_FatJet_particleNetMD_Xcc/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNetMD_Xqq",&Lep1fatJet2_FatJet_particleNetMD_Xqq,"Lep1fatJet2_FatJet_particleNetMD_Xqq/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNet_H4qvsQCD",&Lep1fatJet2_FatJet_particleNet_H4qvsQCD,"Lep1fatJet2_FatJet_particleNet_H4qvsQCD/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNet_HbbvsQCD",&Lep1fatJet2_FatJet_particleNet_HbbvsQCD,"Lep1fatJet2_FatJet_particleNet_HbbvsQCD/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNet_HccvsQCD",&Lep1fatJet2_FatJet_particleNet_HccvsQCD,"Lep1fatJet2_FatJet_particleNet_HccvsQCD/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNet_QCD",&Lep1fatJet2_FatJet_particleNet_QCD,"Lep1fatJet2_FatJet_particleNet_QCD/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNet_TvsQCD",&Lep1fatJet2_FatJet_particleNet_TvsQCD,"Lep1fatJet2_FatJet_particleNet_TvsQCD/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNet_WvsQCD",&Lep1fatJet2_FatJet_particleNet_WvsQCD,"Lep1fatJet2_FatJet_particleNet_WvsQCD/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNet_ZvsQCD",&Lep1fatJet2_FatJet_particleNet_ZvsQCD,"Lep1fatJet2_FatJet_particleNet_ZvsQCD/F");
-
-ExTree->Branch("Lep1fatJet2_FatJet_pt_2",&Lep1fatJet2_FatJet_pt_2,"Lep1fatJet2_FatJet_pt_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_eta_2",&Lep1fatJet2_FatJet_eta_2,"Lep1fatJet2_FatJet_eta_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_phi_2",&Lep1fatJet2_FatJet_phi_2,"Lep1fatJet2_FatJet_phi_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_msoftdrop_2",&Lep1fatJet2_FatJet_msoftdrop_2,"Lep1fatJet2_FatJet_msoftdrop_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_jetId_2",&Lep1fatJet2_FatJet_jetId_2,"Lep1fatJet2_FatJet_jetId_2/I");
-ExTree->Branch("Lep1fatJet2_FatJet_tau1_2",&Lep1fatJet2_FatJet_tau1_2,"Lep1fatJet2_FatJet_tau1_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_tau2_2",&Lep1fatJet2_FatJet_tau2_2,"Lep1fatJet2_FatJet_tau2_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_tau3_2",&Lep1fatJet2_FatJet_tau3_2,"Lep1fatJet2_FatJet_tau3_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_tau4_2",&Lep1fatJet2_FatJet_tau4_2,"Lep1fatJet2_FatJet_tau4_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_H4qvsQCD_2",&Lep1fatJet2_FatJet_deepTagMD_H4qvsQCD_2,"Lep1fatJet2_FatJet_deepTagMD_H4qvsQCD_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_HbbvsQCD_2",&Lep1fatJet2_FatJet_deepTagMD_HbbvsQCD_2,"Lep1fatJet2_FatJet_deepTagMD_HbbvsQCD_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_TvsQCD_2",&Lep1fatJet2_FatJet_deepTagMD_TvsQCD_2,"Lep1fatJet2_FatJet_deepTagMD_TvsQCD_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_WvsQCD_2",&Lep1fatJet2_FatJet_deepTagMD_WvsQCD_2,"Lep1fatJet2_FatJet_deepTagMD_WvsQCD_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_ZHbbvsQCD_2",&Lep1fatJet2_FatJet_deepTagMD_ZHbbvsQCD_2,"Lep1fatJet2_FatJet_deepTagMD_ZHbbvsQCD_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_ZHccvsQCD_2",&Lep1fatJet2_FatJet_deepTagMD_ZHccvsQCD_2,"Lep1fatJet2_FatJet_deepTagMD_ZHccvsQCD_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_ZbbvsQCD_2",&Lep1fatJet2_FatJet_deepTagMD_ZbbvsQCD_2,"Lep1fatJet2_FatJet_deepTagMD_ZbbvsQCD_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_ZvsQCD_2",&Lep1fatJet2_FatJet_deepTagMD_ZvsQCD_2,"Lep1fatJet2_FatJet_deepTagMD_ZvsQCD_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_bbvsLight_2",&Lep1fatJet2_FatJet_deepTagMD_bbvsLight_2,"Lep1fatJet2_FatJet_deepTagMD_bbvsLight_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTagMD_ccvsLight_2",&Lep1fatJet2_FatJet_deepTagMD_ccvsLight_2,"Lep1fatJet2_FatJet_deepTagMD_ccvsLight_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTag_H_2",&Lep1fatJet2_FatJet_deepTag_H_2,"Lep1fatJet2_FatJet_deepTag_H_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTag_QCD_2",&Lep1fatJet2_FatJet_deepTag_QCD_2,"Lep1fatJet2_FatJet_deepTag_QCD_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTag_QCDothers_2",&Lep1fatJet2_FatJet_deepTag_QCDothers_2,"Lep1fatJet2_FatJet_deepTag_QCDothers_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTag_TvsQCD_2",&Lep1fatJet2_FatJet_deepTag_TvsQCD_2,"Lep1fatJet2_FatJet_deepTag_TvsQCD_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTag_WvsQCD_2",&Lep1fatJet2_FatJet_deepTag_WvsQCD_2,"Lep1fatJet2_FatJet_deepTag_WvsQCD_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_deepTag_ZvsQCD_2",&Lep1fatJet2_FatJet_deepTag_ZvsQCD_2,"Lep1fatJet2_FatJet_deepTag_ZvsQCD_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNetMD_QCD_2",&Lep1fatJet2_FatJet_particleNetMD_QCD_2,"Lep1fatJet2_FatJet_particleNetMD_QCD_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNetMD_Xbb_2",&Lep1fatJet2_FatJet_particleNetMD_Xbb_2,"Lep1fatJet2_FatJet_particleNetMD_Xbb_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNetMD_Xcc_2",&Lep1fatJet2_FatJet_particleNetMD_Xcc_2,"Lep1fatJet2_FatJet_particleNetMD_Xcc_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNetMD_Xqq_2",&Lep1fatJet2_FatJet_particleNetMD_Xqq_2,"Lep1fatJet2_FatJet_particleNetMD_Xqq_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNet_H4qvsQCD_2",&Lep1fatJet2_FatJet_particleNet_H4qvsQCD_2,"Lep1fatJet2_FatJet_particleNet_H4qvsQCD_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNet_HbbvsQCD_2",&Lep1fatJet2_FatJet_particleNet_HbbvsQCD_2,"Lep1fatJet2_FatJet_particleNet_HbbvsQCD_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNet_HccvsQCD_2",&Lep1fatJet2_FatJet_particleNet_HccvsQCD_2,"Lep1fatJet2_FatJet_particleNet_HccvsQCD_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNet_QCD_2",&Lep1fatJet2_FatJet_particleNet_QCD_2,"Lep1fatJet2_FatJet_particleNet_QCD_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNet_TvsQCD_2",&Lep1fatJet2_FatJet_particleNet_TvsQCD_2,"Lep1fatJet2_FatJet_particleNet_TvsQCD_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNet_WvsQCD_2",&Lep1fatJet2_FatJet_particleNet_WvsQCD_2,"Lep1fatJet2_FatJet_particleNet_WvsQCD_2/F");
-ExTree->Branch("Lep1fatJet2_FatJet_particleNet_ZvsQCD_2",&Lep1fatJet2_FatJet_particleNet_ZvsQCD_2,"Lep1fatJet2_FatJet_particleNet_ZvsQCD_2/F");
-
-// weight, HLT
-ExTree->Branch("Lep1fatJet2_Pileup_nTrueInt",&Lep1fatJet2_Pileup_nTrueInt,"Lep1fatJet2_Pileup_nTrueInt/F");
-ExTree->Branch("Lep1fatJet2_Pileup_nPU",&Lep1fatJet2_Pileup_nPU,"Lep1fatJet2_Pileup_nPU/F");
-
-ExTree->Branch("Lep1fatJet2_HLT_Mu50",&Lep1fatJet2_HLT_Mu50,"Lep1fatJet2_HLT_Mu50/I");
-ExTree->Branch("Lep1fatJet2_HLT_IsoMu24",&Lep1fatJet2_HLT_IsoMu24,"Lep1fatJet2_HLT_IsoMu24/I");
-ExTree->Branch("Lep1fatJet2_HLT_OldMu100",&Lep1fatJet2_HLT_OldMu100,"Lep1fatJet2_HLT_OldMu100/I");
-ExTree->Branch("Lep1fatJet2_HLT_TkMu100",&Lep1fatJet2_HLT_TkMu100,"Lep1fatJet2_HLT_TkMu100/I");
-ExTree->Branch("Lep1fatJet2_HLT_IsoMu27",&Lep1fatJet2_HLT_IsoMu27,"Lep1fatJet2_HLT_IsoMu27/I");
-ExTree->Branch("Lep1fatJet2_HLT_Ele27_WPTight_GsI",&Lep1fatJet2_HLT_Ele27_WPTight_Gsf,"Lep1fatJet2_HLT_Ele27_WPTight_Gsf/I");
-ExTree->Branch("Lep1fatJet2_HLT_Ele32_WPTight_Gsf_L1DoubleEG",&Lep1fatJet2_HLT_Ele32_WPTight_Gsf_L1DoubleEG,"Lep1fatJet2_HLT_Ele32_WPTight_Gsf_L1DoubleEG/I");
-ExTree->Branch("Lep1fatJet2_HLT_Ele35_WPTight_Gsf",&Lep1fatJet2_HLT_Ele35_WPTight_Gsf,"Lep1fatJet2_HLT_Ele35_WPTight_Gsf/I");
-ExTree->Branch("Lep1fatJet2_HLT_Photon200",&Lep1fatJet2_HLT_Photon200,"Lep1fatJet2_HLT_Photon200/I");
-ExTree->Branch("Lep1fatJet2_HLT_Ele32_WPTight_GsI",&Lep1fatJet2_HLT_Ele32_WPTight_Gsf,"Lep1fatJet2_HLT_Ele32_WPTight_Gsf/I");
-
-if( IsData > 0){
-   ExTree->Branch("weight", &weight, "weight/D");
-   ExTree->Branch("lumiWeight", &lumiWeight, "lumiWeight/D");
-   ExTree->Branch("Weight_btagtight", &Weight_btagtight, "Weight_btagtight/F");
-   ExTree->Branch("weight_btagmediun", &weight_btagmediun, "weight_btagmediun/F");
-   ExTree->Branch("Weight_btagloose", &Weight_btagloose, "Weight_btagloose/F");
-   ExTree->Branch("Weight_FJVL", &Weight_FJVL, "Weight_FJVL/F");
-   ExTree->Branch("Weight_FJL", &Weight_FJL, "Weight_FJL/F");
-   ExTree->Branch("Weight_FJM", &Weight_FJM, "Weight_FJM/F");
-   ExTree->Branch("Weight_FJT", &Weight_FJT, "Weight_FJT/F");
-}
-
-
-// Genmatching
-ExTree->Branch("matchingt_1",&matchingt_1,"matchingt_1/I");
-ExTree->Branch("matchingW_1",&matchingW_1,"matchingW_1/I");
-ExTree->Branch("matchingg_1",&matchingg_1,"matchingg_1/I");
-ExTree->Branch("matchingZ_1",&matchingZ_1,"matchingZ_1/I");
-ExTree->Branch("matchingu_1",&matchingu_1,"matchingu_1/I");
-ExTree->Branch("matchingd_1",&matchingd_1,"matchingd_1/I");
-ExTree->Branch("matchings_1",&matchings_1,"matchings_1/I");
-ExTree->Branch("matchingc_1",&matchingc_1,"matchingc_1/I");
-ExTree->Branch("matching_gq_1",&matching_gq_1,"matching_gq_1/I");
-
-ExTree->Branch("matchingt_2",&matchingt_2,"matchingt_2/I");
-ExTree->Branch("matchingW_2",&matchingW_2,"matchingW_2/I");
-ExTree->Branch("matchingg_2",&matchingg_2,"matchingg_2/I");
-ExTree->Branch("matchingZ_2",&matchingZ_2,"matchingZ_2/I");
-ExTree->Branch("matchingu_2",&matchingu_2,"matchingu_2/I");
-ExTree->Branch("matchingd_2",&matchingd_2,"matchingd_2/I");
-ExTree->Branch("matchings_2",&matchings_2,"matchings_2/I");
-ExTree->Branch("matchingc_2",&matchingc_2,"matchingc_2/I");
-ExTree->Branch("matching_gq_2",&matching_gq_2,"matching_gq_2/I");
-
-
-// event level variables
-ExTree->Branch("nb_l_deep_ex",&nb_l_deep_ex,"nb_l_deep_ex/I");
-ExTree->Branch("nb_m_deep_ex",&nb_m_deep_ex,"nb_m_deep_ex/I");
-ExTree->Branch("nb_t_deep_ex",&nb_t_deep_ex,"nb_t_deep_ex/I");
-ExTree->Branch("nb_l_deep_in",&nb_l_deep_in,"nb_l_deep_in/I");
-ExTree->Branch("nb_m_deep_in",&nb_m_deep_in,"nb_m_deep_in/I");
-ExTree->Branch("nb_t_deep_in",&nb_t_deep_in,"nb_t_deep_in/I");
-ExTree->Branch("Common_nb_tight" ,&Common_nb_tight ,"Common_nb_tight/I");
-ExTree->Branch("Common_nb_medium",&Common_nb_medium,"Common_nb_medium/I");
-ExTree->Branch("Common_nb_loose" ,&Common_nb_loose ,"Common_nb_loose/I");
-
-
-ExTree->Branch("ST",&ST,"ST/F");
-ExTree->Branch("HT",&HT,"HT/F");
-ExTree->Branch("MJJlv",&MJJlv,"MJJlv/F");
-
-ExTree->Branch("leptonicWMT",&leptonicWMT,"leptonicWMT/F");
-
-}
-
-// ==================== gKK 21.9.25 =========================
-// ==================== gKK 21.9.25 =========================
-// ==================== gKK 21.9.25 =========================
-
-fChain->SetBranchAddress("jetAK8puppi_pt",&jetAK8puppi_pt,&b_jetAK8puppi_pt);
-fChain->SetBranchAddress("jetAK8puppi_pt_2",&jetAK8puppi_pt_2,&b_jetAK8puppi_pt_2);
-fChain->SetBranchAddress("jetAK8puppi_pt_3",&jetAK8puppi_pt_3,&b_jetAK8puppi_pt_3);
-fChain->SetBranchAddress("jetAK8puppi_eta",&jetAK8puppi_eta,&b_jetAK8puppi_eta);
-fChain->SetBranchAddress("jetAK8puppi_eta_2",&jetAK8puppi_eta_2,&b_jetAK8puppi_eta_2);
-fChain->SetBranchAddress("jetAK8puppi_eta_3",&jetAK8puppi_eta_3,&b_jetAK8puppi_eta_3);
-fChain->SetBranchAddress("jetAK8puppi_phi",&jetAK8puppi_phi,&b_jetAK8puppi_phi);
-fChain->SetBranchAddress("jetAK8puppi_phi_2",&jetAK8puppi_phi_2,&b_jetAK8puppi_phi_2);
-fChain->SetBranchAddress("jetAK8puppi_phi_3",&jetAK8puppi_phi_3,&b_jetAK8puppi_phi_3);
-fChain->SetBranchAddress("jetAK8puppi_sd",&jetAK8puppi_sd,&b_jetAK8puppi_sd);
-fChain->SetBranchAddress("jetAK8puppi_sd_2",&jetAK8puppi_sd_2,&b_jetAK8puppi_sd_2);
-fChain->SetBranchAddress("jetAK8puppi_sd_3",&jetAK8puppi_sd_3,&b_jetAK8puppi_sd_3);
-
-fChain->SetBranchAddress("MET_pt", &MET_pt, &b_MET_pt);
-
-fChain->SetBranchAddress("usenumber3",&usenumber3,&b_usenumber3);
-fChain->SetBranchAddress("usenumber2",&usenumber2,&b_usenumber2);
-fChain->SetBranchAddress("usenumber1",&usenumber1,&b_usenumber1);
-
-
-
-// for VVV EFT analysis
-
-
-
-// for VVV EFT 
-
-
-
-// end of for VVV EFT
-if ( channelName.Contains("VVV_EFT_1lepton") ){
-
-   fChain->SetBranchStatus("*",0);
-
-   // lepton
-    fChain->SetBranchStatus("Lep1fatJet2_LeptonPt",1);
-    fChain->SetBranchStatus("Lep1fatJet2_LeptonEta",1);
-    fChain->SetBranchStatus("Lep1fatJet2_LeptonPhi",1);
-    fChain->SetBranchStatus("Lep1fatJet2_LeptonE",1);
-    fChain->SetBranchStatus("Lep1fatJet2_LeptonPDGID",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Muon_pfRelIso04_all",1);
-
-    // MET
-    fChain->SetBranchStatus("Lep1fatJet2_MET_pt",1);
-    fChain->SetBranchStatus("Lep1fatJet2_MET_phi",1);
-    fChain->SetBranchStatus("Common_MET_pt_JER",1);
-    fChain->SetBranchStatus("Common_MET_phi_JER",1);
-
-    // neutrino
-    fChain->SetBranchStatus("Lep1fatJet2_NeutrinoPt",1);
-    fChain->SetBranchStatus("Lep1fatJet2_NeutrinoEta",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Neutrinophi",1);
-    fChain->SetBranchStatus("Lep1fatJet2_NeutrinoE",1);
-
-    // Leptonic W
-    fChain->SetBranchStatus("Lep1fatJet2_LeptonicWPt",1);
-    fChain->SetBranchStatus("Lep1fatJet2_LeptonicWEta",1);
-    fChain->SetBranchStatus("Lep1fatJet2_LeptonicWPhi",1);
-    fChain->SetBranchStatus("Lep1fatJet2_LeptonicWM",1);
-    fChain->SetBranchStatus("Lep1fatJet2_LeptonicWMt",1);
-
-    // Jet
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_btagDeepB",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_btagDeepC",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_btagDeepFlavC",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_btagDeepFlavB",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_qgl",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_jetId",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_hadronFlavour",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_partonFlavour",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_pt",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_eta",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_phi",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_e",1);
-   
-    // fatJet1
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_pt",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_eta",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_phi",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_msoftdrop",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_jetId",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_tau1",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_tau2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_tau3",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_tau4",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_H4qvsQCD",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_HbbvsQCD",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_TvsQCD",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_WvsQCD",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_ZHbbvsQCD",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_ZHccvsQCD",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_ZbbvsQCD",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_ZvsQCD",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_bbvsLight",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_ccvsLight",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTag_H",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTag_QCD",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTag_QCDothers",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTag_TvsQCD",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTag_WvsQCD",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTag_ZvsQCD",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNetMD_QCD",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNetMD_Xbb",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNetMD_Xcc",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNetMD_Xqq",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNet_H4qvsQCD",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNet_HbbvsQCD",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNet_HccvsQCD",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNet_QCD",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNet_TvsQCD",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNet_WvsQCD",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNet_ZvsQCD",1);
-
-    // fatJet2
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_pt_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_eta_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_phi_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_msoftdrop_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_jetId_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_tau1_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_tau2_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_tau3_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_tau4_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_H4qvsQCD_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_HbbvsQCD_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_TvsQCD_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_WvsQCD_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_ZHbbvsQCD_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_ZHccvsQCD_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_ZbbvsQCD_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_ZvsQCD_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_bbvsLight_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTagMD_ccvsLight_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTag_H_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTag_QCD_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTag_QCDothers_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTag_TvsQCD_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTag_WvsQCD_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_deepTag_ZvsQCD_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNetMD_QCD_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNetMD_Xbb_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNetMD_Xcc_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNetMD_Xqq_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNet_H4qvsQCD_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNet_HbbvsQCD_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNet_HccvsQCD_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNet_QCD_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNet_TvsQCD_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNet_WvsQCD_2",1);
-    fChain->SetBranchStatus("Lep1fatJet2_FatJet_particleNet_ZvsQCD_2",1);
-
-    // Gen
-    fChain->SetBranchStatus("Lep1fatJet2_GenPart_eta",1);
-    fChain->SetBranchStatus("Lep1fatJet2_GenPart_genPartIdxMother",1);
-    fChain->SetBranchStatus("Lep1fatJet2_GenPart_mass",1);
-    fChain->SetBranchStatus("Lep1fatJet2_GenPart_pdgId",1);
-    fChain->SetBranchStatus("Lep1fatJet2_GenPart_phi",1);
-    fChain->SetBranchStatus("Lep1fatJet2_GenPart_pt",1);
-    fChain->SetBranchStatus("Lep1fatJet2_GenPart_status",1);
-    fChain->SetBranchStatus("Lep1fatJet2_GenPart_statusFlags",1);
-    fChain->SetBranchStatus("Lep1fatJet2_nGenPart",1);
-
-
-    // weight, HLT
-    fChain->SetBranchStatus("Lep1fatJet2_Pileup_nTrueInt",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Pileup_nPU",1);
-
-    fChain->SetBranchStatus("Lep1fatJet2_HLT_Mu50",1);
-    fChain->SetBranchStatus("Lep1fatJet2_HLT_IsoMu24",1);
-    fChain->SetBranchStatus("Lep1fatJet2_HLT_OldMu100",1);
-    fChain->SetBranchStatus("Lep1fatJet2_HLT_TkMu100",1);
-    fChain->SetBranchStatus("Lep1fatJet2_HLT_IsoMu27",1);
-    fChain->SetBranchStatus("Lep1fatJet2_HLT_Ele27_WPTight_Gsf",1);
-    fChain->SetBranchStatus("Lep1fatJet2_HLT_Ele32_WPTight_Gsf_L1DoubleEG",1);
-    fChain->SetBranchStatus("Lep1fatJet2_HLT_Ele35_WPTight_Gsf",1);
-    fChain->SetBranchStatus("Lep1fatJet2_HLT_Photon200",1);
-    fChain->SetBranchStatus("Lep1fatJet2_HLT_Ele32_WPTight_Gsf",1);
-
-    fChain->SetBranchStatus("Common_passGoodRun",1);
-    fChain->SetBranchStatus("Common_noiseFlag",1);
-    fChain->SetBranchStatus("Common_noiseFlagMC",1);
-
-    fChain->SetBranchStatus("Common_event_lepSF",1);
-    fChain->SetBranchStatus("Common_event_tightBtagSF",1);
-    fChain->SetBranchStatus("Common_event_mediumBtagSF",1);
-    fChain->SetBranchStatus("Common_event_looseBtagSF",1);
-    fChain->SetBranchStatus("Common_eventweight_fatjet_SFVLoose",1);
-    fChain->SetBranchStatus("Common_eventweight_fatjet_SFLoose",1);
-    fChain->SetBranchStatus("Common_eventweight_fatjet_SFMedium",1);
-    fChain->SetBranchStatus("Common_eventweight_fatjet_SFTight",1);
-
-    // vector branches
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_btagDeepB",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_btagDeepC",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_btagDeepFlavC",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_btagDeepFlavB",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_qgl",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_jetId",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_hadronFlavour",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_partonFlavour",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_pt",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_eta",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_phi",1);
-    fChain->SetBranchStatus("Lep1fatJet2_Jet_e",1);
-
-    fChain->SetBranchStatus("Common_nb_tight",1);
-    fChain->SetBranchStatus("Common_nb_medium",1);
-    fChain->SetBranchStatus("Common_nb_loose",1);
-
-
-    fChain->SetBranchStatus("Lep1fatJet2_GenPart_eta",1);
-    fChain->SetBranchStatus("Lep1fatJet2_GenPart_genPartIdxMother",1);
-    fChain->SetBranchStatus("Lep1fatJet2_GenPart_mass",1);
-    fChain->SetBranchStatus("Lep1fatJet2_GenPart_pdgId",1);
-    fChain->SetBranchStatus("Lep1fatJet2_GenPart_phi",1);
-    fChain->SetBranchStatus("Lep1fatJet2_GenPart_pt",1);
-    fChain->SetBranchStatus("Lep1fatJet2_GenPart_status",1);
-    fChain->SetBranchStatus("Lep1fatJet2_GenPart_statusFlags",1);
-
-    
-
-   fChain->SetBranchAddress("Lep1fatJet2_LeptonPt",&Lep1fatJet2_LeptonPt,&b_Lep1fatJet2_LeptonPt);
-   fChain->SetBranchAddress("Lep1fatJet2_LeptonEta",&Lep1fatJet2_LeptonEta,&b_Lep1fatJet2_LeptonEta);
-   fChain->SetBranchAddress("Lep1fatJet2_LeptonPhi",&Lep1fatJet2_LeptonPhi,&b_Lep1fatJet2_LeptonPhi);
-   fChain->SetBranchAddress("Lep1fatJet2_LeptonE",&Lep1fatJet2_LeptonE,&b_Lep1fatJet2_LeptonE);
-   fChain->SetBranchAddress("Lep1fatJet2_LeptonPDGID",&Lep1fatJet2_LeptonPDGID,&b_Lep1fatJet2_LeptonPDGID);
-   fChain->SetBranchAddress("Lep1fatJet2_Muon_pfRelIso04_all",&Lep1fatJet2_Muon_pfRelIso04_all,&b_Lep1fatJet2_Muon_pfRelIso04_all);
-
-      // MET
-   fChain->SetBranchAddress("Lep1fatJet2_MET_pt",&Lep1fatJet2_MET_pt,&b_Lep1fatJet2_MET_pt);
-   fChain->SetBranchAddress("Lep1fatJet2_MET_phi",&Lep1fatJet2_MET_phi,&b_Lep1fatJet2_MET_phi);
-   fChain->SetBranchAddress("Common_MET_pt_JER",&Common_MET_pt_JER,&b_Common_MET_pt_JER);
-   fChain->SetBranchAddress("Common_MET_phi_JER",&Common_MET_phi_JER,&b_Common_MET_phi_JER);
-
-      // neutrino
-   fChain->SetBranchAddress("Lep1fatJet2_NeutrinoPt",&Lep1fatJet2_NeutrinoPt,&b_Lep1fatJet2_NeutrinoPt);
-   fChain->SetBranchAddress("Lep1fatJet2_NeutrinoEta",&Lep1fatJet2_NeutrinoEta,&b_Lep1fatJet2_NeutrinoEta);
-   fChain->SetBranchAddress("Lep1fatJet2_Neutrinophi",&Lep1fatJet2_Neutrinophi,&b_Lep1fatJet2_Neutrinophi);
-   fChain->SetBranchAddress("Lep1fatJet2_NeutrinoE",&Lep1fatJet2_NeutrinoE,&b_Lep1fatJet2_NeutrinoE);
-
-      // Leptonic W
-   fChain->SetBranchAddress("Lep1fatJet2_LeptonicWPt",&Lep1fatJet2_LeptonicWPt,&b_Lep1fatJet2_LeptonicWPt);
-   fChain->SetBranchAddress("Lep1fatJet2_LeptonicWEta",&Lep1fatJet2_LeptonicWEta,&b_Lep1fatJet2_LeptonicWEta);
-   fChain->SetBranchAddress("Lep1fatJet2_LeptonicWPhi",&Lep1fatJet2_LeptonicWPhi,&b_Lep1fatJet2_LeptonicWPhi);
-   fChain->SetBranchAddress("Lep1fatJet2_LeptonicWM",&Lep1fatJet2_LeptonicWM,&b_Lep1fatJet2_LeptonicWM);
-   fChain->SetBranchAddress("Lep1fatJet2_LeptonicWMt",&Lep1fatJet2_LeptonicWMt,&b_Lep1fatJet2_LeptonicWMt);
-      
-   // fatJet
-
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_pt",&Lep1fatJet2_FatJet_pt,&b_Lep1fatJet2_FatJet_pt);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_eta",&Lep1fatJet2_FatJet_eta,&b_Lep1fatJet2_FatJet_eta);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_phi",&Lep1fatJet2_FatJet_phi,&b_Lep1fatJet2_FatJet_phi);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_msoftdrop",&Lep1fatJet2_FatJet_msoftdrop,&b_Lep1fatJet2_FatJet_msoftdrop);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_jetId",&Lep1fatJet2_FatJet_jetId,&b_Lep1fatJet2_FatJet_jetId);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_tau1",&Lep1fatJet2_FatJet_tau1,&b_Lep1fatJet2_FatJet_tau1);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_tau2",&Lep1fatJet2_FatJet_tau2,&b_Lep1fatJet2_FatJet_tau2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_tau3",&Lep1fatJet2_FatJet_tau3,&b_Lep1fatJet2_FatJet_tau3);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_tau4",&Lep1fatJet2_FatJet_tau4,&b_Lep1fatJet2_FatJet_tau4);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_H4qvsQCD",&Lep1fatJet2_FatJet_deepTagMD_H4qvsQCD,&b_Lep1fatJet2_FatJet_deepTagMD_H4qvsQCD);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_HbbvsQCD",&Lep1fatJet2_FatJet_deepTagMD_HbbvsQCD,&b_Lep1fatJet2_FatJet_deepTagMD_HbbvsQCD);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_TvsQCD",&Lep1fatJet2_FatJet_deepTagMD_TvsQCD,&b_Lep1fatJet2_FatJet_deepTagMD_TvsQCD);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_WvsQCD",&Lep1fatJet2_FatJet_deepTagMD_WvsQCD,&b_Lep1fatJet2_FatJet_deepTagMD_WvsQCD);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_ZHbbvsQCD",&Lep1fatJet2_FatJet_deepTagMD_ZHbbvsQCD,&b_Lep1fatJet2_FatJet_deepTagMD_ZHbbvsQCD);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_ZHccvsQCD",&Lep1fatJet2_FatJet_deepTagMD_ZHccvsQCD,&b_Lep1fatJet2_FatJet_deepTagMD_ZHccvsQCD);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_ZbbvsQCD",&Lep1fatJet2_FatJet_deepTagMD_ZbbvsQCD,&b_Lep1fatJet2_FatJet_deepTagMD_ZbbvsQCD);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_ZvsQCD",&Lep1fatJet2_FatJet_deepTagMD_ZvsQCD,&b_Lep1fatJet2_FatJet_deepTagMD_ZvsQCD);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_bbvsLight",&Lep1fatJet2_FatJet_deepTagMD_bbvsLight,&b_Lep1fatJet2_FatJet_deepTagMD_bbvsLight);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_ccvsLight",&Lep1fatJet2_FatJet_deepTagMD_ccvsLight,&b_Lep1fatJet2_FatJet_deepTagMD_ccvsLight);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTag_H",&Lep1fatJet2_FatJet_deepTag_H,&b_Lep1fatJet2_FatJet_deepTag_H);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTag_QCD",&Lep1fatJet2_FatJet_deepTag_QCD,&b_Lep1fatJet2_FatJet_deepTag_QCD);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTag_QCDothers",&Lep1fatJet2_FatJet_deepTag_QCDothers,&b_Lep1fatJet2_FatJet_deepTag_QCDothers);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTag_TvsQCD",&Lep1fatJet2_FatJet_deepTag_TvsQCD,&b_Lep1fatJet2_FatJet_deepTag_TvsQCD);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTag_WvsQCD",&Lep1fatJet2_FatJet_deepTag_WvsQCD,&b_Lep1fatJet2_FatJet_deepTag_WvsQCD);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTag_ZvsQCD",&Lep1fatJet2_FatJet_deepTag_ZvsQCD,&b_Lep1fatJet2_FatJet_deepTag_ZvsQCD);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNetMD_QCD",&Lep1fatJet2_FatJet_particleNetMD_QCD,&b_Lep1fatJet2_FatJet_particleNetMD_QCD);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNetMD_Xbb",&Lep1fatJet2_FatJet_particleNetMD_Xbb,&b_Lep1fatJet2_FatJet_particleNetMD_Xbb);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNetMD_Xcc",&Lep1fatJet2_FatJet_particleNetMD_Xcc,&b_Lep1fatJet2_FatJet_particleNetMD_Xcc);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNetMD_Xqq",&Lep1fatJet2_FatJet_particleNetMD_Xqq,&b_Lep1fatJet2_FatJet_particleNetMD_Xqq);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNet_H4qvsQCD",&Lep1fatJet2_FatJet_particleNet_H4qvsQCD,&b_Lep1fatJet2_FatJet_particleNet_H4qvsQCD);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNet_HbbvsQCD",&Lep1fatJet2_FatJet_particleNet_HbbvsQCD,&b_Lep1fatJet2_FatJet_particleNet_HbbvsQCD);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNet_HccvsQCD",&Lep1fatJet2_FatJet_particleNet_HccvsQCD,&b_Lep1fatJet2_FatJet_particleNet_HccvsQCD);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNet_QCD",&Lep1fatJet2_FatJet_particleNet_QCD,&b_Lep1fatJet2_FatJet_particleNet_QCD);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNet_TvsQCD",&Lep1fatJet2_FatJet_particleNet_TvsQCD,&b_Lep1fatJet2_FatJet_particleNet_TvsQCD);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNet_WvsQCD",&Lep1fatJet2_FatJet_particleNet_WvsQCD,&b_Lep1fatJet2_FatJet_particleNet_WvsQCD);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNet_ZvsQCD",&Lep1fatJet2_FatJet_particleNet_ZvsQCD,&b_Lep1fatJet2_FatJet_particleNet_ZvsQCD);
-
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_pt_2",&Lep1fatJet2_FatJet_pt_2,&b_Lep1fatJet2_FatJet_pt_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_eta_2",&Lep1fatJet2_FatJet_eta_2,&b_Lep1fatJet2_FatJet_eta_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_phi_2",&Lep1fatJet2_FatJet_phi_2,&b_Lep1fatJet2_FatJet_phi_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_msoftdrop_2",&Lep1fatJet2_FatJet_msoftdrop_2,&b_Lep1fatJet2_FatJet_msoftdrop_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_jetId_2",&Lep1fatJet2_FatJet_jetId_2,&b_Lep1fatJet2_FatJet_jetId_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_tau1_2",&Lep1fatJet2_FatJet_tau1_2,&b_Lep1fatJet2_FatJet_tau1_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_tau2_2",&Lep1fatJet2_FatJet_tau2_2,&b_Lep1fatJet2_FatJet_tau2_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_tau3_2",&Lep1fatJet2_FatJet_tau3_2,&b_Lep1fatJet2_FatJet_tau3_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_tau4_2",&Lep1fatJet2_FatJet_tau4_2,&b_Lep1fatJet2_FatJet_tau4_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_H4qvsQCD_2",&Lep1fatJet2_FatJet_deepTagMD_H4qvsQCD_2,&b_Lep1fatJet2_FatJet_deepTagMD_H4qvsQCD_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_HbbvsQCD_2",&Lep1fatJet2_FatJet_deepTagMD_HbbvsQCD_2,&b_Lep1fatJet2_FatJet_deepTagMD_HbbvsQCD_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_TvsQCD_2",&Lep1fatJet2_FatJet_deepTagMD_TvsQCD_2,&b_Lep1fatJet2_FatJet_deepTagMD_TvsQCD_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_WvsQCD_2",&Lep1fatJet2_FatJet_deepTagMD_WvsQCD_2,&b_Lep1fatJet2_FatJet_deepTagMD_WvsQCD_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_ZHbbvsQCD_2",&Lep1fatJet2_FatJet_deepTagMD_ZHbbvsQCD_2,&b_Lep1fatJet2_FatJet_deepTagMD_ZHbbvsQCD_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_ZHccvsQCD_2",&Lep1fatJet2_FatJet_deepTagMD_ZHccvsQCD_2,&b_Lep1fatJet2_FatJet_deepTagMD_ZHccvsQCD_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_ZbbvsQCD_2",&Lep1fatJet2_FatJet_deepTagMD_ZbbvsQCD_2,&b_Lep1fatJet2_FatJet_deepTagMD_ZbbvsQCD_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_ZvsQCD_2",&Lep1fatJet2_FatJet_deepTagMD_ZvsQCD_2,&b_Lep1fatJet2_FatJet_deepTagMD_ZvsQCD_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_bbvsLight_2",&Lep1fatJet2_FatJet_deepTagMD_bbvsLight_2,&b_Lep1fatJet2_FatJet_deepTagMD_bbvsLight_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTagMD_ccvsLight_2",&Lep1fatJet2_FatJet_deepTagMD_ccvsLight_2,&b_Lep1fatJet2_FatJet_deepTagMD_ccvsLight_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTag_H_2",&Lep1fatJet2_FatJet_deepTag_H_2,&b_Lep1fatJet2_FatJet_deepTag_H_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTag_QCD_2",&Lep1fatJet2_FatJet_deepTag_QCD_2,&b_Lep1fatJet2_FatJet_deepTag_QCD_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTag_QCDothers_2",&Lep1fatJet2_FatJet_deepTag_QCDothers_2,&b_Lep1fatJet2_FatJet_deepTag_QCDothers_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTag_TvsQCD_2",&Lep1fatJet2_FatJet_deepTag_TvsQCD_2,&b_Lep1fatJet2_FatJet_deepTag_TvsQCD_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTag_WvsQCD_2",&Lep1fatJet2_FatJet_deepTag_WvsQCD_2,&b_Lep1fatJet2_FatJet_deepTag_WvsQCD_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_deepTag_ZvsQCD_2",&Lep1fatJet2_FatJet_deepTag_ZvsQCD_2,&b_Lep1fatJet2_FatJet_deepTag_ZvsQCD_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNetMD_QCD_2",&Lep1fatJet2_FatJet_particleNetMD_QCD_2,&b_Lep1fatJet2_FatJet_particleNetMD_QCD_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNetMD_Xbb_2",&Lep1fatJet2_FatJet_particleNetMD_Xbb_2,&b_Lep1fatJet2_FatJet_particleNetMD_Xbb_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNetMD_Xcc_2",&Lep1fatJet2_FatJet_particleNetMD_Xcc_2,&b_Lep1fatJet2_FatJet_particleNetMD_Xcc_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNetMD_Xqq_2",&Lep1fatJet2_FatJet_particleNetMD_Xqq_2,&b_Lep1fatJet2_FatJet_particleNetMD_Xqq_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNet_H4qvsQCD_2",&Lep1fatJet2_FatJet_particleNet_H4qvsQCD_2,&b_Lep1fatJet2_FatJet_particleNet_H4qvsQCD_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNet_HbbvsQCD_2",&Lep1fatJet2_FatJet_particleNet_HbbvsQCD_2,&b_Lep1fatJet2_FatJet_particleNet_HbbvsQCD_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNet_HccvsQCD_2",&Lep1fatJet2_FatJet_particleNet_HccvsQCD_2,&b_Lep1fatJet2_FatJet_particleNet_HccvsQCD_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNet_QCD_2",&Lep1fatJet2_FatJet_particleNet_QCD_2,&b_Lep1fatJet2_FatJet_particleNet_QCD_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNet_TvsQCD_2",&Lep1fatJet2_FatJet_particleNet_TvsQCD_2,&b_Lep1fatJet2_FatJet_particleNet_TvsQCD_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNet_WvsQCD_2",&Lep1fatJet2_FatJet_particleNet_WvsQCD_2,&b_Lep1fatJet2_FatJet_particleNet_WvsQCD_2);
-   fChain->SetBranchAddress("Lep1fatJet2_FatJet_particleNet_ZvsQCD_2",&Lep1fatJet2_FatJet_particleNet_ZvsQCD_2,&b_Lep1fatJet2_FatJet_particleNet_ZvsQCD_2);
-
-
-   // weight, HLT
-   fChain->SetBranchAddress("Lep1fatJet2_Pileup_nTrueInt",&Lep1fatJet2_Pileup_nTrueInt,&b_Lep1fatJet2_Pileup_nTrueInt);
-   fChain->SetBranchAddress("Lep1fatJet2_Pileup_nPU",&Lep1fatJet2_Pileup_nPU,&b_Lep1fatJet2_Pileup_nPU);
-
-   fChain->SetBranchAddress("Lep1fatJet2_HLT_Mu50",&Lep1fatJet2_HLT_Mu50,&b_Lep1fatJet2_HLT_Mu50);
-   fChain->SetBranchAddress("Lep1fatJet2_HLT_IsoMu24",&Lep1fatJet2_HLT_IsoMu24,&b_Lep1fatJet2_HLT_IsoMu24);
-   fChain->SetBranchAddress("Lep1fatJet2_HLT_OldMu100",&Lep1fatJet2_HLT_OldMu100,&b_Lep1fatJet2_HLT_OldMu100);
-   fChain->SetBranchAddress("Lep1fatJet2_HLT_TkMu100",&Lep1fatJet2_HLT_TkMu100,&b_Lep1fatJet2_HLT_TkMu100);
-   fChain->SetBranchAddress("Lep1fatJet2_HLT_IsoMu27",&Lep1fatJet2_HLT_IsoMu27,&b_Lep1fatJet2_HLT_IsoMu27);
-   fChain->SetBranchAddress("Lep1fatJet2_HLT_Ele27_WPTight_Gsf",&Lep1fatJet2_HLT_Ele27_WPTight_Gsf,&b_Lep1fatJet2_HLT_Ele27_WPTight_Gsf);
-   fChain->SetBranchAddress("Lep1fatJet2_HLT_Ele32_WPTight_Gsf_L1DoubleEG",&Lep1fatJet2_HLT_Ele32_WPTight_Gsf_L1DoubleEG,&b_Lep1fatJet2_HLT_Ele32_WPTight_Gsf_L1DoubleEG);
-   fChain->SetBranchAddress("Lep1fatJet2_HLT_Ele35_WPTight_Gsf",&Lep1fatJet2_HLT_Ele35_WPTight_Gsf,&b_Lep1fatJet2_HLT_Ele35_WPTight_Gsf);
-   fChain->SetBranchAddress("Lep1fatJet2_HLT_Photon200",&Lep1fatJet2_HLT_Photon200,&b_Lep1fatJet2_HLT_Photon200);
-   fChain->SetBranchAddress("Lep1fatJet2_HLT_Ele32_WPTight_Gsf",&Lep1fatJet2_HLT_Ele32_WPTight_Gsf,&b_Lep1fatJet2_HLT_Ele32_WPTight_Gsf);
-
-   fChain->SetBranchAddress("Common_passGoodRun",&Common_passGoodRun,&b_Common_passGoodRun);
-   fChain->SetBranchAddress("Common_noiseFlag",&Common_noiseFlag,&b_Common_noiseFlag);
-   fChain->SetBranchAddress("Common_noiseFlagMC",&Common_noiseFlagMC,&b_Common_noiseFlagMC);
-
-   fChain->SetBranchAddress("Common_event_lepSF",&Common_event_lepSF,&b_Common_event_lepSF);
-   fChain->SetBranchAddress("Common_event_tightBtagSF",&Common_event_tightBtagSF,&b_Common_event_tightBtagSF);
-   fChain->SetBranchAddress("Common_event_mediumBtagSF",&Common_event_mediumBtagSF,&b_Common_event_mediumBtagSF);
-   fChain->SetBranchAddress("Common_event_looseBtagSF",&Common_event_looseBtagSF,&b_Common_event_looseBtagSF);
-   fChain->SetBranchAddress("Common_eventweight_fatjet_SFVLoose",&Common_eventweight_fatjet_SFVLoose,&b_Common_eventweight_fatjet_SFVLoose);
-   fChain->SetBranchAddress("Common_eventweight_fatjet_SFLoose",&Common_eventweight_fatjet_SFLoose,&b_Common_eventweight_fatjet_SFLoose);
-   fChain->SetBranchAddress("Common_eventweight_fatjet_SFMedium",&Common_eventweight_fatjet_SFMedium,&b_Common_eventweight_fatjet_SFMedium);
-   fChain->SetBranchAddress("Common_eventweight_fatjet_SFTight",&Common_eventweight_fatjet_SFTight,&b_Common_eventweight_fatjet_SFTight);
-
-   
-
-
-   fChain->SetBranchAddress("Lep1fatJet2_Jet_btagDeepB",  &Lep1fatJet2_Jet_btagDeepB);
-   fChain->SetBranchAddress("Lep1fatJet2_Jet_btagDeepC",  &Lep1fatJet2_Jet_btagDeepC);
-   fChain->SetBranchAddress("Lep1fatJet2_Jet_btagDeepFlavC",  &Lep1fatJet2_Jet_btagDeepFlavC);
-   fChain->SetBranchAddress("Lep1fatJet2_Jet_btagDeepFlavB",  &Lep1fatJet2_Jet_btagDeepFlavB);
-   fChain->SetBranchAddress("Lep1fatJet2_Jet_qgl",  &Lep1fatJet2_Jet_qgl);
-   fChain->SetBranchAddress("Lep1fatJet2_Jet_jetId",  &Lep1fatJet2_Jet_jetId);
-   fChain->SetBranchAddress("Lep1fatJet2_Jet_hadronFlavour",  &Lep1fatJet2_Jet_hadronFlavour);
-   fChain->SetBranchAddress("Lep1fatJet2_Jet_partonFlavour",  &Lep1fatJet2_Jet_partonFlavour);
-   fChain->SetBranchAddress("Lep1fatJet2_Jet_pt",  &Lep1fatJet2_Jet_pt);
-   fChain->SetBranchAddress("Lep1fatJet2_Jet_eta",  &Lep1fatJet2_Jet_eta);
-   fChain->SetBranchAddress("Lep1fatJet2_Jet_phi",  &Lep1fatJet2_Jet_phi);
-   fChain->SetBranchAddress("Lep1fatJet2_Jet_e",  &Lep1fatJet2_Jet_e);
-
-   fChain->SetBranchAddress("Common_nb_tight",&Common_nb_tight,&b_Common_nb_tight);
-   fChain->SetBranchAddress("Common_nb_medium",&Common_nb_medium,&b_Common_nb_medium);
-   fChain->SetBranchAddress("Common_nb_loose",&Common_nb_loose,&b_Common_nb_loose);
-
-
-   fChain->SetBranchAddress("Lep1fatJet2_GenPart_eta",  &Lep1fatJet2_GenPart_eta);
-   fChain->SetBranchAddress("Lep1fatJet2_GenPart_genPartIdxMother",  &Lep1fatJet2_GenPart_genPartIdxMother);
-   fChain->SetBranchAddress("Lep1fatJet2_GenPart_mass",  &Lep1fatJet2_GenPart_mass);
-   fChain->SetBranchAddress("Lep1fatJet2_GenPart_pdgId",  &Lep1fatJet2_GenPart_pdgId);
-   fChain->SetBranchAddress("Lep1fatJet2_GenPart_phi",  &Lep1fatJet2_GenPart_phi);
-   fChain->SetBranchAddress("Lep1fatJet2_GenPart_pt",  &Lep1fatJet2_GenPart_pt);
-   fChain->SetBranchAddress("Lep1fatJet2_GenPart_status",  &Lep1fatJet2_GenPart_status);
-   fChain->SetBranchAddress("Lep1fatJet2_GenPart_statusFlags",  &Lep1fatJet2_GenPart_statusFlags);
-}
-
-fChain->SetBranchAddress("Flag_METFilters", &Flag_METFilters, &b_Flag_METFilters);
-fChain->SetBranchAddress("Flag_goodVertices", &Flag_goodVertices, &b_Flag_goodVertices);
-fChain->SetBranchAddress("Flag_globalSuperTightHalo2016Filter", &Flag_globalSuperTightHalo2016Filter, &b_Flag_globalSuperTightHalo2016Filter);
-fChain->SetBranchAddress("Flag_HBHENoiseFilter", &Flag_HBHENoiseFilter, &b_Flag_HBHENoiseFilter);
-fChain->SetBranchAddress("Flag_HBHENoiseIsoFilter", &Flag_HBHENoiseIsoFilter, &b_Flag_HBHENoiseIsoFilter);
-fChain->SetBranchAddress("Flag_EcalDeadCellTriggerPrimitiveFilter", &Flag_EcalDeadCellTriggerPrimitiveFilter, &b_Flag_EcalDeadCellTriggerPrimitiveFilter);
-fChain->SetBranchAddress("Flag_BadPFMuonFilter", &Flag_BadPFMuonFilter, &b_Flag_BadPFMuonFilter);
-fChain->SetBranchAddress("Flag_eeBadScFilter", &Flag_eeBadScFilter, &b_Flag_eeBadScFilter);
-
-
-fChain->SetBranchAddress("genWeight",&genWeight,&b_genWeight);
-
-// gKK raw score
-fChain->SetBranchAddress("ak4jet_deepflavor_probb", ak4jet_deepflavor_probb, &b_ak4jet_deepflavor_probb);
-fChain->SetBranchAddress("ak4jet_deepflavor_probc", ak4jet_deepflavor_probc, &b_ak4jet_deepflavor_probc);
-fChain->SetBranchAddress("ak4jet_deepflavor_probg", ak4jet_deepflavor_probg, &b_ak4jet_deepflavor_probg);
-fChain->SetBranchAddress("ak4jet_deepflavor_problepb", ak4jet_deepflavor_problepb, &b_ak4jet_deepflavor_problepb);
-fChain->SetBranchAddress("ak4jet_deepflavor_probbb", ak4jet_deepflavor_probbb, &b_ak4jet_deepflavor_probbb);
-fChain->SetBranchAddress("ak4jet_deepflavor_probuds", ak4jet_deepflavor_probuds, &b_ak4jet_deepflavor_probuds);
-
-fChain->SetBranchAddress("jetAK8puppi_dnn_probTbcq",&jetAK8puppi_dnn_probTbcq,&b_jetAK8puppi_dnn_probTbcq);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probTbqq",&jetAK8puppi_dnn_probTbqq,&b_jetAK8puppi_dnn_probTbqq);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probTbc",&jetAK8puppi_dnn_probTbc,&b_jetAK8puppi_dnn_probTbc);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probTbq",&jetAK8puppi_dnn_probTbq,&b_jetAK8puppi_dnn_probTbq);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probWcq",&jetAK8puppi_dnn_probWcq,&b_jetAK8puppi_dnn_probWcq);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probWqq",&jetAK8puppi_dnn_probWqq,&b_jetAK8puppi_dnn_probWqq);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probZbb",&jetAK8puppi_dnn_probZbb,&b_jetAK8puppi_dnn_probZbb);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probZcc",&jetAK8puppi_dnn_probZcc,&b_jetAK8puppi_dnn_probZcc);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probZqq",&jetAK8puppi_dnn_probZqq,&b_jetAK8puppi_dnn_probZqq);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probHbb",&jetAK8puppi_dnn_probHbb,&b_jetAK8puppi_dnn_probHbb);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probHcc",&jetAK8puppi_dnn_probHcc,&b_jetAK8puppi_dnn_probHcc);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probHqqqq",&jetAK8puppi_dnn_probHqqqq,&b_jetAK8puppi_dnn_probHqqqq);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDbb",&jetAK8puppi_dnn_probQCDbb,&b_jetAK8puppi_dnn_probQCDbb);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDcc",&jetAK8puppi_dnn_probQCDcc,&b_jetAK8puppi_dnn_probQCDcc);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDb",&jetAK8puppi_dnn_probQCDb,&b_jetAK8puppi_dnn_probQCDb);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDc",&jetAK8puppi_dnn_probQCDc,&b_jetAK8puppi_dnn_probQCDc);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDothers",&jetAK8puppi_dnn_probQCDothers,&b_jetAK8puppi_dnn_probQCDothers);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probTbcq",&jetAK8puppi_dnnDecorr_probTbcq,&b_jetAK8puppi_dnnDecorr_probTbcq);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probTbqq",&jetAK8puppi_dnnDecorr_probTbqq,&b_jetAK8puppi_dnnDecorr_probTbqq);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probTbc",&jetAK8puppi_dnnDecorr_probTbc,&b_jetAK8puppi_dnnDecorr_probTbc);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probTbq",&jetAK8puppi_dnnDecorr_probTbq,&b_jetAK8puppi_dnnDecorr_probTbq);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probWcq",&jetAK8puppi_dnnDecorr_probWcq,&b_jetAK8puppi_dnnDecorr_probWcq);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probWqq",&jetAK8puppi_dnnDecorr_probWqq,&b_jetAK8puppi_dnnDecorr_probWqq);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probZbb",&jetAK8puppi_dnnDecorr_probZbb,&b_jetAK8puppi_dnnDecorr_probZbb);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probZcc",&jetAK8puppi_dnnDecorr_probZcc,&b_jetAK8puppi_dnnDecorr_probZcc);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probZqq",&jetAK8puppi_dnnDecorr_probZqq,&b_jetAK8puppi_dnnDecorr_probZqq);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probHbb",&jetAK8puppi_dnnDecorr_probHbb,&b_jetAK8puppi_dnnDecorr_probHbb);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probHcc",&jetAK8puppi_dnnDecorr_probHcc,&b_jetAK8puppi_dnnDecorr_probHcc);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probHqqqq",&jetAK8puppi_dnnDecorr_probHqqqq,&b_jetAK8puppi_dnnDecorr_probHqqqq);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDbb",&jetAK8puppi_dnnDecorr_probQCDbb,&b_jetAK8puppi_dnnDecorr_probQCDbb);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDcc",&jetAK8puppi_dnnDecorr_probQCDcc,&b_jetAK8puppi_dnnDecorr_probQCDcc);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDb",&jetAK8puppi_dnnDecorr_probQCDb,&b_jetAK8puppi_dnnDecorr_probQCDb);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDc",&jetAK8puppi_dnnDecorr_probQCDc,&b_jetAK8puppi_dnnDecorr_probQCDc);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDothers",&jetAK8puppi_dnnDecorr_probQCDothers,&b_jetAK8puppi_dnnDecorr_probQCDothers);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probTbcq_2",&jetAK8puppi_dnn_probTbcq_2,&b_jetAK8puppi_dnn_probTbcq_2);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probTbqq_2",&jetAK8puppi_dnn_probTbqq_2,&b_jetAK8puppi_dnn_probTbqq_2);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probTbc_2",&jetAK8puppi_dnn_probTbc_2,&b_jetAK8puppi_dnn_probTbc_2);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probTbq_2",&jetAK8puppi_dnn_probTbq_2,&b_jetAK8puppi_dnn_probTbq_2);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probWcq_2",&jetAK8puppi_dnn_probWcq_2,&b_jetAK8puppi_dnn_probWcq_2);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probWqq_2",&jetAK8puppi_dnn_probWqq_2,&b_jetAK8puppi_dnn_probWqq_2);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probZbb_2",&jetAK8puppi_dnn_probZbb_2,&b_jetAK8puppi_dnn_probZbb_2);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probZcc_2",&jetAK8puppi_dnn_probZcc_2,&b_jetAK8puppi_dnn_probZcc_2);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probZqq_2",&jetAK8puppi_dnn_probZqq_2,&b_jetAK8puppi_dnn_probZqq_2);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probHbb_2",&jetAK8puppi_dnn_probHbb_2,&b_jetAK8puppi_dnn_probHbb_2);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probHcc_2",&jetAK8puppi_dnn_probHcc_2,&b_jetAK8puppi_dnn_probHcc_2);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probHqqqq_2",&jetAK8puppi_dnn_probHqqqq_2,&b_jetAK8puppi_dnn_probHqqqq_2);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDbb_2",&jetAK8puppi_dnn_probQCDbb_2,&b_jetAK8puppi_dnn_probQCDbb_2);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDcc_2",&jetAK8puppi_dnn_probQCDcc_2,&b_jetAK8puppi_dnn_probQCDcc_2);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDb_2",&jetAK8puppi_dnn_probQCDb_2,&b_jetAK8puppi_dnn_probQCDb_2);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDc_2",&jetAK8puppi_dnn_probQCDc_2,&b_jetAK8puppi_dnn_probQCDc_2);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDothers_2",&jetAK8puppi_dnn_probQCDothers_2,&b_jetAK8puppi_dnn_probQCDothers_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probTbcq_2",&jetAK8puppi_dnnDecorr_probTbcq_2,&b_jetAK8puppi_dnnDecorr_probTbcq_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probTbqq_2",&jetAK8puppi_dnnDecorr_probTbqq_2,&b_jetAK8puppi_dnnDecorr_probTbqq_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probTbc_2",&jetAK8puppi_dnnDecorr_probTbc_2,&b_jetAK8puppi_dnnDecorr_probTbc_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probTbq_2",&jetAK8puppi_dnnDecorr_probTbq_2,&b_jetAK8puppi_dnnDecorr_probTbq_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probWcq_2",&jetAK8puppi_dnnDecorr_probWcq_2,&b_jetAK8puppi_dnnDecorr_probWcq_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probWqq_2",&jetAK8puppi_dnnDecorr_probWqq_2,&b_jetAK8puppi_dnnDecorr_probWqq_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probZbb_2",&jetAK8puppi_dnnDecorr_probZbb_2,&b_jetAK8puppi_dnnDecorr_probZbb_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probZcc_2",&jetAK8puppi_dnnDecorr_probZcc_2,&b_jetAK8puppi_dnnDecorr_probZcc_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probZqq_2",&jetAK8puppi_dnnDecorr_probZqq_2,&b_jetAK8puppi_dnnDecorr_probZqq_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probHbb_2",&jetAK8puppi_dnnDecorr_probHbb_2,&b_jetAK8puppi_dnnDecorr_probHbb_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probHcc_2",&jetAK8puppi_dnnDecorr_probHcc_2,&b_jetAK8puppi_dnnDecorr_probHcc_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probHqqqq_2",&jetAK8puppi_dnnDecorr_probHqqqq_2,&b_jetAK8puppi_dnnDecorr_probHqqqq_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDbb_2",&jetAK8puppi_dnnDecorr_probQCDbb_2,&b_jetAK8puppi_dnnDecorr_probQCDbb_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDcc_2",&jetAK8puppi_dnnDecorr_probQCDcc_2,&b_jetAK8puppi_dnnDecorr_probQCDcc_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDb_2",&jetAK8puppi_dnnDecorr_probQCDb_2,&b_jetAK8puppi_dnnDecorr_probQCDb_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDc_2",&jetAK8puppi_dnnDecorr_probQCDc_2,&b_jetAK8puppi_dnnDecorr_probQCDc_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDothers_2",&jetAK8puppi_dnnDecorr_probQCDothers_2,&b_jetAK8puppi_dnnDecorr_probQCDothers_2);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probTbcq_3",&jetAK8puppi_dnn_probTbcq_3,&b_jetAK8puppi_dnn_probTbcq_3);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probTbqq_3",&jetAK8puppi_dnn_probTbqq_3,&b_jetAK8puppi_dnn_probTbqq_3);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probTbc_3",&jetAK8puppi_dnn_probTbc_3,&b_jetAK8puppi_dnn_probTbc_3);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probTbq_3",&jetAK8puppi_dnn_probTbq_3,&b_jetAK8puppi_dnn_probTbq_3);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probWcq_3",&jetAK8puppi_dnn_probWcq_3,&b_jetAK8puppi_dnn_probWcq_3);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probWqq_3",&jetAK8puppi_dnn_probWqq_3,&b_jetAK8puppi_dnn_probWqq_3);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probZbb_3",&jetAK8puppi_dnn_probZbb_3,&b_jetAK8puppi_dnn_probZbb_3);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probZcc_3",&jetAK8puppi_dnn_probZcc_3,&b_jetAK8puppi_dnn_probZcc_3);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probZqq_3",&jetAK8puppi_dnn_probZqq_3,&b_jetAK8puppi_dnn_probZqq_3);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probHbb_3",&jetAK8puppi_dnn_probHbb_3,&b_jetAK8puppi_dnn_probHbb_3);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probHcc_3",&jetAK8puppi_dnn_probHcc_3,&b_jetAK8puppi_dnn_probHcc_3);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probHqqqq_3",&jetAK8puppi_dnn_probHqqqq_3,&b_jetAK8puppi_dnn_probHqqqq_3);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDbb_3",&jetAK8puppi_dnn_probQCDbb_3,&b_jetAK8puppi_dnn_probQCDbb_3);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDcc_3",&jetAK8puppi_dnn_probQCDcc_3,&b_jetAK8puppi_dnn_probQCDcc_3);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDb_3",&jetAK8puppi_dnn_probQCDb_3,&b_jetAK8puppi_dnn_probQCDb_3);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDc_3",&jetAK8puppi_dnn_probQCDc_3,&b_jetAK8puppi_dnn_probQCDc_3);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDothers_3",&jetAK8puppi_dnn_probQCDothers_3,&b_jetAK8puppi_dnn_probQCDothers_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probTbcq_3",&jetAK8puppi_dnnDecorr_probTbcq_3,&b_jetAK8puppi_dnnDecorr_probTbcq_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probTbqq_3",&jetAK8puppi_dnnDecorr_probTbqq_3,&b_jetAK8puppi_dnnDecorr_probTbqq_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probTbc_3",&jetAK8puppi_dnnDecorr_probTbc_3,&b_jetAK8puppi_dnnDecorr_probTbc_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probTbq_3",&jetAK8puppi_dnnDecorr_probTbq_3,&b_jetAK8puppi_dnnDecorr_probTbq_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probWcq_3",&jetAK8puppi_dnnDecorr_probWcq_3,&b_jetAK8puppi_dnnDecorr_probWcq_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probWqq_3",&jetAK8puppi_dnnDecorr_probWqq_3,&b_jetAK8puppi_dnnDecorr_probWqq_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probZbb_3",&jetAK8puppi_dnnDecorr_probZbb_3,&b_jetAK8puppi_dnnDecorr_probZbb_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probZcc_3",&jetAK8puppi_dnnDecorr_probZcc_3,&b_jetAK8puppi_dnnDecorr_probZcc_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probZqq_3",&jetAK8puppi_dnnDecorr_probZqq_3,&b_jetAK8puppi_dnnDecorr_probZqq_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probHbb_3",&jetAK8puppi_dnnDecorr_probHbb_3,&b_jetAK8puppi_dnnDecorr_probHbb_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probHcc_3",&jetAK8puppi_dnnDecorr_probHcc_3,&b_jetAK8puppi_dnnDecorr_probHcc_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probHqqqq_3",&jetAK8puppi_dnnDecorr_probHqqqq_3,&b_jetAK8puppi_dnnDecorr_probHqqqq_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDbb_3",&jetAK8puppi_dnnDecorr_probQCDbb_3,&b_jetAK8puppi_dnnDecorr_probQCDbb_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDcc_3",&jetAK8puppi_dnnDecorr_probQCDcc_3,&b_jetAK8puppi_dnnDecorr_probQCDcc_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDb_3",&jetAK8puppi_dnnDecorr_probQCDb_3,&b_jetAK8puppi_dnnDecorr_probQCDb_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDc_3",&jetAK8puppi_dnnDecorr_probQCDc_3,&b_jetAK8puppi_dnnDecorr_probQCDc_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDothers_3",&jetAK8puppi_dnnDecorr_probQCDothers_3,&b_jetAK8puppi_dnnDecorr_probQCDothers_3);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probTbcq_4",&jetAK8puppi_dnn_probTbcq_4,&b_jetAK8puppi_dnn_probTbcq_4);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probTbqq_4",&jetAK8puppi_dnn_probTbqq_4,&b_jetAK8puppi_dnn_probTbqq_4);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probTbc_4",&jetAK8puppi_dnn_probTbc_4,&b_jetAK8puppi_dnn_probTbc_4);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probTbq_4",&jetAK8puppi_dnn_probTbq_4,&b_jetAK8puppi_dnn_probTbq_4);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probWcq_4",&jetAK8puppi_dnn_probWcq_4,&b_jetAK8puppi_dnn_probWcq_4);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probWqq_4",&jetAK8puppi_dnn_probWqq_4,&b_jetAK8puppi_dnn_probWqq_4);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probZbb_4",&jetAK8puppi_dnn_probZbb_4,&b_jetAK8puppi_dnn_probZbb_4);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probZcc_4",&jetAK8puppi_dnn_probZcc_4,&b_jetAK8puppi_dnn_probZcc_4);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probZqq_4",&jetAK8puppi_dnn_probZqq_4,&b_jetAK8puppi_dnn_probZqq_4);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probHbb_4",&jetAK8puppi_dnn_probHbb_4,&b_jetAK8puppi_dnn_probHbb_4);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probHcc_4",&jetAK8puppi_dnn_probHcc_4,&b_jetAK8puppi_dnn_probHcc_4);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probHqqqq_4",&jetAK8puppi_dnn_probHqqqq_4,&b_jetAK8puppi_dnn_probHqqqq_4);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDbb_4",&jetAK8puppi_dnn_probQCDbb_4,&b_jetAK8puppi_dnn_probQCDbb_4);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDcc_4",&jetAK8puppi_dnn_probQCDcc_4,&b_jetAK8puppi_dnn_probQCDcc_4);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDb_4",&jetAK8puppi_dnn_probQCDb_4,&b_jetAK8puppi_dnn_probQCDb_4);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDc_4",&jetAK8puppi_dnn_probQCDc_4,&b_jetAK8puppi_dnn_probQCDc_4);
-fChain->SetBranchAddress("jetAK8puppi_dnn_probQCDothers_4",&jetAK8puppi_dnn_probQCDothers_4,&b_jetAK8puppi_dnn_probQCDothers_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probTbcq_4",&jetAK8puppi_dnnDecorr_probTbcq_4,&b_jetAK8puppi_dnnDecorr_probTbcq_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probTbqq_4",&jetAK8puppi_dnnDecorr_probTbqq_4,&b_jetAK8puppi_dnnDecorr_probTbqq_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probTbc_4",&jetAK8puppi_dnnDecorr_probTbc_4,&b_jetAK8puppi_dnnDecorr_probTbc_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probTbq_4",&jetAK8puppi_dnnDecorr_probTbq_4,&b_jetAK8puppi_dnnDecorr_probTbq_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probWcq_4",&jetAK8puppi_dnnDecorr_probWcq_4,&b_jetAK8puppi_dnnDecorr_probWcq_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probWqq_4",&jetAK8puppi_dnnDecorr_probWqq_4,&b_jetAK8puppi_dnnDecorr_probWqq_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probZbb_4",&jetAK8puppi_dnnDecorr_probZbb_4,&b_jetAK8puppi_dnnDecorr_probZbb_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probZcc_4",&jetAK8puppi_dnnDecorr_probZcc_4,&b_jetAK8puppi_dnnDecorr_probZcc_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probZqq_4",&jetAK8puppi_dnnDecorr_probZqq_4,&b_jetAK8puppi_dnnDecorr_probZqq_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probHbb_4",&jetAK8puppi_dnnDecorr_probHbb_4,&b_jetAK8puppi_dnnDecorr_probHbb_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probHcc_4",&jetAK8puppi_dnnDecorr_probHcc_4,&b_jetAK8puppi_dnnDecorr_probHcc_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probHqqqq_4",&jetAK8puppi_dnnDecorr_probHqqqq_4,&b_jetAK8puppi_dnnDecorr_probHqqqq_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDbb_4",&jetAK8puppi_dnnDecorr_probQCDbb_4,&b_jetAK8puppi_dnnDecorr_probQCDbb_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDcc_4",&jetAK8puppi_dnnDecorr_probQCDcc_4,&b_jetAK8puppi_dnnDecorr_probQCDcc_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDb_4",&jetAK8puppi_dnnDecorr_probQCDb_4,&b_jetAK8puppi_dnnDecorr_probQCDb_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDc_4",&jetAK8puppi_dnnDecorr_probQCDc_4,&b_jetAK8puppi_dnnDecorr_probQCDc_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorr_probQCDothers_4",&jetAK8puppi_dnnDecorr_probQCDothers_4,&b_jetAK8puppi_dnnDecorr_probQCDothers_4);
-
-fChain->SetBranchAddress("jetAK8puppi_dnnTop",&jetAK8puppi_dnnTop,&b_jetAK8puppi_dnnTop);
-fChain->SetBranchAddress("jetAK8puppi_dnnW",&jetAK8puppi_dnnW,&b_jetAK8puppi_dnnW);
-fChain->SetBranchAddress("jetAK8puppi_dnnH4q",&jetAK8puppi_dnnH4q,&b_jetAK8puppi_dnnH4q);
-fChain->SetBranchAddress("jetAK8puppi_dnnTop_2",&jetAK8puppi_dnnTop_2,&b_jetAK8puppi_dnnTop_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnW_2",&jetAK8puppi_dnnW_2,&b_jetAK8puppi_dnnW_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnH4q_2",&jetAK8puppi_dnnH4q_2,&b_jetAK8puppi_dnnH4q_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnTop_3",&jetAK8puppi_dnnTop_3,&b_jetAK8puppi_dnnTop_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnW_3",&jetAK8puppi_dnnW_3,&b_jetAK8puppi_dnnW_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnH4q_3",&jetAK8puppi_dnnH4q_3,&b_jetAK8puppi_dnnH4q_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnTop_4",&jetAK8puppi_dnnTop_4,&b_jetAK8puppi_dnnTop_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnW_4",&jetAK8puppi_dnnW_4,&b_jetAK8puppi_dnnW_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnH4q_4",&jetAK8puppi_dnnH4q_4,&b_jetAK8puppi_dnnH4q_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnZ",&jetAK8puppi_dnnZ,&b_jetAK8puppi_dnnZ);
-fChain->SetBranchAddress("jetAK8puppi_dnnZbb",&jetAK8puppi_dnnZbb,&b_jetAK8puppi_dnnZbb);
-fChain->SetBranchAddress("jetAK8puppi_dnnHbb",&jetAK8puppi_dnnHbb,&b_jetAK8puppi_dnnHbb);
-fChain->SetBranchAddress("jetAK8puppi_dnnZ_2",&jetAK8puppi_dnnZ_2,&b_jetAK8puppi_dnnZ_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnZbb_2",&jetAK8puppi_dnnZbb_2,&b_jetAK8puppi_dnnZbb_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnHbb_2",&jetAK8puppi_dnnHbb_2,&b_jetAK8puppi_dnnHbb_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnZ_3",&jetAK8puppi_dnnZ_3,&b_jetAK8puppi_dnnZ_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnZbb_3",&jetAK8puppi_dnnZbb_3,&b_jetAK8puppi_dnnZbb_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnHbb_3",&jetAK8puppi_dnnHbb_3,&b_jetAK8puppi_dnnHbb_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnZ_4",&jetAK8puppi_dnnZ_4,&b_jetAK8puppi_dnnZ_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnZbb_4",&jetAK8puppi_dnnZbb_4,&b_jetAK8puppi_dnnZbb_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnHbb_4",&jetAK8puppi_dnnHbb_4,&b_jetAK8puppi_dnnHbb_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrTop",&jetAK8puppi_dnnDecorrTop,&b_jetAK8puppi_dnnDecorrTop);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrW",&jetAK8puppi_dnnDecorrW,&b_jetAK8puppi_dnnDecorrW);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrH4q",&jetAK8puppi_dnnDecorrH4q,&b_jetAK8puppi_dnnDecorrH4q);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrTop_2",&jetAK8puppi_dnnDecorrTop_2,&b_jetAK8puppi_dnnDecorrTop_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrW_2",&jetAK8puppi_dnnDecorrW_2,&b_jetAK8puppi_dnnDecorrW_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrH4q_2",&jetAK8puppi_dnnDecorrH4q_2,&b_jetAK8puppi_dnnDecorrH4q_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrTop_3",&jetAK8puppi_dnnDecorrTop_3,&b_jetAK8puppi_dnnDecorrTop_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrW_3",&jetAK8puppi_dnnDecorrW_3,&b_jetAK8puppi_dnnDecorrW_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrH4q_3",&jetAK8puppi_dnnDecorrH4q_3,&b_jetAK8puppi_dnnDecorrH4q_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrTop_4",&jetAK8puppi_dnnDecorrTop_4,&b_jetAK8puppi_dnnDecorrTop_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrW_4",&jetAK8puppi_dnnDecorrW_4,&b_jetAK8puppi_dnnDecorrW_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrH4q_4",&jetAK8puppi_dnnDecorrH4q_4,&b_jetAK8puppi_dnnDecorrH4q_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrZ",&jetAK8puppi_dnnDecorrZ,&b_jetAK8puppi_dnnDecorrZ);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrZbb",&jetAK8puppi_dnnDecorrZbb,&b_jetAK8puppi_dnnDecorrZbb);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrHbb",&jetAK8puppi_dnnDecorrHbb,&b_jetAK8puppi_dnnDecorrHbb);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrZ_2",&jetAK8puppi_dnnDecorrZ_2,&b_jetAK8puppi_dnnDecorrZ_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrZbb_2",&jetAK8puppi_dnnDecorrZbb_2,&b_jetAK8puppi_dnnDecorrZbb_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrHbb_2",&jetAK8puppi_dnnDecorrHbb_2,&b_jetAK8puppi_dnnDecorrHbb_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrZ_3",&jetAK8puppi_dnnDecorrZ_3,&b_jetAK8puppi_dnnDecorrZ_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrZbb_3",&jetAK8puppi_dnnDecorrZbb_3,&b_jetAK8puppi_dnnDecorrZbb_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrHbb_3",&jetAK8puppi_dnnDecorrHbb_3,&b_jetAK8puppi_dnnDecorrHbb_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrZ_4",&jetAK8puppi_dnnDecorrZ_4,&b_jetAK8puppi_dnnDecorrZ_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrZbb_4",&jetAK8puppi_dnnDecorrZbb_4,&b_jetAK8puppi_dnnDecorrZbb_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrHbb_4",&jetAK8puppi_dnnDecorrHbb_4,&b_jetAK8puppi_dnnDecorrHbb_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrbb",&jetAK8puppi_dnnDecorrbb,&b_jetAK8puppi_dnnDecorrbb);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrcc",&jetAK8puppi_dnnDecorrcc,&b_jetAK8puppi_dnnDecorrcc);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrbbnog",&jetAK8puppi_dnnDecorrbbnog,&b_jetAK8puppi_dnnDecorrbbnog);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrccnog",&jetAK8puppi_dnnDecorrccnog,&b_jetAK8puppi_dnnDecorrccnog);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrbb_2",&jetAK8puppi_dnnDecorrbb_2,&b_jetAK8puppi_dnnDecorrbb_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrcc_2",&jetAK8puppi_dnnDecorrcc_2,&b_jetAK8puppi_dnnDecorrcc_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrbbnog_2",&jetAK8puppi_dnnDecorrbbnog_2,&b_jetAK8puppi_dnnDecorrbbnog_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrccnog_2",&jetAK8puppi_dnnDecorrccnog_2,&b_jetAK8puppi_dnnDecorrccnog_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrbb_3",&jetAK8puppi_dnnDecorrbb_3,&b_jetAK8puppi_dnnDecorrbb_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrcc_3",&jetAK8puppi_dnnDecorrcc_3,&b_jetAK8puppi_dnnDecorrcc_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrbbnog_3",&jetAK8puppi_dnnDecorrbbnog_3,&b_jetAK8puppi_dnnDecorrbbnog_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrccnog_3",&jetAK8puppi_dnnDecorrccnog_3,&b_jetAK8puppi_dnnDecorrccnog_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrbb_4",&jetAK8puppi_dnnDecorrbb_4,&b_jetAK8puppi_dnnDecorrbb_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrcc_4",&jetAK8puppi_dnnDecorrcc_4,&b_jetAK8puppi_dnnDecorrcc_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrbbnog_4",&jetAK8puppi_dnnDecorrbbnog_4,&b_jetAK8puppi_dnnDecorrbbnog_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrccnog_4",&jetAK8puppi_dnnDecorrccnog_4,&b_jetAK8puppi_dnnDecorrccnog_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnqcd",&jetAK8puppi_dnnqcd,&b_jetAK8puppi_dnnqcd);
-fChain->SetBranchAddress("jetAK8puppi_dnntop",&jetAK8puppi_dnntop,&b_jetAK8puppi_dnntop);
-fChain->SetBranchAddress("jetAK8puppi_dnnw",&jetAK8puppi_dnnw,&b_jetAK8puppi_dnnw);
-fChain->SetBranchAddress("jetAK8puppi_dnnz",&jetAK8puppi_dnnz,&b_jetAK8puppi_dnnz);
-fChain->SetBranchAddress("jetAK8puppi_dnnzbb",&jetAK8puppi_dnnzbb,&b_jetAK8puppi_dnnzbb);
-fChain->SetBranchAddress("jetAK8puppi_dnnhbb",&jetAK8puppi_dnnhbb,&b_jetAK8puppi_dnnhbb);
-fChain->SetBranchAddress("jetAK8puppi_dnnh4q",&jetAK8puppi_dnnh4q,&b_jetAK8puppi_dnnh4q);
-fChain->SetBranchAddress("jetAK8puppi_dnnqcd_2",&jetAK8puppi_dnnqcd_2,&b_jetAK8puppi_dnnqcd_2);
-fChain->SetBranchAddress("jetAK8puppi_dnntop_2",&jetAK8puppi_dnntop_2,&b_jetAK8puppi_dnntop_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnw_2",&jetAK8puppi_dnnw_2,&b_jetAK8puppi_dnnw_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnz_2",&jetAK8puppi_dnnz_2,&b_jetAK8puppi_dnnz_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnzbb_2",&jetAK8puppi_dnnzbb_2,&b_jetAK8puppi_dnnzbb_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnhbb_2",&jetAK8puppi_dnnhbb_2,&b_jetAK8puppi_dnnhbb_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnh4q_2",&jetAK8puppi_dnnh4q_2,&b_jetAK8puppi_dnnh4q_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnqcd_3",&jetAK8puppi_dnnqcd_3,&b_jetAK8puppi_dnnqcd_3);
-fChain->SetBranchAddress("jetAK8puppi_dnntop_3",&jetAK8puppi_dnntop_3,&b_jetAK8puppi_dnntop_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnw_3",&jetAK8puppi_dnnw_3,&b_jetAK8puppi_dnnw_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnz_3",&jetAK8puppi_dnnz_3,&b_jetAK8puppi_dnnz_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnzbb_3",&jetAK8puppi_dnnzbb_3,&b_jetAK8puppi_dnnzbb_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnhbb_3",&jetAK8puppi_dnnhbb_3,&b_jetAK8puppi_dnnhbb_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnh4q_3",&jetAK8puppi_dnnh4q_3,&b_jetAK8puppi_dnnh4q_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnqcd_4",&jetAK8puppi_dnnqcd_4,&b_jetAK8puppi_dnnqcd_4);
-fChain->SetBranchAddress("jetAK8puppi_dnntop_4",&jetAK8puppi_dnntop_4,&b_jetAK8puppi_dnntop_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnw_4",&jetAK8puppi_dnnw_4,&b_jetAK8puppi_dnnw_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnz_4",&jetAK8puppi_dnnz_4,&b_jetAK8puppi_dnnz_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnzbb_4",&jetAK8puppi_dnnzbb_4,&b_jetAK8puppi_dnnzbb_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnhbb_4",&jetAK8puppi_dnnhbb_4,&b_jetAK8puppi_dnnhbb_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnh4q_4",&jetAK8puppi_dnnh4q_4,&b_jetAK8puppi_dnnh4q_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrqcd",&jetAK8puppi_dnnDecorrqcd,&b_jetAK8puppi_dnnDecorrqcd);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrtop",&jetAK8puppi_dnnDecorrtop,&b_jetAK8puppi_dnnDecorrtop);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrw",&jetAK8puppi_dnnDecorrw,&b_jetAK8puppi_dnnDecorrw);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrz",&jetAK8puppi_dnnDecorrz,&b_jetAK8puppi_dnnDecorrz);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrzbb",&jetAK8puppi_dnnDecorrzbb,&b_jetAK8puppi_dnnDecorrzbb);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrhbb",&jetAK8puppi_dnnDecorrhbb,&b_jetAK8puppi_dnnDecorrhbb);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrh4q",&jetAK8puppi_dnnDecorrh4q,&b_jetAK8puppi_dnnDecorrh4q);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrqcd_2",&jetAK8puppi_dnnDecorrqcd_2,&b_jetAK8puppi_dnnDecorrqcd_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrtop_2",&jetAK8puppi_dnnDecorrtop_2,&b_jetAK8puppi_dnnDecorrtop_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrw_2",&jetAK8puppi_dnnDecorrw_2,&b_jetAK8puppi_dnnDecorrw_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrz_2",&jetAK8puppi_dnnDecorrz_2,&b_jetAK8puppi_dnnDecorrz_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrzbb_2",&jetAK8puppi_dnnDecorrzbb_2,&b_jetAK8puppi_dnnDecorrzbb_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrhbb_2",&jetAK8puppi_dnnDecorrhbb_2,&b_jetAK8puppi_dnnDecorrhbb_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrh4q_2",&jetAK8puppi_dnnDecorrh4q_2,&b_jetAK8puppi_dnnDecorrh4q_2);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrqcd_3",&jetAK8puppi_dnnDecorrqcd_3,&b_jetAK8puppi_dnnDecorrqcd_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrtop_3",&jetAK8puppi_dnnDecorrtop_3,&b_jetAK8puppi_dnnDecorrtop_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrw_3",&jetAK8puppi_dnnDecorrw_3,&b_jetAK8puppi_dnnDecorrw_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrz_3",&jetAK8puppi_dnnDecorrz_3,&b_jetAK8puppi_dnnDecorrz_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrzbb_3",&jetAK8puppi_dnnDecorrzbb_3,&b_jetAK8puppi_dnnDecorrzbb_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrhbb_3",&jetAK8puppi_dnnDecorrhbb_3,&b_jetAK8puppi_dnnDecorrhbb_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrh4q_3",&jetAK8puppi_dnnDecorrh4q_3,&b_jetAK8puppi_dnnDecorrh4q_3);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrqcd_4",&jetAK8puppi_dnnDecorrqcd_4,&b_jetAK8puppi_dnnDecorrqcd_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrtop_4",&jetAK8puppi_dnnDecorrtop_4,&b_jetAK8puppi_dnnDecorrtop_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrw_4",&jetAK8puppi_dnnDecorrw_4,&b_jetAK8puppi_dnnDecorrw_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrz_4",&jetAK8puppi_dnnDecorrz_4,&b_jetAK8puppi_dnnDecorrz_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrzbb_4",&jetAK8puppi_dnnDecorrzbb_4,&b_jetAK8puppi_dnnDecorrzbb_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrhbb_4",&jetAK8puppi_dnnDecorrhbb_4,&b_jetAK8puppi_dnnDecorrhbb_4);
-fChain->SetBranchAddress("jetAK8puppi_dnnDecorrh4q_4",&jetAK8puppi_dnnDecorrh4q_4,&b_jetAK8puppi_dnnDecorrh4q_4);
-
-   fChain->SetBranchAddress("ak8sj11", &ak8sj11, &b_ak8sj11);
-   fChain->SetBranchAddress("ak8sj21", &ak8sj21, &b_ak8sj21);
-   fChain->SetBranchAddress("ak8sj31", &ak8sj31, &b_ak8sj31);
-   fChain->SetBranchAddress("ak8sj12", &ak8sj12, &b_ak8sj12);
-   fChain->SetBranchAddress("ak8sj22", &ak8sj22, &b_ak8sj22);
-   fChain->SetBranchAddress("ak8sj32", &ak8sj32, &b_ak8sj32);
-   fChain->SetBranchAddress("ak8sj13", &ak8sj13, &b_ak8sj13);
-   fChain->SetBranchAddress("ak8sj23", &ak8sj23, &b_ak8sj23);
-   fChain->SetBranchAddress("ak8sj33", &ak8sj33, &b_ak8sj33);
-   fChain->SetBranchAddress("ak8sj14", &ak8sj14, &b_ak8sj14);
-   fChain->SetBranchAddress("ak8sj24", &ak8sj24, &b_ak8sj24);
-   fChain->SetBranchAddress("ak8sj34", &ak8sj34, &b_ak8sj34);
-   fChain->SetBranchAddress("ak8sj15", &ak8sj15, &b_ak8sj15);
-   fChain->SetBranchAddress("ak8sj25", &ak8sj25, &b_ak8sj25);
-   fChain->SetBranchAddress("ak8sj35", &ak8sj35, &b_ak8sj35);
-   fChain->SetBranchAddress("run", &run, &b_run);
-   fChain->SetBranchAddress("luminosityBlock", &luminosityBlock, &b_luminosityBlock);
-   fChain->SetBranchAddress("ls", &ls, &b_ls);
-   fChain->SetBranchAddress("nLooseEle", &nLooseEle, &b_nLooseEle);
-   fChain->SetBranchAddress("nLooseMu", &nLooseMu, &b_nLooseMu);
-
-   fChain->SetBranchAddress("event", &event, &b_event);
-   fChain->SetBranchAddress("nVtx", &nVtx, &b_nVtx);
- //  fChain->SetBranchAddress("numCands", &numCands, &b_numCands);
-//   fChain->SetBranchAddress("ptVlep", &ptVlep, &b_ptVlep);
-   fChain->SetBranchAddress("ptVhad", &ptVhad, &b_ptVhad);
-  // fChain->SetBranchAddress("yVlep", &yVlep, &b_yVlep);
-   fChain->SetBranchAddress("yVhad", &yVhad, &b_yVhad);
-   fChain->SetBranchAddress("yVhadJEC", &yVhadJEC, &b_yVhadJEC);
-//   fChain->SetBranchAddress("phiVlep", &phiVlep, &b_phiVlep);
-   fChain->SetBranchAddress("phiVhad", &phiVhad, &b_phiVhad);
-  // fChain->SetBranchAddress("massVlep", &massVlep, &b_massVlep);
- //  fChain->SetBranchAddress("mtVlep", &mtVlep, &b_mtVlep);
-   fChain->SetBranchAddress("massVhad", &massVhad, &b_massVhad);
-//   fChain->SetBranchAddress("massVhad_gen", &massVhad_gen, &b_massVhad_gen);
-   fChain->SetBranchAddress("tau1", &tau1, &b_tau1);
-   fChain->SetBranchAddress("tau2", &tau2, &b_tau2);
-   fChain->SetBranchAddress("tau3", &tau3, &b_tau3);
- //  fChain->SetBranchAddress("tau21", &tau21, &b_tau21);
-//   fChain->SetBranchAddress("sdrop", &sdrop, &b_sdrop);
- //  fChain->SetBranchAddress("lep", &lep, &b_lep);
-   fChain->SetBranchAddress("channel", &channel, &b_channel);
-   fChain->SetBranchAddress("candMass", &candMass, &b_candMass);
-  /* fChain->SetBranchAddress("ptlep1", &ptlep1, &b_ptlep1);
-   fChain->SetBranchAddress("ptlep2", &ptlep2, &b_ptlep2);
-   fChain->SetBranchAddress("etalep1", &etalep1, &b_etalep1);
-   fChain->SetBranchAddress("etalep2", &etalep2, &b_etalep2);
-   fChain->SetBranchAddress("philep1", &philep1, &b_philep1);
-   fChain->SetBranchAddress("philep2", &philep2, &b_philep2);
-*/  
- fChain->SetBranchAddress("met", &met, &b_met);
-   fChain->SetBranchAddress("metPhi", &metPhi, &b_metPhi);
-   fChain->SetBranchAddress("theWeight", &theWeight, &b_theWeight);
-   fChain->SetBranchAddress("nump", &nump, &b_nump);
-   fChain->SetBranchAddress("numm", &numm, &b_numm);
-   fChain->SetBranchAddress("npT", &npT, &b_npT);
-   fChain->SetBranchAddress("npIT", &npIT, &b_npIT);
-   fChain->SetBranchAddress("nBX", &nBX, &b_nBX);
-   fChain->SetBranchAddress("triggerWeight", &triggerWeight, &b_triggerWeight);
-   fChain->SetBranchAddress("lumiWeight", &lumiWeight, &b_lumiWeight);
-   fChain->SetBranchAddress("pileupWeight", &pileupWeight, &b_pileupWeight);
-   fChain->SetBranchAddress("delPhilepmet", &delPhilepmet, &b_delPhilepmet);
-   fChain->SetBranchAddress("deltaRlepjet", &deltaRlepjet, &b_deltaRlepjet);
-   fChain->SetBranchAddress("delPhijetmet", &delPhijetmet, &b_delPhijetmet);
-   fChain->SetBranchAddress("delPhijetlep", &delPhijetlep, &b_delPhijetlep);
-   fChain->SetBranchAddress("vbftag", &vbftag, &b_vbftag);
-   //fChain->SetBranchAddress("IDLoose", &IDLoose, &b_IDLoose);
- //  fChain->SetBranchAddress("IDTight", &IDTight, &b_IDTight);
-   //fChain->SetBranchAddress("isHighPt", &isHighPt, &b_isHighPt);
-   //fChain->SetBranchAddress("isHEEP", &isHEEP, &b_isHEEP);
-   fChain->SetBranchAddress("trackIso", &trackIso, &b_trackIso);
-//   fChain->SetBranchAddress("muchaiso", &muchaiso, &b_muchaiso);
-  // fChain->SetBranchAddress("muneuiso", &muneuiso, &b_muneuiso);
-//   fChain->SetBranchAddress("muphoiso", &muphoiso, &b_muphoiso);
-  // fChain->SetBranchAddress("muPU", &muPU, &b_muPU);
- //  fChain->SetBranchAddress("muisolation", &muisolation, &b_muisolation);
-   fChain->SetBranchAddress("METraw_et", &METraw_et, &b_METraw_et);
-   fChain->SetBranchAddress("METraw_phi", &METraw_phi, &b_METraw_phi);
-   fChain->SetBranchAddress("METraw_sumEt", &METraw_sumEt, &b_METraw_sumEt);
-   fChain->SetBranchAddress("MET_phi", &MET_phi, &b_MET_phi);
-   fChain->SetBranchAddress("RawMET_phi", &RawMET_phi, &b_RawMET_phi);
-   fChain->SetBranchAddress("MET_sumEt", &MET_sumEt, &b_MET_sumEt);
-   fChain->SetBranchAddress("jetAK8_pt", &jetAK8_pt, &b_jetAK8_pt);
-   fChain->SetBranchAddress("jetAK8_mass", &jetAK8_mass, &b_jetAK8_mass);
-   fChain->SetBranchAddress("jetAK8_jec", &jetAK8_jec, &b_jetAK8_jec);
-   fChain->SetBranchAddress("jetAK8_pt1", jetAK8_pt1, &b_jetAK8_pt1);
-   fChain->SetBranchAddress("jetAK8_eta1", jetAK8_eta1, &b_jetAK8_eta1);
-   fChain->SetBranchAddress("jetAK8_mass1", jetAK8_mass1, &b_jetAK8_mass1);
-   fChain->SetBranchAddress("jetAK8_SF_mass1", jetAK8_SF_mass1, &b_jetAK8_SF_mass1);
-   fChain->SetBranchAddress("jetAK8_SF_mass2", jetAK8_SF_mass2, &b_jetAK8_SF_mass2);
-   fChain->SetBranchAddress("jetAK8_jec1", jetAK8_jec1, &b_jetAK8_jec1);
-   fChain->SetBranchAddress("jetAK8_eta", &jetAK8_eta, &b_jetAK8_eta);
-   fChain->SetBranchAddress("jetAK8_phi", &jetAK8_phi, &b_jetAK8_phi);
-
-   fChain->SetBranchAddress("MJJ_JEC_up", &MJJ_JEC_up, &b_MJJ_JEC_up);
-   fChain->SetBranchAddress("MJJ_JEC_down", &MJJ_JEC_down, &b_MJJ_JEC_down);
-   fChain->SetBranchAddress("MJJ_JER_up", &MJJ_JER_up, &b_MJJ_JER_up);
-   fChain->SetBranchAddress("MJJ_JER_down", &MJJ_JER_down, &b_MJJ_JER_down);
-
-  
-   fChain->SetBranchAddress("candMasspuppiJEC_new", &candMasspuppiJEC_new, &b_candMasspuppiJEC_new);
-   fChain->SetBranchAddress("candMasspuppiJEC", &candMasspuppiJEC, &b_candMasspuppiJEC);
-   fChain->SetBranchAddress("candMasspuppiJEC_JEC_up", &candMasspuppiJEC_JEC_up, &b_candMasspuppiJEC_JEC_up);
-   fChain->SetBranchAddress("candMasspuppiJEC_JEC_down", &candMasspuppiJEC_JEC_down, &b_candMasspuppiJEC_JEC_down);
-   fChain->SetBranchAddress("candMasspuppiJEC_JER_up", &candMasspuppiJEC_JER_up, &b_candMasspuppiJEC_JER_up);
-   fChain->SetBranchAddress("candMasspuppiJEC_JER_down", &candMasspuppiJEC_JER_down, &b_candMasspuppiJEC_JER_down);
-
-
-   fChain->SetBranchAddress("HLT_Mu1", &HLT_Mu1, &b_HLT_Mu1);
-   fChain->SetBranchAddress("HLT_Mu2", &HLT_Mu2, &b_HLT_Mu2);
-   fChain->SetBranchAddress("HLT_Mu3", &HLT_Mu3, &b_HLT_Mu3);
-   fChain->SetBranchAddress("HLT_Mu4", &HLT_Mu4, &b_HLT_Mu4);
-   fChain->SetBranchAddress("HLT_Mu5", &HLT_Mu5, &b_HLT_Mu5);
-   fChain->SetBranchAddress("HLT_Mu6", &HLT_Mu6, &b_HLT_Mu6);
-   fChain->SetBranchAddress("HLT_Mu7", &HLT_Mu7, &b_HLT_Mu7);
-   fChain->SetBranchAddress("HLT_Mu8", &HLT_Mu8, &b_HLT_Mu8);
-   fChain->SetBranchAddress("HLT_Mu9", &HLT_Mu9, &b_HLT_Mu9);
-   fChain->SetBranchAddress("HLT_Mu10", &HLT_Mu10, &b_HLT_Mu10);
-   fChain->SetBranchAddress("HLT_Mu11", &HLT_Mu11, &b_HLT_Mu11);
-   fChain->SetBranchAddress("HLT_Mu12", &HLT_Mu12, &b_HLT_Mu12);
-   fChain->SetBranchAddress("HLT_Mu13", &HLT_Mu13, &b_HLT_Mu13);
-   fChain->SetBranchAddress("HLT_Mu14", &HLT_Mu14, &b_HLT_Mu14);
-   fChain->SetBranchAddress("HLT_Mu15", &HLT_Mu15, &b_HLT_Mu15);
-   fChain->SetBranchAddress("HLT_Mu16", &HLT_Mu16, &b_HLT_Mu16);
-   fChain->SetBranchAddress("HLT_Mu17", &HLT_Mu17, &b_HLT_Mu17);
-
-   fChain->SetBranchAddress("pweight", pweight, &b_pweight);
-
-
-   fChain->SetBranchAddress("ak4jet_hf", ak4jet_hf, &b_ak4jet_hf);
-   fChain->SetBranchAddress("ak4jet_pf", ak4jet_pf, &b_ak4jet_pf);
-   fChain->SetBranchAddress("ak4jet_pt", ak4jet_pt, &b_ak4jet_pt);
-   fChain->SetBranchAddress("ak4jet_pt_uncorr", ak4jet_pt_uncorr, &b_ak4jet_pt_uncorr);
-   fChain->SetBranchAddress("ak4jet_eta", ak4jet_eta, &b_ak4jet_eta);
-   fChain->SetBranchAddress("ak4jet_phi", ak4jet_phi, &b_ak4jet_phi);
-   fChain->SetBranchAddress("ak4jet_e", ak4jet_e, &b_ak4jet_e);
-   fChain->SetBranchAddress("ak4jet_dr", ak4jet_dr, &b_ak4jet_dr);
-   fChain->SetBranchAddress("ak4jet_csv", ak4jet_csv, &b_ak4jet_csv);
-   fChain->SetBranchAddress("ak4jet_icsv", ak4jet_icsv, &b_ak4jet_icsv);
-   fChain->SetBranchAddress("ak4jet_deepcsvb", ak4jet_deepcsvb, &b_ak4jet_deepcsvb);
-   fChain->SetBranchAddress("ak4jet_deepcsvbb", ak4jet_deepcsvbb, &b_ak4jet_deepcsvbb);
-   fChain->SetBranchAddress("ak4jet_IDLoose", ak4jet_IDLoose, &b_ak4jet_IDLoose);
-   fChain->SetBranchAddress("ak4jet_IDTight", ak4jet_IDTight, &b_ak4jet_IDTight);
-
-   fChain->SetBranchAddress("deltaRAK4AK8", deltaRAK4AK8, &b_deltaRAK4AK8);
-   fChain->SetBranchAddress("gen_gra_m", &gen_gra_m, &b_gen_gra_m);
-   fChain->SetBranchAddress("gen_gra_pt", &gen_gra_pt, &b_gen_gra_pt);
-   fChain->SetBranchAddress("gen_gra_eta", &gen_gra_eta, &b_gen_gra_eta);
-   fChain->SetBranchAddress("gen_gra_phi", &gen_gra_phi, &b_gen_gra_phi);
-   fChain->SetBranchAddress("gen_rad_m", &gen_rad_m, &b_gen_rad_m);
-   fChain->SetBranchAddress("gen_rad_pt", &gen_rad_pt, &b_gen_rad_pt);
-   fChain->SetBranchAddress("gen_rad_eta", &gen_rad_eta, &b_gen_rad_eta);
-   fChain->SetBranchAddress("gen_rad_phi", &gen_rad_phi, &b_gen_rad_phi);
-
-   fChain->SetBranchAddress("gen_tau_eta", &gen_tau_eta, &b_gen_tau_eta);
-   fChain->SetBranchAddress("gen_tau_phi", &gen_tau_phi, &b_gen_tau_phi);
-   fChain->SetBranchAddress("gen_tau_pt", &gen_tau_pt, &b_gen_tau_pt);
-   fChain->SetBranchAddress("gen_tau_e", &gen_tau_e, &b_gen_tau_e);
-   fChain->SetBranchAddress("gen_tau_eta_2", &gen_tau_eta_2, &b_gen_tau_eta_2);
-   fChain->SetBranchAddress("gen_tau_phi_2", &gen_tau_phi_2, &b_gen_tau_phi_2);
-   fChain->SetBranchAddress("gen_tau_pt_2", &gen_tau_pt_2, &b_gen_tau_pt_2);
-   fChain->SetBranchAddress("gen_tau_e_2", &gen_tau_e_2, &b_gen_tau_e_2);
-   fChain->SetBranchAddress("gen_tau_eta_3", &gen_tau_eta_3, &b_gen_tau_eta_3);
-   fChain->SetBranchAddress("gen_tau_phi_3", &gen_tau_phi_3, &b_gen_tau_phi_3);
-   fChain->SetBranchAddress("gen_tau_pt_3", &gen_tau_pt_3, &b_gen_tau_pt_3);
-   fChain->SetBranchAddress("gen_tau_e_3", &gen_tau_e_3, &b_gen_tau_e_3);
-
-  
-   fChain->SetBranchAddress("gentop_pt", &gentop_pt, &b_gentop_pt);
-   fChain->SetBranchAddress("gentop_eta", &gentop_eta, &b_gentop_eta);
-   fChain->SetBranchAddress("gentop_phi", &gentop_phi, &b_gentop_phi);
-   fChain->SetBranchAddress("gentop_mass", &gentop_mass, &b_gentop_mass);
-   fChain->SetBranchAddress("genantitop_pt", &genantitop_pt, &b_genantitop_pt);
-   fChain->SetBranchAddress("genantitop_eta", &genantitop_eta, &b_genantitop_eta);
-   fChain->SetBranchAddress("genantitop_phi", &genantitop_phi, &b_genantitop_phi);
-   fChain->SetBranchAddress("genantitop_mass", &genantitop_mass, &b_genantitop_mass);
-
-
-   fChain->SetBranchAddress("ptGenVlep", &ptGenVlep, &b_ptGenVlep);
-   fChain->SetBranchAddress("etaGenVlep", &etaGenVlep, &b_etaGenVlep);
-   fChain->SetBranchAddress("phiGenVlep", &phiGenVlep, &b_phiGenVlep);
-   fChain->SetBranchAddress("massGenVlep", &massGenVlep, &b_massGenVlep);
-   fChain->SetBranchAddress("ptGenVhad", &ptGenVhad, &b_ptGenVhad);
-   fChain->SetBranchAddress("etaGenVhad", &etaGenVhad, &b_etaGenVhad);
-   fChain->SetBranchAddress("phiGenVhad", &phiGenVhad, &b_phiGenVhad);
-   fChain->SetBranchAddress("etaGenVhad_2", &etaGenVhad_2, &b_etaGenVhad_2);
-   fChain->SetBranchAddress("phiGenVhad_2", &phiGenVhad_2, &b_phiGenVhad_2);
-   fChain->SetBranchAddress("etaGenVhad_3", &etaGenVhad_3, &b_etaGenVhad_3);
-   fChain->SetBranchAddress("phiGenVhad_3", &phiGenVhad_3, &b_phiGenVhad_3);
-   fChain->SetBranchAddress("massGenVhad", &massGenVhad, &b_massGenVhad);
-   fChain->SetBranchAddress("ptGenVlep_2", &ptGenVlep_2, &b_ptGenVlep_2);
-   fChain->SetBranchAddress("etaGenVlep_2", &etaGenVlep_2, &b_etaGenVlep_2);
-   fChain->SetBranchAddress("phiGenVlep_2", &phiGenVlep_2, &b_phiGenVlep_2);
-   fChain->SetBranchAddress("massGenVlep_2", &massGenVlep_2, &b_massGenVlep_2);
-   fChain->SetBranchAddress("ptGenV_2", &ptGenV_2, &b_ptGenV_2);
-   fChain->SetBranchAddress("etaGenV_2", &etaGenV_2, &b_etaGenV_2);
-   fChain->SetBranchAddress("phiGenV_2", &phiGenV_2, &b_phiGenV_2);
-   fChain->SetBranchAddress("massGenV_2", &massGenV_2, &b_massGenV_2);
-   fChain->SetBranchAddress("ptGenVlep_3", &ptGenVlep_3, &b_ptGenVlep_3);
-   fChain->SetBranchAddress("etaGenVlep_3", &etaGenVlep_3, &b_etaGenVlep_3);
-   fChain->SetBranchAddress("phiGenVlep_3", &phiGenVlep_3, &b_phiGenVlep_3);
-   fChain->SetBranchAddress("massGenVlep_3", &massGenVlep_3, &b_massGenVlep_3);
-   fChain->SetBranchAddress("ptGenV_3", &ptGenV_3, &b_ptGenV_3);
-   fChain->SetBranchAddress("etaGenV_3", &etaGenV_3, &b_etaGenV_3);
-   fChain->SetBranchAddress("phiGenV_3", &phiGenV_3, &b_phiGenV_3);
-   fChain->SetBranchAddress("massGenV_3", &massGenV_3, &b_massGenV_3);
-
-   fChain->SetBranchAddress("ptq11", &ptq11, &b_ptq11);
-   fChain->SetBranchAddress("etaq11", &etaq11, &b_etaq11);
-   fChain->SetBranchAddress("phiq11", &phiq11, &b_phiq11);
-   fChain->SetBranchAddress("massq11", &massq11, &b_massq11);
-   fChain->SetBranchAddress("ptq12", &ptq12, &b_ptq12);
-   fChain->SetBranchAddress("etaq12", &etaq12, &b_etaq12);
-   fChain->SetBranchAddress("phiq12", &phiq12, &b_phiq12);
-   fChain->SetBranchAddress("massq12", &massq12, &b_massq12);
-   fChain->SetBranchAddress("ptq21", &ptq21, &b_ptq21);
-   fChain->SetBranchAddress("etaq21", &etaq21, &b_etaq21);
-   fChain->SetBranchAddress("phiq21", &phiq21, &b_phiq21);
-   fChain->SetBranchAddress("massq21", &massq21, &b_massq21);
-   fChain->SetBranchAddress("ptq22", &ptq22, &b_ptq22);
-   fChain->SetBranchAddress("etaq22", &etaq22, &b_etaq22);
-   fChain->SetBranchAddress("phiq22", &phiq22, &b_phiq22);
-   fChain->SetBranchAddress("massq22", &massq22, &b_massq22);   
-   fChain->SetBranchAddress("ptq31", &ptq31, &b_ptq31);
-   fChain->SetBranchAddress("etaq31", &etaq31, &b_etaq31);
-   fChain->SetBranchAddress("phiq31", &phiq31, &b_phiq31);
-   fChain->SetBranchAddress("massq31", &massq31, &b_massq31);
-   fChain->SetBranchAddress("ptq32", &ptq32, &b_ptq32);
-   fChain->SetBranchAddress("etaq32", &etaq32, &b_etaq32);
-   fChain->SetBranchAddress("phiq32", &phiq32, &b_phiq32);
-   fChain->SetBranchAddress("massq32", &massq32, &b_massq32);
    // Notify();
 }
 
@@ -4913,18 +3678,7 @@ Bool_t EDBR2PKUTree::Notify(Long64_t jentry)
    // is started when using PROOF. It is normally not necessary to make changes
    // to the generated code, but the routine can be extended by the
    // user if needed. The return value is currently not used.
-   loadVectorBranches();
-   cout << "branches adr old :" << b_FatJet_pt_ << endl;
-   cout << "branches adr new :" << fChain->GetBranch("FatJet_pt") << endl;
-   // b_FatJet_pt_ = fChain->GetBranch("FatJet_pt");
-   // cout << "branches adr updated :" << b_FatJet_pt_ << endl;
-   // if (b_FatJet_pt_) { b_FatJet_pt_->SetAddress(&FatJet_pt_);}
-   // cout << "branches before :" << b_FatJet_pt_->GetEntry(jentry) << endl;
-   // b_FatJet_pt_ = nullptr;
-   // fChain->SetBranchAddress("FatJet_pt",FatJet_pt_,&b_FatJet_pt_);
-   // cout << "branches adr updated again :" << b_FatJet_pt_ << endl;
-   // cout << "branches after :" << b_FatJet_pt_->GetEntry(jentry) << endl;
-   // cout << "FatJet_pt_ adr :" << &FatJet_pt_ << endl;
+   
    return kTRUE;
 }
 

@@ -1,7 +1,7 @@
 #ifndef _VVVUtils_
 #define _VVVUtils_
 
-bool EDBR2PKUTree::Exclusive_Collection(TLorentzVector object, vector<TLorentzVector> collectionP4 , float deltaR_  ){
+bool Exclusive_Collection(TLorentzVector object, vector<TLorentzVector> collectionP4 , float deltaR_  ){
     bool exclusive = true;
     for ( Int_t i = 0 ; i < collectionP4.size() ; i++ ) {
         float deltaR = object.DeltaR(collectionP4[i]);
@@ -9,5 +9,7 @@ bool EDBR2PKUTree::Exclusive_Collection(TLorentzVector object, vector<TLorentzVe
     }
     return exclusive;
 }
+
+
 
 #endif

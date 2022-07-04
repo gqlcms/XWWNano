@@ -76,7 +76,6 @@ void EDBR2PKUTree::Radion_Matching() {
     z_mid = -99;
     z_min = -99;
 
-    cout << "running radion matching 2" << endl;
     
     gKK_g_Matching(); // this has to run first
     Radion_Matching_taulep(); // this has to run second

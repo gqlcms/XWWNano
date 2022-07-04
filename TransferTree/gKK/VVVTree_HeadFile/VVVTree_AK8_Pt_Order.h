@@ -1,10 +1,6 @@
 #ifndef _VVVTree_AK8_Pt_Order_
 #define _VVVTree_AK8_Pt_Order_
 
-/*
-jetAK8puppi_pt_2
-*/
-
 void EDBR2PKUTree::AK8_Pt_Ordered(Long64_t jentry) {
     AK8_Pt_Ordered_p4_flatVector(jentry);
     AK8_Nsubjetness_Init(jentry);
@@ -79,6 +75,8 @@ void EDBR2PKUTree::AK8_Pt_Ordered_p4_flatVector(Long64_t jentry){
         FatJet_pt_4 = -99;
     }
 
+    int bytes_FatJet_jetId = b_FatJet_jetId_->GetEntry(jentry);
+    v_FatJet_jetId_ = vector<int>(FatJet_jetId_,FatJet_jetId_+bytes_FatJet_jetId/sizeof(FatJet_jetId_[0]));
     
     int bytes_FatJet_eta = b_FatJet_eta_->GetEntry(jentry);
     v_FatJet_eta_ = vector<float>(FatJet_eta_,FatJet_eta_+bytes_FatJet_eta/sizeof(FatJet_eta_[0]));
