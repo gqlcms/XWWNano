@@ -10,7 +10,7 @@ from PhysicsTools.NanoAODTools.postprocessing.analysis.modules.eleRECOSFProducer
 from PhysicsTools.NanoAODTools.postprocessing.analysis.modules.eleIDSFProducer import *
 from PhysicsTools.NanoAODTools.postprocessing.analysis.modules.muonScaleResProducer import *
 from PhysicsTools.NanoAODTools.postprocessing.analysis.modules.muonIDISOSFProducer import *
-from PhysicsTools.NanoAODTools.postprocessing.analysis.modules.VVVProducer import *
+from PhysicsTools.NanoAODTools.postprocessing.analysis.modules.XWWProducer import *
 #from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetUncertainties import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.PrefireCorr import *
@@ -19,6 +19,7 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2 impor
 from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetUncertainties import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer import *
 ### main python file to run ###
+
 
 def main():
 
@@ -32,6 +33,7 @@ def main():
   parser.add_option('-M', '--MODE', dest='MODE', help='MODE', default="inclusive", type='string')
   parser.add_option('--CrabCondor', '--CrabCondor', dest='CrabCondor', help='Crab Condor', default="crab", type='string')
   (opt, args) = parser.parse_args()
+
   import FWCore.PythonUtilities.LumiList as LumiList
   import FWCore.ParameterSet.Config as cms
 
@@ -104,12 +106,12 @@ def main():
       p = PostProcessor(opt.output, [opt.inputs], modules=[muonScaleRes2016b(),jetmetCorrector(),jmeCorrections(),VVV2016()], provenance=True,fwkJobReport=True, jsonInput=jsoninput)
     
     if opt.year in ['UL2017B','UL2017C','UL2017D','UL2017E','UL2017F',]:
-      p = PostProcessor(opt.output, [opt.inputs], modules=[muonScaleRes2017(),jetmetCorrector(),jmeCorrections(),VVV2017()], provenance=True,fwkJobReport=True, jsonInput=jsoninput)
+      p = PostProcessor(opt.output, [opt.inputs], modules=[muonScaleRes2017(),jetmetCorrector(),jmeCorrections(),VVV2017()], provenance=True,fwkJobReport=True, jsonInput=jsoninput,maxEntries=10000)
 
     if opt.year in ['UL2018A','UL2018B','UL2018C','UL2018D']:
       p = PostProcessor(opt.output, [opt.inputs], modules=[muonScaleRes2018(),jetmetCorrector(),jmeCorrections(),VVV2018()], provenance=True,fwkJobReport=True, jsonInput=jsoninput)
   
   p.run()
-
+  
 if __name__ == "__main__":
     sys.exit(main())

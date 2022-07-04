@@ -3,6 +3,9 @@ import json
 import re
 from commands import getoutput
 from samples import DAS_2016_Common,DAS_2016_1lepton,DAS_2016_1lepton_Data,CMSC_2016_1lepton_MC,CMSC_2016_1lepton_data,DAS_2017_0Lepton,DAS_2017_0Lepton_test,DAS_2017_0lepton_Data_test,DAS_2017_0lepton_Data,CMSC_2017_0Lepton_MC,CMSC_2018_0Lepton_MC
+from samples import CMSC_2018A_0Lepton_data,CMSC_2018B_0Lepton_data,CMSC_2018C_0Lepton_data,CMSC_2018D_0Lepton_data
+from samples import CMSC_2017B_0Lepton_data,CMSC_2017C_0Lepton_data,CMSC_2017D_0Lepton_data,CMSC_2017E_0Lepton_data,CMSC_2017F_0Lepton_data
+
 from optparse   import OptionParser
 import time
  
@@ -45,7 +48,7 @@ error={std_logs}/$(Cluster).$(Process).err
 notification=Never
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
-x509userproxy=x509up_u100637
+x509userproxy=x509up_u12976
 +MaxRuntime={MaxRuntime}
         '''
         self.queue_templete = '''
@@ -307,7 +310,7 @@ if options.createfilejson:
 
 if options.MODE == "CustNano":
     def additional(ds):
-            return ""
+            return "" 
     if options.Condor:
         if "debug" in options.excutable:
             print "You are using debug executable scripts, are you sure? Yes or No"
@@ -315,8 +318,8 @@ if options.MODE == "CustNano":
             if not Yes :
                 sys.exit("You are using debug executable scripts for large scaled production , debug scripts only run <2000 events for one root file")
         samples_toRun = [ds for ds in eval(options.DAS)().DAS]
-        Input = ["x509up_u100637","Scripts/fetchFiles.py"]
-        os.system("cp /tmp/x509up_u100637 .")
+        Input = ["x509up_u12976","Scripts/fetchFiles.py"]
+        os.system("cp /tmp/x509up_u12976 .")
         Input = [ "%s/%s"%(os.getcwd(),i) for i in Input ]
         Condor_ = Condor(
             options.Filesjson, # Files.json
@@ -333,8 +336,8 @@ if options.MODE == "CustNano":
 
     if options.FakeCondor:
         samples_toRun = [ds for ds in eval(options.DAS)().DAS]
-        Input = ["x509up_u100637","Scripts/fetchFiles.py"]
-        os.system("cp /tmp/x509up_u100637 .")
+        Input = ["x509up_u12976","Scripts/fetchFiles.py"]
+        os.system("cp /tmp/x509up_u12976 .")
         Input = [ "%s/%s"%(os.getcwd(),i) for i in Input ]
         FakeCondorTest_ = FakeCondorTest(
             options.Filesjson, # Files.json
@@ -362,7 +365,7 @@ if options.MODE == "XWWNano":
     def additional(ds):
         return additional_(ds,options.AddtionalArgs)
 
-    os.system("cp /tmp/x509up_u100637 .")
+    os.system("cp /tmp/x509up_u12976 .")
     Input_ = options.Input.split(",")
     Input = []
     for i in Input_:
