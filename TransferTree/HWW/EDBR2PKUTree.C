@@ -15,19 +15,55 @@ Double_t detlaR (Double_t eta1,Double_t eta2,Double_t phi1,Double_t phi2)
     return resultR;
 }
 
+#include "VVVTree_HeadFile/XYMETCorrection_withUL17andUL18andUL16.h"
+
 #include "VVVTree_HeadFile/VVVUtils.h"
+#include "VVVTree_HeadFile/fatJets.h"
+#include "VVVTree_HeadFile/Jets.h"
+
+// GKK
+#include "VVVTree_HeadFile/GKK_0lepton/process.h"
+#include "VVVTree_HeadFile/GKK_0lepton/process_2016.h"
 
 #include "VVVTree_HeadFile/VVVTree_EventLevel.h"
 #include "VVVTree_HeadFile/VVVTree_AK8_Mass_Order.h"
 #include "VVVTree_HeadFile/VVVTree_AK8_Pt_Order.h"
 #include "VVVTree_HeadFile/VVVTree_AK8_deep_W_Order.h"
-#include "VVVTree_HeadFile/VVVTree_AK8_H4q_Order.h"
 #include "VVVTree_HeadFile/GenParticles.h"
-#include "VVVTree_HeadFile/VVVTree_GenMatchingH.h"
-#include "VVVTree_HeadFile/VVVNanoAODInit.h"
-#include "VVVTree_HeadFile/VVVTree_H_signal_DECO.h"
+#include "VVVTree_HeadFile/VVVTree_GenMatching.h"
+#include "VVVTree_HeadFile/VVVTree_signal_DECO.h"
+// for HWW 
+
+
+
+// for VVV EFT
+#include "VVVTree_HeadFile/VVV_EFT_1lepton.h"
+#include "VVVTree_HeadFile/VVVNano_B2GSF_lepton.h"
+#include "VVVTree_HeadFile/B2GSF_1lepton/Lepton.h"
+#include "VVVTree_HeadFile/B2GSF_1lepton/process.h"
+#include "VVVTree_HeadFile/B2GSF_1lepton/Lepton_fatJets.h"
+#include "VVVTree_HeadFile/outputBranches/GKK_0Lepton.h"
+#include "VVVTree_HeadFile/outputBranches/B2GSF.h"
+#include "VVVTree_HeadFile/outputBranches/VVVEFT.h"
+#include "VVVTree_HeadFile/vector_GetEntry/NanoAOD.h"
+#include "VVVTree_HeadFile/loadbranches/GKK_0Lepton.h"
+#include "VVVTree_HeadFile/loadbranches/Init.h"
+#include "VVVTree_HeadFile/loadbranches/NanoAOD.h"
+#include "VVVTree_HeadFile/loadbranches/VVVEFT.h"
+#include "VVVTree_HeadFile/loadbranches/B2GSF_1Lepton.h"
 
 void EDBR2PKUTree::Loop(TString channelname, Double_t XS, Int_t IsData_, Float_t Nevents,  Double_t LUMI, TString YEAR) {
+    /*
+    allowed year
+        mc :
+            2016postVFP
+            2016preVFP
+            2017
+            2018
+        data :
+    */
+    
+    YEAR_g = YEAR;
     IsData = IsData_;
 
 	if (fChain == 0) return;
@@ -41,9 +77,10 @@ void EDBR2PKUTree::Loop(TString channelname, Double_t XS, Int_t IsData_, Float_t
     Long64_t NeventsFilled = 0 ;
 
     if(channelname.EqualTo("had")){
-        GlobalInit(YEAR,IsData);
+        // GlobalInit(YEAR,IsData);
         loadVectorBranches();
- for (Long64_t jentry=0; jentry<nentries;jentry++)
+        for (Long64_t jentry=0; jentry<nentries;jentry++) 
+        // for (Long64_t jentry=0; jentry<1000;jentry++) 
         {
             Long64_t ientry = LoadTree(jentry);
             if (ientry < 0) break;
@@ -51,81 +88,173 @@ void EDBR2PKUTree::Loop(TString channelname, Double_t XS, Int_t IsData_, Float_t
                 std::cout<<jentry<<std::endl;
                 float Ratio;
                 Ratio = 100*Float_t(jentry)/Float_t(nentries);
-                std::cout<<"finsh is : "<< Ratio << "%"<<std::endl;
+                std::cout<<"finsh : "<< Ratio << "%"<<std::endl;
             }
-           // std::cout <<"End loop"<<std::endl;
-            nb = fChain->GetEntry(jentry);
+            nb = fChain->GetEntry(jentry); 
             nbytes += nb;
             if(event<0){event=event+pow(2,32);}
 
             Int_t nLooseLep=nLooseEle+nLooseMu;
-          //  std::cout<<"Next begin AK8 PT order"<<std::endl;
-            AK8_Pt_Ordered(jentry);
-          // std::cout<<"jetAK8puppi_V1_probHww4qvsQCD 1 ="<<jetAK8puppi_V1_probHww4qvsQCD<<std::endl;
-          // std::cout<<"evqq tagger 1 ="<<V1_evqqvsQCD_1<<std::endl;
-          // std::cout<<"AK8 Pt order done."<<std::endl;
-            EventLevel(jentry,YEAR,IsData);
-           // if(Nj8!=2){continue;}
 
-            DeepAK8_Mass_Ordered_init();
-           //   std::cout<<"jetAK8puppi_V1_probHww4qvsQCD 2 ="<<jetAK8puppi_V1_probHww4qvsQCD<<std::endl;
-           //   std::cout<<"evqq tagger 2 ="<<V1_evqqvsQCD_1<<std::endl;
-
-            DeepAK8_Mass_Ordered_P4();
-            MJJ_MJJJf();
-            DeepAK8_Mass_Ordered();
-          //  std::cout<<"jetAK8puppi_V1_probHww4qvsQCD 3 ="<<jetAK8puppi_V1_probHww4qvsQCD<<std::endl;
-          //  std::cout<<"evqq tagger 3 ="<<V1_evqqvsQCD_1<<std::endl;
-          //  std::cout<<"AK8 mass order done."<<std::endl;
-            Deep_H4q_Ordered();
-          //  std::cout<<"AK8 H4q order done."<<std::endl;
-          //  std::cout<<"jetAK8puppi_V1_probHww4qvsQCD 4 ="<<jetAK8puppi_V1_probHww4qvsQCD<<std::endl;
-          //  std::cout<<"evqq tagger 4 ="<<V1_evqqvsQCD_1<<std::endl;
-
-            // Deep_W_Ordered();
-           //   std::cout<<"jetAK8puppi_V1_probHww4qvsQCD 5 ="<<jetAK8puppi_V1_probHww4qvsQCD<<std::endl;
-           //   std::cout<<"evqq tagger 5 ="<<V1_evqqvsQCD_1<<std::endl;
-
-            Weightf(XS, Nevents, LUMI);
-             //   std::cout<<"jetAK8puppi_V1_probHww4qvsQCD 6 ="<<jetAK8puppi_V1_probHww4qvsQCD<<std::endl;
-             //   std::cout<<"evqq tagger 6 ="<<V1_evqqvsQCD_1<<std::endl;
-
+            if(YEAR_g.Contains("2016")){
+                GKK_process_1_2016(jentry,YEAR);
+            }
+            else{
+                GKK_process_1(jentry,YEAR);
+            }
+            
             bool Fill = Filter_Events(YEAR,IsData);
             if ( !Fill ){ continue ; }
 
+            if(YEAR_g.Contains("2016")){
+                GKK_process_2_2016(jentry,YEAR);
+            }
+            else{
+                GKK_process_2(jentry,YEAR);
+            }
+
+            Weightf(XS, Nevents, LUMI);
+
             if (IsData_ > 0){
                 GenMatching(jentry);
-           //   std::cout<<"jetAK8puppi_V1_probHww4qvsQCD 7 ="<<jetAK8puppi_V1_probHww4qvsQCD<<std::endl;
-           //   std::cout<<"evqq tagger 7 ="<<V1_evqqvsQCD_1<<std::endl;
-
             }
             if (IsData_ == 1000){
-                Higgs_Matching();
+                Radion_Matching();
             }
-            if ( Fill ){
-                //              std::cout<<"evqq tagger 8 ="<<V1_evqqvsQCD_1<<std::endl;
 
-                     //                     std::cout<<"jetAK8puppi_V1_probHww4qvsQCD 8 ="<<jetAK8puppi_V1_probHww4qvsQCD<<std::endl;
+            if ( Fill ){
                 ExTree->Fill();
                 NeventsFilled++;
             }
-                        //  std::cout<<"evqq tagger 9 ="<<V1_evqqvsQCD_1<<std::endl;
+        }
+    }
 
-                   //       std::cout<<"jetAK8puppi_V1_probHww4qvsQCD 9 ="<<jetAK8puppi_V1_probHww4qvsQCD<<std::endl;
- 
+    if(channelname.EqualTo("HWW")){
+        // GlobalInit(YEAR,IsData);
+        loadVectorBranches();
+        for (Long64_t jentry=0; jentry<nentries;jentry++) 
+        // for (Long64_t jentry=0; jentry<1000;jentry++) 
+        {
+            Long64_t ientry = LoadTree(jentry);
+            if (ientry < 0) break;
+            if (jentry%jentryprint==0)   {
+                std::cout<<jentry<<std::endl;
+                float Ratio;
+                Ratio = 100*Float_t(jentry)/Float_t(nentries);
+                std::cout<<"finsh : "<< Ratio << "%"<<std::endl;
+            }
+            nb = fChain->GetEntry(jentry); 
+            nbytes += nb;
+            if(event<0){event=event+pow(2,32);}
+
+            Int_t nLooseLep=nLooseEle+nLooseMu;
+
+            if(YEAR_g.Contains("2016")){
+                GKK_process_1_2016(jentry,YEAR);
+            }
+            else{
+                GKK_process_1(jentry,YEAR);
+            }
+            
+            bool Fill = Filter_Events_HWW(YEAR,IsData);
+            if ( !Fill ){ continue ; }
+
+            if(YEAR_g.Contains("2016")){
+                GKK_process_2_2016(jentry,YEAR);
+            }
+            else{
+                GKK_process_2(jentry,YEAR);
+            }
+
+            Weightf(XS, Nevents, LUMI);
+
+            if (IsData_ > 0){
+                GenMatching(jentry);
+            }
+            if (IsData_ == 1000){
+                Radion_Matching();
+            }
+
+            if ( Fill ){
+                ExTree->Fill();
+                NeventsFilled++;
+            }
         }
     }
 
 
+    if(channelname.EqualTo("B2GSF_1lepton")){
+        loadVectorBranches();
+        for (Long64_t jentry=0; jentry<nentries;jentry++) 
+        {
+            Long64_t ientry = LoadTree(jentry);
+            if (ientry < 0) break;
+            if (jentry%jentryprint==0){
+                float Ratio;
+                Ratio = 100*Float_t(jentry)/Float_t(nentries);
+                endTime = clock();
+                double runtime = (double)(endTime - startTime)/CLOCKS_PER_SEC;
+                double remaintime = runtime*Float_t(nentries-jentry)/Float_t(jentry);
+                std::cout << "start : " << jentry << "; finsh : "<< Ratio << "%"<<std::endl;
+                std::cout << "run : " << int(runtime) << "s;" << " remain : " << int(remaintime) << "s" << endl;
+            }
+            nb = fChain->GetEntry(jentry); 
+            nbytes += nb;
+            if(event<0){event=event+pow(2,32);}
+            
+            B2GSF_GetEntry(jentry);
+            B2GSF_preprocess();
+
+            bool pass = B2GSF_prefilter() ; if( !pass ){ continue; }
+
+            B2GSF_FillTree();
+        }
+    }
+
+
+
     if(channelname.Contains("VVV_EFT_1lepton")){
-      //Deleted for HWW analysis. 
+        loadVectorBranches();
+        for (Long64_t jentry=0; jentry<nentries;jentry++) 
+        {
+            Long64_t ientry = LoadTree(jentry);
+            if (ientry < 0) break;
+            if (jentry%jentryprint==0)   {
+                float Ratio;
+                Ratio = 100*Float_t(jentry)/Float_t(nentries);
+                endTime = clock();
+                double runtime = (double)(endTime - startTime)/CLOCKS_PER_SEC;
+                double remaintime = runtime*Float_t(nentries-jentry)/Float_t(jentry);
+                std::cout << "start : " << jentry << "; finsh : "<< Ratio << "%"<<std::endl;
+                std::cout << "run : " << int(runtime) << "s;" << " remain : " << int(remaintime) << "s" << endl;
+            }
+            nb = fChain->GetEntry(jentry); 
+            nbytes += nb;
+            if(event<0){event=event+pow(2,32);}
+
+            VVVEFT_process(jentry);
+
+            bool Fill = true;
+            if(YEAR.EqualTo("2016")){
+                Fill = Filter_Event_1LeptonEFT(YEAR,IsData) ;
+            }
+
+            if ( !Fill ){ continue ; }
+
+            if (IsData > 0){
+                VVVEFT_weight(XS, Nevents, LUMI);
+                VVVEFT_GenMatching();
+            }
+
+            if ( Fill ){ 
+                ExTree->Fill(); 
+                NeventsFilled++;
+            }
+        }
     }
 	
     std::cout << NeventsFilled  <<  " Filled" << std::endl;
     std::cout << "transfertree finished" << std::endl;
 
 }
-
-
-
 

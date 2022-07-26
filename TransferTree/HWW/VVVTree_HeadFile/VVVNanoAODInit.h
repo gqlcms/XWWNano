@@ -86,53 +86,7 @@ void EDBR2PKUTree::loadVectorBranches() {
         
     b_FatJet_msoftdrop_ = fChain->GetBranch("FatJet_msoftdrop");
     if (b_FatJet_msoftdrop_) { b_FatJet_msoftdrop_->SetAddress(&FatJet_msoftdrop_);}
-    //New tagger
-
-    b_FatJet_deepHWWMDV1_probHww3q_ = fChain->GetBranch("FatJet_deepHWWMDV1_probHww3q"); 
-    if (b_FatJet_deepHWWMDV1_probHww3q_) {b_FatJet_deepHWWMDV1_probHww3q_->SetAddress(&FatJet_deepHWWMDV1_probHww3q_);}
-
-    b_FatJet_deepHWWMDV1_probHww4q_ = fChain->GetBranch("FatJet_deepHWWMDV1_probHww4q"); 
-    if (b_FatJet_deepHWWMDV1_probHww4q_) {b_FatJet_deepHWWMDV1_probHww4q_->SetAddress(&FatJet_deepHWWMDV1_probHww4q_);}
-
-    b_FatJet_deepHWWMDV1_probHww4qvsQCD_ = fChain->GetBranch("FatJet_deepHWWMDV1_probHww4qvsQCD"); 
-    if (b_FatJet_deepHWWMDV1_probHww4qvsQCD_) {b_FatJet_deepHWWMDV1_probHww4qvsQCD_->SetAddress(&FatJet_deepHWWMDV1_probHww4qvsQCD_);}
-
-    b_FatJet_deepHWWMDV1_probHww4q3qvsQCD_ = fChain->GetBranch("FatJet_deepHWWMDV1_probHww4q3qvsQCD"); 
-    if (b_FatJet_deepHWWMDV1_probHww4q3qvsQCD_) {b_FatJet_deepHWWMDV1_probHww4q3qvsQCD_->SetAddress(&FatJet_deepHWWMDV1_probHww4q3qvsQCD_);}
-
-    b_FatJet_deepHWWMDV1_probHwwevqq_ = fChain->GetBranch("FatJet_deepHWWMDV1_probHwwevqq"); 
-    if (b_FatJet_deepHWWMDV1_probHwwevqq_) {b_FatJet_deepHWWMDV1_probHwwevqq_->SetAddress(&FatJet_deepHWWMDV1_probHwwevqq_);}
-
-    b_FatJet_deepHWWMDV1_probHwwmvqq_ = fChain->GetBranch("FatJet_deepHWWMDV1_probHwwmvqq"); 
-    if (b_FatJet_deepHWWMDV1_probHwwmvqq_) {b_FatJet_deepHWWMDV1_probHwwmvqq_->SetAddress(&FatJet_deepHWWMDV1_probHwwmvqq_);}
-
-    b_FatJet_deepHWWMDV1_probHwwleptaumvqq_ = fChain->GetBranch("FatJet_deepHWWMDV1_probHwwleptaumvqq"); 
-    if (b_FatJet_deepHWWMDV1_probHwwleptaumvqq_) {b_FatJet_deepHWWMDV1_probHwwleptaumvqq_->SetAddress(&FatJet_deepHWWMDV1_probHwwleptaumvqq_);}
-
-    b_FatJet_deepHWWMDV1_probHwwleptauevqq_ = fChain->GetBranch("FatJet_deepHWWMDV1_probHwwleptauevqq"); 
-    if (b_FatJet_deepHWWMDV1_probHwwleptauevqq_) {b_FatJet_deepHWWMDV1_probHwwleptauevqq_->SetAddress(&FatJet_deepHWWMDV1_probHwwleptauevqq_);}
-
-    b_FatJet_deepHWWMDV1_probHwwhadtauvqq_ = fChain->GetBranch("FatJet_deepHWWMDV1_probHwwhadtauvqq"); 
-    if (b_FatJet_deepHWWMDV1_probHwwhadtauvqq_) {b_FatJet_deepHWWMDV1_probHwwhadtauvqq_->SetAddress(&FatJet_deepHWWMDV1_probHwwhadtauvqq_);}
-
-    b_FatJet_deepHWWMDV1_probQCDb_ = fChain->GetBranch("FatJet_deepHWWMDV1_probQCDb"); 
-    if (b_FatJet_deepHWWMDV1_probQCDb_) {b_FatJet_deepHWWMDV1_probQCDb_->SetAddress(&FatJet_deepHWWMDV1_probQCDb_);}
-
-    b_FatJet_deepHWWMDV1_probQCDbb_ = fChain->GetBranch("FatJet_deepHWWMDV1_probQCDbb"); 
-    if (b_FatJet_deepHWWMDV1_probQCDbb_) {b_FatJet_deepHWWMDV1_probQCDbb_->SetAddress(&FatJet_deepHWWMDV1_probQCDbb_);}
-
-    b_FatJet_deepHWWMDV1_probQCDc_ = fChain->GetBranch("FatJet_deepHWWMDV1_probQCDc"); 
-    if (b_FatJet_deepHWWMDV1_probQCDc_) {b_FatJet_deepHWWMDV1_probQCDc_->SetAddress(&FatJet_deepHWWMDV1_probQCDc_);}
-
-    b_FatJet_deepHWWMDV1_probQCDcc_ = fChain->GetBranch("FatJet_deepHWWMDV1_probQCDcc"); 
-    if (b_FatJet_deepHWWMDV1_probQCDcc_) {b_FatJet_deepHWWMDV1_probQCDcc_->SetAddress(&FatJet_deepHWWMDV1_probQCDcc_);}
-
-    b_FatJet_deepHWWMDV1_probQCDothers_ = fChain->GetBranch("FatJet_deepHWWMDV1_probQCDothers"); 
-    if (b_FatJet_deepHWWMDV1_probQCDothers_) {b_FatJet_deepHWWMDV1_probQCDothers_->SetAddress(&FatJet_deepHWWMDV1_probQCDothers_);}
-
-
-    //New tagger ends.
-
+        
 
     b_FatJet_deepTagMD_probHbb_ = fChain->GetBranch("FatJet_deepTagMD_probHbb");
     if (b_FatJet_deepTagMD_probHbb_) { b_FatJet_deepTagMD_probHbb_->SetAddress(&FatJet_deepTagMD_probHbb_);}

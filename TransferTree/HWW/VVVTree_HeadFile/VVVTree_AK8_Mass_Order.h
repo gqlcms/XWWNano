@@ -133,7 +133,7 @@ void EDBR2PKUTree::DeepAK8_Mass_Ordered_init() {
 }
 
 void EDBR2PKUTree::DeepAK8_Mass_Ordered_P4() {
-    if(PTj_3<0&&PTj_2>0){//Means there are 2 AK8 jets.Questions: how we recognize 2 AK8 jets in the VVVTree_AK8_Pt_Order.h?
+    if(PTj_3<0&&PTj_2>0){
         if(Mj_2>Mj){
             Mj_min=Float_t(Mj);
             Mj_mid=-99;
@@ -277,94 +277,6 @@ Phij_max=Float_t(Phij);
 
 void EDBR2PKUTree::DeepAK8_Mass_Ordered_deepAK8RawScore() {
 
-    //New tagger part
-
-
-  V1_evqqvsQCD_max=-99;
-  V1_evqqvsQCD_mid=-99;
-  V1_evqqvsQCD_min=-99;
-
-  V1_mvqqvsQCD_max=-99;
-  V1_mvqqvsQCD_mid=-99;
-  V1_mvqqvsQCD_min=-99;
-
-  V1_emvqqvsQCD_max=-99;
-  V1_emvqqvsQCD_mid=-99;
-  V1_emvqqvsQCD_min=-99;
-
-  V1_hadtauvqqvsQCD_max=-99;
-  V1_hadtauvqqvsQCD_mid=-99;
-  V1_hadtauvqqvsQCD_min=-99;
-
-
-  V1_leptauevqqvsQCD_max=-99;
-  V1_leptauevqqvsQCD_mid=-99;
-  V1_leptauevqqvsQCD_min=-99;
-
-
-  V1_leptaumvqqvsQCD_max=-99;
-  V1_leptaumvqqvsQCD_mid=-99;
-  V1_leptaumvqqvsQCD_min=-99;
-
-
-
-
-jetAK8puppi_V1_probHww3q_max=-99;
-jetAK8puppi_V1_probHww3q_mid=-99;
-jetAK8puppi_V1_probHww3q_min=-99;
-
-jetAK8puppi_V1_probHww4q_max=-99;
-jetAK8puppi_V1_probHww4q_mid=-99;
-jetAK8puppi_V1_probHww4q_min=-99;
-
-jetAK8puppi_V1_probHww4q3qvsQCD_max=-99;
-jetAK8puppi_V1_probHww4q3qvsQCD_mid=-99;
-jetAK8puppi_V1_probHww4q3qvsQCD_min=-99;
-
-jetAK8puppi_V1_probHww4qvsQCD_max=-99;
-jetAK8puppi_V1_probHww4qvsQCD_mid=-99;
-jetAK8puppi_V1_probHww4qvsQCD_min=-99;
-
-jetAK8puppi_V1_probHwwevqq_max=-99;
-jetAK8puppi_V1_probHwwevqq_mid=-99;
-jetAK8puppi_V1_probHwwevqq_min=-99;
-
-jetAK8puppi_V1_probHwwmvqq_max=-99;
-jetAK8puppi_V1_probHwwmvqq_mid=-99;
-jetAK8puppi_V1_probHwwmvqq_min=-99;
-
-jetAK8puppi_V1_probHwwhadtauvqq_max=-99;
-jetAK8puppi_V1_probHwwhadtauvqq_mid=-99;
-jetAK8puppi_V1_probHwwhadtauvqq_min=-99;
-
-jetAK8puppi_V1_probHwwleptauevqq_max=-99;
-jetAK8puppi_V1_probHwwleptauevqq_mid=-99;
-jetAK8puppi_V1_probHwwleptauevqq_min=-99;
-
-jetAK8puppi_V1_probHwwleptaumvqq_max=-99;
-jetAK8puppi_V1_probHwwleptaumvqq_mid=-99;
-jetAK8puppi_V1_probHwwleptaumvqq_min=-99;
-
-jetAK8puppi_V1_probQCDb_max=-99;
-jetAK8puppi_V1_probQCDb_mid=-99;
-jetAK8puppi_V1_probQCDb_min=-99;
-
-jetAK8puppi_V1_probQCDbb_max=-99;
-jetAK8puppi_V1_probQCDbb_mid=-99;
-jetAK8puppi_V1_probQCDbb_min=-99;
-
-jetAK8puppi_V1_probQCDc_max=-99;
-jetAK8puppi_V1_probQCDc_mid=-99;
-jetAK8puppi_V1_probQCDc_min=-99;
-
-jetAK8puppi_V1_probQCDcc_max=-99;
-jetAK8puppi_V1_probQCDcc_mid=-99;
-jetAK8puppi_V1_probQCDcc_min=-99;
-
-jetAK8puppi_V1_probQCDothers_max=-99;
-jetAK8puppi_V1_probQCDothers_mid=-99;
-jetAK8puppi_V1_probQCDothers_min=-99;
-    //New tagger part end
     jetAK8puppi_dnn_probTbcq_max = -99;
     jetAK8puppi_dnn_probTbcq_mid = -99;
     jetAK8puppi_dnn_probTbcq_min = -99;
@@ -473,24 +385,7 @@ jetAK8puppi_V1_probQCDothers_min=-99;
         Int_t *indexTag=new Int_t[2];
         Double_t jetAK8puppi_Mass_sort[2] = { Mj , Mj_2 };
         TMath::Sort(2, jetAK8puppi_Mass_sort, indexTag, 1);
-        //New tagger part.
-        Double_t jetAK8puppi_V1_probHww3q_sort[2] = {jetAK8puppi_V1_probHww3q,jetAK8puppi_V1_probHww3q_2};
-        Double_t jetAK8puppi_V1_probHww4q_sort[2] = {jetAK8puppi_V1_probHww4q,jetAK8puppi_V1_probHww4q_2};
-        Double_t jetAK8puppi_V1_probHww4qvsQCD_sort[2] = {jetAK8puppi_V1_probHww4qvsQCD,jetAK8puppi_V1_probHww4qvsQCD_2};
-        Double_t jetAK8puppi_V1_probHww4q3qvsQCD_sort[2] = {jetAK8puppi_V1_probHww4q3qvsQCD,jetAK8puppi_V1_probHww4q3qvsQCD_2};
-        Double_t jetAK8puppi_V1_probHwwevqq_sort[2] = {jetAK8puppi_V1_probHwwevqq,jetAK8puppi_V1_probHwwevqq_2};
-        Double_t jetAK8puppi_V1_probHwwmvqq_sort[2] = {jetAK8puppi_V1_probHwwmvqq,jetAK8puppi_V1_probHwwmvqq_2};
-        Double_t jetAK8puppi_V1_probHwwhadtauvqq_sort[2] = {jetAK8puppi_V1_probHwwhadtauvqq,jetAK8puppi_V1_probHwwhadtauvqq_2};
-        Double_t jetAK8puppi_V1_probHwwleptauevqq_sort[2] = {jetAK8puppi_V1_probHwwleptauevqq,jetAK8puppi_V1_probHwwleptauevqq_2};
-        Double_t jetAK8puppi_V1_probHwwleptaumvqq_sort[2] = {jetAK8puppi_V1_probHwwleptaumvqq,jetAK8puppi_V1_probHwwleptaumvqq_2};
-        Double_t jetAK8puppi_V1_probQCDb_sort[2] = {jetAK8puppi_V1_probQCDb,jetAK8puppi_V1_probQCDb_2};
-        Double_t jetAK8puppi_V1_probQCDbb_sort[2] = {jetAK8puppi_V1_probQCDbb,jetAK8puppi_V1_probQCDbb_2};
-        Double_t jetAK8puppi_V1_probQCDc_sort[2] = {jetAK8puppi_V1_probQCDc,jetAK8puppi_V1_probQCDc_2};
-        Double_t jetAK8puppi_V1_probQCDcc_sort[2] = {jetAK8puppi_V1_probQCDcc,jetAK8puppi_V1_probQCDcc_2};
-        Double_t jetAK8puppi_V1_probQCDothers_sort[2] = {jetAK8puppi_V1_probQCDothers,jetAK8puppi_V1_probQCDothers_2};
 
-
-        //New tagger part ends.
         Double_t jetAK8puppi_dnn_probTbcq_sort[2] = { jetAK8puppi_dnn_probTbcq , jetAK8puppi_dnn_probTbcq_2 };
         Double_t jetAK8puppi_dnn_probTbqq_sort[2] = { jetAK8puppi_dnn_probTbqq , jetAK8puppi_dnn_probTbqq_2 };
         Double_t jetAK8puppi_dnn_probTbc_sort[2] = { jetAK8puppi_dnn_probTbc , jetAK8puppi_dnn_probTbc_2 };
@@ -525,91 +420,7 @@ jetAK8puppi_V1_probQCDothers_min=-99;
         Double_t jetAK8puppi_dnnDecorr_probQCDb_sort[2] = { jetAK8puppi_dnnDecorr_probQCDb , jetAK8puppi_dnnDecorr_probQCDb_2 };
         Double_t jetAK8puppi_dnnDecorr_probQCDc_sort[2] = { jetAK8puppi_dnnDecorr_probQCDc , jetAK8puppi_dnnDecorr_probQCDc_2 };
         Double_t jetAK8puppi_dnnDecorr_probQCDothers_sort[2] = { jetAK8puppi_dnnDecorr_probQCDothers , jetAK8puppi_dnnDecorr_probQCDothers_2 };
-        //New tagger part
-        jetAK8puppi_V1_probHww3q_max=jetAK8puppi_V1_probHww3q_sort[indexTag[0]];
-        jetAK8puppi_V1_probHww3q_min=jetAK8puppi_V1_probHww3q_sort[indexTag[1]];
 
-  
-        jetAK8puppi_V1_probHww4q_max=jetAK8puppi_V1_probHww4q_sort[indexTag[0]];
-        jetAK8puppi_V1_probHww4q_min=jetAK8puppi_V1_probHww4q_sort[indexTag[1]];
-
-  
-        jetAK8puppi_V1_probHww4qvsQCD_max=jetAK8puppi_V1_probHww4qvsQCD_sort[indexTag[0]];
-        jetAK8puppi_V1_probHww4qvsQCD_min=jetAK8puppi_V1_probHww4qvsQCD_sort[indexTag[1]];
-
-  
-        jetAK8puppi_V1_probHww4q3qvsQCD_max=jetAK8puppi_V1_probHww4q3qvsQCD_sort[indexTag[0]];
-        jetAK8puppi_V1_probHww4q3qvsQCD_min=jetAK8puppi_V1_probHww4q3qvsQCD_sort[indexTag[1]];
-
-  
-        jetAK8puppi_V1_probHwwevqq_max=jetAK8puppi_V1_probHwwevqq_sort[indexTag[0]];
-        jetAK8puppi_V1_probHwwevqq_min=jetAK8puppi_V1_probHwwmvqq_sort[indexTag[1]];
-
-  
-        jetAK8puppi_V1_probHwwhadtauvqq_max=jetAK8puppi_V1_probHwwhadtauvqq_sort[indexTag[0]];
-        jetAK8puppi_V1_probHwwhadtauvqq_min=jetAK8puppi_V1_probHwwhadtauvqq_sort[indexTag[1]];
-
-  
-        jetAK8puppi_V1_probHwwleptauevqq_max=jetAK8puppi_V1_probHwwleptauevqq_sort[indexTag[0]];
-        jetAK8puppi_V1_probHwwleptauevqq_min=jetAK8puppi_V1_probHwwleptauevqq_sort[indexTag[1]];
-
-  
-        jetAK8puppi_V1_probHwwleptaumvqq_max=jetAK8puppi_V1_probHwwleptaumvqq_sort[indexTag[0]];
-        jetAK8puppi_V1_probHwwleptaumvqq_min=jetAK8puppi_V1_probHwwleptaumvqq_sort[indexTag[1]];
-
-  
-        jetAK8puppi_V1_probHwwmvqq_max=jetAK8puppi_V1_probHwwmvqq_sort[indexTag[0]];
-        jetAK8puppi_V1_probHwwmvqq_min=jetAK8puppi_V1_probHwwmvqq_sort[indexTag[1]];
-
-  
-        jetAK8puppi_V1_probQCDc_max=jetAK8puppi_V1_probQCDc_sort[indexTag[0]];
-        jetAK8puppi_V1_probQCDc_min=jetAK8puppi_V1_probQCDc_sort[indexTag[1]];
-
-  
-        jetAK8puppi_V1_probQCDcc_max=jetAK8puppi_V1_probQCDcc_sort[indexTag[0]];
-        jetAK8puppi_V1_probQCDcc_min=jetAK8puppi_V1_probQCDcc_sort[indexTag[1]];
-
-  
-        jetAK8puppi_V1_probQCDbb_max=jetAK8puppi_V1_probQCDbb_sort[indexTag[0]];
-        jetAK8puppi_V1_probQCDbb_min=jetAK8puppi_V1_probQCDbb_sort[indexTag[1]];
-
-  
-        jetAK8puppi_V1_probQCDb_max=jetAK8puppi_V1_probQCDb_sort[indexTag[0]];
-        jetAK8puppi_V1_probQCDb_min=jetAK8puppi_V1_probQCDb_sort[indexTag[1]];
-
-  
-        jetAK8puppi_V1_probQCDothers_max=jetAK8puppi_V1_probQCDothers_sort[indexTag[0]];
-        jetAK8puppi_V1_probQCDothers_min=jetAK8puppi_V1_probQCDothers_sort[indexTag[1]];
-
-   Double_t probQCDAll_max =jetAK8puppi_V1_probQCDb_max + jetAK8puppi_V1_probQCDbb_max + jetAK8puppi_V1_probQCDc_max + jetAK8puppi_V1_probQCDcc_max + jetAK8puppi_V1_probQCDothers_max;
-   Double_t probQCDAll_min =jetAK8puppi_V1_probQCDb_min + jetAK8puppi_V1_probQCDbb_min + jetAK8puppi_V1_probQCDc_min + jetAK8puppi_V1_probQCDcc_min + jetAK8puppi_V1_probQCDothers_min;
-
-  V1_evqqvsQCD_max=(jetAK8puppi_V1_probHwwevqq_max)/(jetAK8puppi_V1_probHwwevqq_max+probQCDAll_max);
-  V1_evqqvsQCD_min=(jetAK8puppi_V1_probHwwevqq_min)/(jetAK8puppi_V1_probHwwevqq_min+probQCDAll_min);
-
-  V1_mvqqvsQCD_max=(jetAK8puppi_V1_probHwwmvqq_max)/(jetAK8puppi_V1_probHwwmvqq_max+probQCDAll_max);
-  V1_mvqqvsQCD_min=(jetAK8puppi_V1_probHwwmvqq_min)/(jetAK8puppi_V1_probHwwmvqq_min+probQCDAll_min);
-
-  V1_emvqqvsQCD_max=(jetAK8puppi_V1_probHwwevqq_max+jetAK8puppi_V1_probHwwmvqq_max)/(jetAK8puppi_V1_probHwwevqq_max+jetAK8puppi_V1_probHwwmvqq_max+probQCDAll_max);
-//   std::cout<<"Nj8=2, Now the evqq score max is:"<<jetAK8puppi_V1_probHwwevqq_max<<std::endl;
-//   std::cout<<"Nj8=2, Now the mvqq score max is:"<<jetAK8puppi_V1_probHwwmvqq_max<<std::endl;
-//   std::cout<<"Nj8=2, Now the emvqq tagger max is:"<<V1_emvqqvsQCD_max<<std::endl;
-  V1_emvqqvsQCD_min=(jetAK8puppi_V1_probHwwevqq_min+jetAK8puppi_V1_probHwwmvqq_min)/(jetAK8puppi_V1_probHwwevqq_min+jetAK8puppi_V1_probHwwmvqq_min+probQCDAll_min);
-
-  V1_hadtauvqqvsQCD_max=(jetAK8puppi_V1_probHwwhadtauvqq_max)/(jetAK8puppi_V1_probHwwhadtauvqq_max+probQCDAll_max);
-  V1_hadtauvqqvsQCD_min=(jetAK8puppi_V1_probHwwhadtauvqq_min)/(jetAK8puppi_V1_probHwwhadtauvqq_min+probQCDAll_min);
-
-  V1_leptauevqqvsQCD_max=(jetAK8puppi_V1_probHwwleptauevqq_max)/(jetAK8puppi_V1_probHwwleptauevqq_max+probQCDAll_max);
-  V1_leptauevqqvsQCD_min=(jetAK8puppi_V1_probHwwleptauevqq_min)/(jetAK8puppi_V1_probHwwleptauevqq_min+probQCDAll_min);
-
-  V1_leptaumvqqvsQCD_max=(jetAK8puppi_V1_probHwwleptaumvqq_max)/(jetAK8puppi_V1_probHwwleptaumvqq_max+probQCDAll_max);
-  V1_leptaumvqqvsQCD_min=(jetAK8puppi_V1_probHwwleptaumvqq_min)/(jetAK8puppi_V1_probHwwleptaumvqq_min+probQCDAll_min);
-
-
-  
-   
-         
-        //New tagger part ends.
         jetAK8puppi_dnn_probTbcq_max = jetAK8puppi_dnn_probTbcq_sort[indexTag[0]] ;
         jetAK8puppi_dnn_probTbcq_min = jetAK8puppi_dnn_probTbcq_sort[indexTag[1]] ;
         jetAK8puppi_dnn_probTbqq_max = jetAK8puppi_dnn_probTbqq_sort[indexTag[0]] ;
@@ -687,24 +498,6 @@ jetAK8puppi_V1_probQCDothers_min=-99;
         Int_t *indexTag=new Int_t[3];
         Double_t jetAK8puppi_Mass_sort[3] = { Mj , Mj_2, Mj_3 };
         TMath::Sort(3, jetAK8puppi_Mass_sort, indexTag, 1);
-//New tagger part.
-       Double_t jetAK8puppi_V1_probHww3q_sort[3] = {jetAK8puppi_V1_probHww3q,jetAK8puppi_V1_probHww3q_2,jetAK8puppi_V1_probHww3q_3};
-       Double_t jetAK8puppi_V1_probHww4q_sort[3] = {jetAK8puppi_V1_probHww4q,jetAK8puppi_V1_probHww4q_2,jetAK8puppi_V1_probHww4q_3};
-       Double_t jetAK8puppi_V1_probHww4qvsQCD_sort[3] = {jetAK8puppi_V1_probHww4qvsQCD,jetAK8puppi_V1_probHww4qvsQCD_2,jetAK8puppi_V1_probHww4qvsQCD_3};
-       Double_t jetAK8puppi_V1_probHww4q3qvsQCD_sort[3] = {jetAK8puppi_V1_probHww4q3qvsQCD,jetAK8puppi_V1_probHww4q3qvsQCD_2,jetAK8puppi_V1_probHww4q3qvsQCD_3};
-       Double_t jetAK8puppi_V1_probHwwevqq_sort[3] = {jetAK8puppi_V1_probHwwevqq,jetAK8puppi_V1_probHwwevqq_2,jetAK8puppi_V1_probHwwevqq_3};
-       Double_t jetAK8puppi_V1_probHwwmvqq_sort[3] = {jetAK8puppi_V1_probHwwmvqq,jetAK8puppi_V1_probHwwmvqq_2,jetAK8puppi_V1_probHwwmvqq_3};
-       Double_t jetAK8puppi_V1_probHwwhadtauvqq_sort[3] = {jetAK8puppi_V1_probHwwhadtauvqq,jetAK8puppi_V1_probHwwhadtauvqq_2,jetAK8puppi_V1_probHwwhadtauvqq_3};
-       Double_t jetAK8puppi_V1_probHwwleptauevqq_sort[3] = {jetAK8puppi_V1_probHwwleptauevqq,jetAK8puppi_V1_probHwwleptauevqq_2,jetAK8puppi_V1_probHwwleptauevqq_3};
-       Double_t jetAK8puppi_V1_probHwwleptaumvqq_sort[3] = {jetAK8puppi_V1_probHwwleptaumvqq,jetAK8puppi_V1_probHwwleptaumvqq_2,jetAK8puppi_V1_probHwwleptaumvqq_3};
-       Double_t jetAK8puppi_V1_probQCDb_sort[3] = {jetAK8puppi_V1_probQCDb,jetAK8puppi_V1_probQCDb_2,jetAK8puppi_V1_probQCDb_3};
-       Double_t jetAK8puppi_V1_probQCDbb_sort[3] = {jetAK8puppi_V1_probQCDbb,jetAK8puppi_V1_probQCDbb_2,jetAK8puppi_V1_probQCDbb_3};
-       Double_t jetAK8puppi_V1_probQCDcc_sort[3] = {jetAK8puppi_V1_probQCDcc,jetAK8puppi_V1_probQCDcc_2,jetAK8puppi_V1_probQCDcc_3};
-       Double_t jetAK8puppi_V1_probQCDc_sort[3] = {jetAK8puppi_V1_probQCDc,jetAK8puppi_V1_probQCDc_2,jetAK8puppi_V1_probQCDc_3};
-       Double_t jetAK8puppi_V1_probQCDothers_sort[3] = {jetAK8puppi_V1_probQCDothers,jetAK8puppi_V1_probQCDothers_2,jetAK8puppi_V1_probQCDothers_3};
-
-//New tagger part ends.
-
         Double_t jetAK8puppi_dnn_probTbcq_sort[3] = { jetAK8puppi_dnn_probTbcq , jetAK8puppi_dnn_probTbcq_2 , jetAK8puppi_dnn_probTbcq_3 };
         Double_t jetAK8puppi_dnn_probTbqq_sort[3] = { jetAK8puppi_dnn_probTbqq , jetAK8puppi_dnn_probTbqq_2 , jetAK8puppi_dnn_probTbqq_3 };
         Double_t jetAK8puppi_dnn_probTbc_sort[3] = { jetAK8puppi_dnn_probTbc , jetAK8puppi_dnn_probTbc_2 , jetAK8puppi_dnn_probTbc_3 };
@@ -741,100 +534,7 @@ jetAK8puppi_V1_probQCDothers_min=-99;
         Double_t jetAK8puppi_dnnDecorr_probQCDothers_sort[3] = { jetAK8puppi_dnnDecorr_probQCDothers , jetAK8puppi_dnnDecorr_probQCDothers_2 , jetAK8puppi_dnnDecorr_probQCDothers_3 };
 
 
-       //New tagger part.
-        jetAK8puppi_V1_probHww3q_max=jetAK8puppi_V1_probHww3q_sort[indexTag[0]];
-        jetAK8puppi_V1_probHww3q_mid=jetAK8puppi_V1_probHww3q_sort[indexTag[1]];
-        jetAK8puppi_V1_probHww3q_min=jetAK8puppi_V1_probHww3q_sort[indexTag[2]];
-
-        jetAK8puppi_V1_probHww4q_max=jetAK8puppi_V1_probHww4q_sort[indexTag[0]];
-        jetAK8puppi_V1_probHww4q_mid=jetAK8puppi_V1_probHww4q_sort[indexTag[1]];
-        jetAK8puppi_V1_probHww4q_min=jetAK8puppi_V1_probHww4q_sort[indexTag[2]];
-
-        jetAK8puppi_V1_probHww4qvsQCD_max=jetAK8puppi_V1_probHww4qvsQCD_sort[indexTag[0]];
-        jetAK8puppi_V1_probHww4qvsQCD_mid=jetAK8puppi_V1_probHww4qvsQCD_sort[indexTag[1]];
-        jetAK8puppi_V1_probHww4qvsQCD_min=jetAK8puppi_V1_probHww4qvsQCD_sort[indexTag[2]];
-
-        jetAK8puppi_V1_probHww4q3qvsQCD_max=jetAK8puppi_V1_probHww4q3qvsQCD_sort[indexTag[0]];
-        jetAK8puppi_V1_probHww4q3qvsQCD_mid=jetAK8puppi_V1_probHww4q3qvsQCD_sort[indexTag[1]];
-        jetAK8puppi_V1_probHww4q3qvsQCD_min=jetAK8puppi_V1_probHww4q3qvsQCD_sort[indexTag[2]];
-
-        jetAK8puppi_V1_probHwwevqq_max=jetAK8puppi_V1_probHwwevqq_sort[indexTag[0]];
-        jetAK8puppi_V1_probHwwevqq_mid=jetAK8puppi_V1_probHwwevqq_sort[indexTag[1]];
-        jetAK8puppi_V1_probHwwevqq_min=jetAK8puppi_V1_probHwwevqq_sort[indexTag[2]];
-
-        jetAK8puppi_V1_probHwwmvqq_max=jetAK8puppi_V1_probHwwmvqq_sort[indexTag[0]];
-        jetAK8puppi_V1_probHwwmvqq_mid=jetAK8puppi_V1_probHwwmvqq_sort[indexTag[1]];
-        jetAK8puppi_V1_probHwwmvqq_min=jetAK8puppi_V1_probHwwmvqq_sort[indexTag[2]];
-
-        jetAK8puppi_V1_probHwwhadtauvqq_max=jetAK8puppi_V1_probHwwhadtauvqq_sort[indexTag[0]];
-        jetAK8puppi_V1_probHwwhadtauvqq_mid=jetAK8puppi_V1_probHwwhadtauvqq_sort[indexTag[1]];
-        jetAK8puppi_V1_probHwwhadtauvqq_min=jetAK8puppi_V1_probHwwhadtauvqq_sort[indexTag[2]];
-
-        jetAK8puppi_V1_probHwwleptauevqq_max=jetAK8puppi_V1_probHwwleptauevqq_sort[indexTag[0]];
-        jetAK8puppi_V1_probHwwleptauevqq_mid=jetAK8puppi_V1_probHwwleptauevqq_sort[indexTag[1]];
-        jetAK8puppi_V1_probHwwleptauevqq_min=jetAK8puppi_V1_probHwwleptauevqq_sort[indexTag[2]];
-
-        jetAK8puppi_V1_probHwwleptaumvqq_max=jetAK8puppi_V1_probHwwleptaumvqq_sort[indexTag[0]];
-        jetAK8puppi_V1_probHwwleptaumvqq_mid=jetAK8puppi_V1_probHwwleptaumvqq_sort[indexTag[1]];
-        jetAK8puppi_V1_probHwwleptaumvqq_min=jetAK8puppi_V1_probHwwleptaumvqq_sort[indexTag[2]];
-
-        jetAK8puppi_V1_probQCDc_max=jetAK8puppi_V1_probQCDc_sort[indexTag[0]];
-        jetAK8puppi_V1_probQCDc_mid=jetAK8puppi_V1_probQCDc_sort[indexTag[1]];
-        jetAK8puppi_V1_probQCDc_min=jetAK8puppi_V1_probQCDc_sort[indexTag[2]];
-
-        jetAK8puppi_V1_probQCDcc_max=jetAK8puppi_V1_probQCDcc_sort[indexTag[0]];
-        jetAK8puppi_V1_probQCDcc_mid=jetAK8puppi_V1_probQCDcc_sort[indexTag[1]];
-        jetAK8puppi_V1_probQCDcc_min=jetAK8puppi_V1_probQCDcc_sort[indexTag[2]];
-
-        jetAK8puppi_V1_probQCDb_max=jetAK8puppi_V1_probQCDb_sort[indexTag[0]];
-        jetAK8puppi_V1_probQCDb_mid=jetAK8puppi_V1_probQCDb_sort[indexTag[1]];
-        jetAK8puppi_V1_probQCDb_min=jetAK8puppi_V1_probQCDb_sort[indexTag[2]];
-
-        jetAK8puppi_V1_probQCDbb_max=jetAK8puppi_V1_probQCDbb_sort[indexTag[0]];
-        jetAK8puppi_V1_probQCDbb_mid=jetAK8puppi_V1_probQCDbb_sort[indexTag[1]];
-        jetAK8puppi_V1_probQCDbb_min=jetAK8puppi_V1_probQCDbb_sort[indexTag[2]];
-
-        jetAK8puppi_V1_probQCDothers_max=jetAK8puppi_V1_probQCDothers_sort[indexTag[0]];
-        jetAK8puppi_V1_probQCDothers_mid=jetAK8puppi_V1_probQCDothers_sort[indexTag[1]];
-        jetAK8puppi_V1_probQCDothers_min=jetAK8puppi_V1_probQCDothers_sort[indexTag[2]];
         
-   Double_t probQCDAll_max =jetAK8puppi_V1_probQCDb_max + jetAK8puppi_V1_probQCDbb_max + jetAK8puppi_V1_probQCDc_max + jetAK8puppi_V1_probQCDcc_max + jetAK8puppi_V1_probQCDothers_max;
-   Double_t probQCDAll_mid =jetAK8puppi_V1_probQCDb_mid + jetAK8puppi_V1_probQCDbb_mid + jetAK8puppi_V1_probQCDc_mid + jetAK8puppi_V1_probQCDcc_mid + jetAK8puppi_V1_probQCDothers_mid;
-   Double_t probQCDAll_min =jetAK8puppi_V1_probQCDb_min + jetAK8puppi_V1_probQCDbb_min + jetAK8puppi_V1_probQCDc_min + jetAK8puppi_V1_probQCDcc_min + jetAK8puppi_V1_probQCDothers_min;
-
-  V1_evqqvsQCD_max=(jetAK8puppi_V1_probHwwevqq_max)/(jetAK8puppi_V1_probHwwevqq_max+probQCDAll_max);
-  V1_evqqvsQCD_mid=(jetAK8puppi_V1_probHwwevqq_mid)/(jetAK8puppi_V1_probHwwevqq_mid+probQCDAll_mid);
-  V1_evqqvsQCD_min=(jetAK8puppi_V1_probHwwevqq_min)/(jetAK8puppi_V1_probHwwevqq_min+probQCDAll_min);
-
-  V1_mvqqvsQCD_max=(jetAK8puppi_V1_probHwwmvqq_max)/(jetAK8puppi_V1_probHwwmvqq_max+probQCDAll_max);
-  V1_mvqqvsQCD_mid=(jetAK8puppi_V1_probHwwmvqq_mid)/(jetAK8puppi_V1_probHwwmvqq_mid+probQCDAll_mid);
-  V1_mvqqvsQCD_min=(jetAK8puppi_V1_probHwwmvqq_min)/(jetAK8puppi_V1_probHwwmvqq_min+probQCDAll_min);
-
-  V1_emvqqvsQCD_max=(jetAK8puppi_V1_probHwwevqq_max+jetAK8puppi_V1_probHwwmvqq_max)/(jetAK8puppi_V1_probHwwevqq_max+jetAK8puppi_V1_probHwwmvqq_max+probQCDAll_max);
-    // std::cout<<"Nj8=2, Now the evqq score max is:"<<jetAK8puppi_V1_probHwwevqq_max<<std::endl;
-    // std::cout<<"Nj8=2, Now the mvqq score max is:"<<jetAK8puppi_V1_probHwwmvqq_max<<std::endl;
-    // std::cout<<"Nj8=3, Now the emvqq tagger max is:"<<V1_emvqqvsQCD_max<<std::endl;
-
-  V1_emvqqvsQCD_mid=(jetAK8puppi_V1_probHwwevqq_mid+jetAK8puppi_V1_probHwwmvqq_mid)/(jetAK8puppi_V1_probHwwevqq_mid+jetAK8puppi_V1_probHwwmvqq_mid+probQCDAll_mid);
-  V1_emvqqvsQCD_min=(jetAK8puppi_V1_probHwwevqq_min+jetAK8puppi_V1_probHwwmvqq_min)/(jetAK8puppi_V1_probHwwevqq_min+jetAK8puppi_V1_probHwwmvqq_min+probQCDAll_min);
-
-  V1_hadtauvqqvsQCD_max=(jetAK8puppi_V1_probHwwhadtauvqq_max)/(jetAK8puppi_V1_probHwwhadtauvqq_max+probQCDAll_max);
-  V1_hadtauvqqvsQCD_mid=(jetAK8puppi_V1_probHwwhadtauvqq_mid)/(jetAK8puppi_V1_probHwwhadtauvqq_mid+probQCDAll_mid);
-  V1_hadtauvqqvsQCD_min=(jetAK8puppi_V1_probHwwhadtauvqq_min)/(jetAK8puppi_V1_probHwwhadtauvqq_min+probQCDAll_min);
-
-  V1_leptauevqqvsQCD_max=(jetAK8puppi_V1_probHwwleptauevqq_max)/(jetAK8puppi_V1_probHwwleptauevqq_max+probQCDAll_max);
-  V1_leptauevqqvsQCD_mid=(jetAK8puppi_V1_probHwwleptauevqq_mid)/(jetAK8puppi_V1_probHwwleptauevqq_mid+probQCDAll_mid);
-  V1_leptauevqqvsQCD_min=(jetAK8puppi_V1_probHwwleptauevqq_min)/(jetAK8puppi_V1_probHwwleptauevqq_min+probQCDAll_min);
-
-  V1_leptaumvqqvsQCD_max=(jetAK8puppi_V1_probHwwleptaumvqq_max)/(jetAK8puppi_V1_probHwwleptaumvqq_max+probQCDAll_max);
-  V1_leptaumvqqvsQCD_mid=(jetAK8puppi_V1_probHwwleptaumvqq_mid)/(jetAK8puppi_V1_probHwwleptaumvqq_mid+probQCDAll_mid);
-  V1_leptaumvqqvsQCD_min=(jetAK8puppi_V1_probHwwleptaumvqq_min)/(jetAK8puppi_V1_probHwwleptaumvqq_min+probQCDAll_min);
-
-
-  
-  
-  
-       //New tagger part ends. 
         jetAK8puppi_dnn_probTbcq_max = jetAK8puppi_dnn_probTbcq_sort[indexTag[0]] ;
         jetAK8puppi_dnn_probTbcq_mid = jetAK8puppi_dnn_probTbcq_sort[indexTag[1]] ;
         jetAK8puppi_dnn_probTbcq_min = jetAK8puppi_dnn_probTbcq_sort[indexTag[2]] ;
