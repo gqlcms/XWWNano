@@ -108,10 +108,10 @@ struct FatJet_P
     vector<float>* v_FatJet_deepHWWMDV1_probHwwleptauevqq_;
     vector<float>* v_FatJet_deepHWWMDV1_probHwwleptaumvqq_;
     vector<float>* v_FatJet_deepHWWMDV1_probQCDb_;
-    vector<float>* v_FatJet_deepHWWMDV1_probQCDbb_;
-    vector<float>* v_FatJet_deepHWWMDV1_probQCDbb_;
     vector<float>* v_FatJet_deepHWWMDV1_probQCDcc_;
+    vector<float>* v_FatJet_deepHWWMDV1_probQCDc_;
     vector<float>* v_FatJet_deepHWWMDV1_probQCDcc_;
+    vector<float>* v_FatJet_deepHWWMDV1_probQCDothers_;
 
 } ;
 
@@ -414,9 +414,9 @@ FatJet_Collection::FatJet_Collection(FatJet_P FatJet_ , int NMAXFatJet_, int fil
     v_FatJet_deepHWWMDV1_probHwwleptaumvqq_  = FatJet_.v_FatJet_deepHWWMDV1_probHwwleptaumvqq_;
     v_FatJet_deepHWWMDV1_probQCDb_           = FatJet_.v_FatJet_deepHWWMDV1_probQCDb_;
     v_FatJet_deepHWWMDV1_probQCDbb_          = FatJet_.v_FatJet_deepHWWMDV1_probQCDbb_;
-    v_FatJet_deepHWWMDV1_probQCDbb_          = FatJet_.v_FatJet_deepHWWMDV1_probQCDbb_;
+    v_FatJet_deepHWWMDV1_probQCDc_          = FatJet_.v_FatJet_deepHWWMDV1_probQCDc_;
     v_FatJet_deepHWWMDV1_probQCDcc_          = FatJet_.v_FatJet_deepHWWMDV1_probQCDcc_;
-    v_FatJet_deepHWWMDV1_probQCDcc_          = FatJet_.v_FatJet_deepHWWMDV1_probQCDcc_;
+    v_FatJet_deepHWWMDV1_probQCDothers_          = FatJet_.v_FatJet_deepHWWMDV1_probQCDothers_;
 
     NMAXFatJet = NMAXFatJet_;
     filterMode = filterMode_;
@@ -550,7 +550,7 @@ void FatJet_Collection::brances_Added(){
     Branch.clear();
 
     for (int iFJ = 0; iFJ != int(FatJet_pt.size()); ++iFJ ){
-        float HWWMD_H4q3q = (FatJet_deepHWWMDV1_probHww4q[iFJ]+FatJet_deepHWWMDV1_probHww4q3q[iFJ] )/(FatJet_deepHWWMDV1_probHww4q3q[iFJ]+FatJet_deepHWWMDV1_probHww4q[iFJ]+FatJet_deepHWWMDV1_probQCDb[iFJ]+FatJet_deepHWWMDV1_probQCDbb[iFJ]+FatJet_deepHWWMDV1_probQCDc[iFJ]+FatJet_deepHWWMDV1_probQCDcc[iFJ]+FatJet_deepHWWMDV1_probQCDothers[iFJ]);
+        float HWWMD_H4q3q = (FatJet_deepHWWMDV1_probHww4q[iFJ]+FatJet_deepHWWMDV1_probHww3q[iFJ] )/(FatJet_deepHWWMDV1_probHww3q[iFJ]+FatJet_deepHWWMDV1_probHww4q[iFJ]+FatJet_deepHWWMDV1_probQCDb[iFJ]+FatJet_deepHWWMDV1_probQCDbb[iFJ]+FatJet_deepHWWMDV1_probQCDc[iFJ]+FatJet_deepHWWMDV1_probQCDcc[iFJ]+FatJet_deepHWWMDV1_probQCDothers[iFJ]);
         Branch.push_back(HWWMD_H4q3q);
     }
     FatJet_Branches["deepHWWMDV1_H4q3qvsQCD"] = Branch;
@@ -698,7 +698,7 @@ void FatJet_Collection::Filter_1(){
         //New tagger.
         FatJet_deepHWWMDV1_probHww4q.push_back(v_FatJet_deepHWWMDV1_probHww4q_->at(iFJ));
         FatJet_deepHWWMDV1_probHww3q.push_back(v_FatJet_deepHWWMDV1_probHww3q_->at(iFJ));
-        FatJet_deepHWWMDV1_probHww4qvsQD.push_back(v_FatJet_deepHWWMDV1_probHww4qvsQCD_->at(iFJ));
+        FatJet_deepHWWMDV1_probHww4qvsQCD.push_back(v_FatJet_deepHWWMDV1_probHww4qvsQCD_->at(iFJ));
         FatJet_deepHWWMDV1_probHww4q3qvsQCD.push_back(v_FatJet_deepHWWMDV1_probHww4q3qvsQCD_->at(iFJ));
         FatJet_deepHWWMDV1_probHwwevqq.push_back(v_FatJet_deepHWWMDV1_probHwwevqq_->at(iFJ));
         FatJet_deepHWWMDV1_probHwwmvqq.push_back(v_FatJet_deepHWWMDV1_probHwwmvqq_->at(iFJ));
@@ -883,7 +883,7 @@ void FatJet_Collection::Filter_2(){
         //New tagger.
         FatJet_deepHWWMDV1_probHww4q.push_back(v_FatJet_deepHWWMDV1_probHww4q_->at(iFJ));
         FatJet_deepHWWMDV1_probHww3q.push_back(v_FatJet_deepHWWMDV1_probHww3q_->at(iFJ));
-        FatJet_deepHWWMDV1_probHww4qvsQD.push_back(v_FatJet_deepHWWMDV1_probHww4qvsQCD_->at(iFJ));
+        FatJet_deepHWWMDV1_probHww4qvsQCD.push_back(v_FatJet_deepHWWMDV1_probHww4qvsQCD_->at(iFJ));
         FatJet_deepHWWMDV1_probHww4q3qvsQCD.push_back(v_FatJet_deepHWWMDV1_probHww4q3qvsQCD_->at(iFJ));
         FatJet_deepHWWMDV1_probHwwevqq.push_back(v_FatJet_deepHWWMDV1_probHwwevqq_->at(iFJ));
         FatJet_deepHWWMDV1_probHwwmvqq.push_back(v_FatJet_deepHWWMDV1_probHwwmvqq_->at(iFJ));
