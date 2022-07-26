@@ -606,7 +606,7 @@ void EDBR2PKUTree::OutputBranches_GKK_0Lepton() {
    ExTree->Branch("nb_m_deep_in",&nb_m_deep_in,"nb_m_deep_in/I");
    ExTree->Branch("nb_t_deep_in",&nb_t_deep_in,"nb_t_deep_in/I");
 
-   // define Extree for gKK 0lepton output
+   // define ExTree for gKK 0lepton output
 
    ExTree->Branch("MET_phi_NoXYCorr",&MET_phi_NoXYCorr,"MET_phi_NoXYCorr/F");
    ExTree->Branch("MET_et_NoXYCorr",&MET_et_NoXYCorr,"MET_et_NoXYCorr/F");
@@ -1252,95 +1252,95 @@ void EDBR2PKUTree::OutputBranches_HWW() {
    ExTree->Branch("nb_m_deep_in",&nb_m_deep_in,"nb_m_deep_in/I");
    ExTree->Branch("nb_t_deep_in",&nb_t_deep_in,"nb_t_deep_in/I");
 
-   // define Extree for gKK 0lepton output
+   // define ExTree for gKK 0lepton output
 
-   Extree->Branch("deepHWW_probHww3q_a",&deepHWW_probHww3q_a,"deepHWW_probHww3q_a/F");
-   Extree->Branch("deepHWW_probHww4q_a",&deepHWW_probHww4q_a,"deepHWW_probHww4q_a/F");
-   Extree->Branch("deepHWW_probHww4q3qvsQCD_a",&deepHWW_probHww4q3qvsQCD_a,"deepHWW_probHww4q3qvsQCD_a/F");
-   Extree->Branch("deepHWW_probHww4qvsQCD_a",&deepHWW_probHww4qvsQCD_a,"deepHWW_probHww4qvsQCD_a/F");
-   Extree->Branch("deepHWW_probHwwevqq_a",&deepHWW_probHwwevqq_a,"deepHWW_probHwwevqq_a/F");
-   Extree->Branch("deepHWW_probHwwmvqq_a",&deepHWW_probHwwmvqq_a,"deepHWW_probHwwmvqq_a/F");
-   Extree->Branch("deepHWW_probHwwhadtauvqq_a",&deepHWW_probHwwhadtauvqq_a,"deepHWW_probHwwhadtauvqq_a/F");
-   Extree->Branch("deepHWW_probHwwleptauevqq_a",&deepHWW_probHwwleptauevqq_a,"deepHWW_probHwwleptauevqq_a/F");
-   Extree->Branch("deepHWW_probHwwleptaumvqq_a",&deepHWW_probHwwleptaumvqq_a,"deepHWW_probHwwleptaumvqq_a/F");
-   Extree->Branch("deepHWW_probQCDb_a",&deepHWW_probQCDb_a,"deepHWW_probQCDb_a/F");
-   Extree->Branch("deepHWW_probQCDbb_a",&deepHWW_probQCDbb_a,"deepHWW_probQCDbb_a/F");
-   Extree->Branch("deepHWW_probQCDc_a",&deepHWW_probQCDc_a,"deepHWW_probQCDc_a/F");
-   Extree->Branch("deepHWW_probQCDcc_a",&deepHWW_probQCDcc_a,"deepHWW_probQCDcc_a/F");
-   Extree->Branch("deepHWW_probQCDothers_a",&deepHWW_probQCDothers_a,"deepHWW_probQCDothers_a/F");
-   Extree->Branch("deepHWW_H4q_a",&deepHWW_H4q_a,"deepHWW_H4q_a/F");
+   ExTree->Branch("deepHWW_probHww3q_a",&deepHWW_probHww3q_a,"deepHWW_probHww3q_a/F");
+   ExTree->Branch("deepHWW_probHww4q_a",&deepHWW_probHww4q_a,"deepHWW_probHww4q_a/F");
+   ExTree->Branch("deepHWW_probHww4q3qvsQCD_a",&deepHWW_probHww4q3qvsQCD_a,"deepHWW_probHww4q3qvsQCD_a/F");
+   ExTree->Branch("deepHWW_probHww4qvsQCD_a",&deepHWW_probHww4qvsQCD_a,"deepHWW_probHww4qvsQCD_a/F");
+   ExTree->Branch("deepHWW_probHwwevqq_a",&deepHWW_probHwwevqq_a,"deepHWW_probHwwevqq_a/F");
+   ExTree->Branch("deepHWW_probHwwmvqq_a",&deepHWW_probHwwmvqq_a,"deepHWW_probHwwmvqq_a/F");
+   ExTree->Branch("deepHWW_probHwwhadtauvqq_a",&deepHWW_probHwwhadtauvqq_a,"deepHWW_probHwwhadtauvqq_a/F");
+   ExTree->Branch("deepHWW_probHwwleptauevqq_a",&deepHWW_probHwwleptauevqq_a,"deepHWW_probHwwleptauevqq_a/F");
+   ExTree->Branch("deepHWW_probHwwleptaumvqq_a",&deepHWW_probHwwleptaumvqq_a,"deepHWW_probHwwleptaumvqq_a/F");
+   ExTree->Branch("deepHWW_probQCDb_a",&deepHWW_probQCDb_a,"deepHWW_probQCDb_a/F");
+   ExTree->Branch("deepHWW_probQCDbb_a",&deepHWW_probQCDbb_a,"deepHWW_probQCDbb_a/F");
+   ExTree->Branch("deepHWW_probQCDc_a",&deepHWW_probQCDc_a,"deepHWW_probQCDc_a/F");
+   ExTree->Branch("deepHWW_probQCDcc_a",&deepHWW_probQCDcc_a,"deepHWW_probQCDcc_a/F");
+   ExTree->Branch("deepHWW_probQCDothers_a",&deepHWW_probQCDothers_a,"deepHWW_probQCDothers_a/F");
+   ExTree->Branch("deepHWW_H4q_a",&deepHWW_H4q_a,"deepHWW_H4q_a/F");
 
-   Extree->Branch("deepHWW_probHww3q_b",&deepHWW_probHww3q_b,"deepHWW_probHww3q_b/F");
-   Extree->Branch("deepHWW_probHww4q_b",&deepHWW_probHww4q_b,"deepHWW_probHww4q_b/F");
-   Extree->Branch("deepHWW_probHww4q3qvsQCD_b",&deepHWW_probHww4q3qvsQCD_b,"deepHWW_probHww4q3qvsQCD_b/F");
-   Extree->Branch("deepHWW_probHww4qvsQCD_b",&deepHWW_probHww4qvsQCD_b,"deepHWW_probHww4qvsQCD_b/F");
-   Extree->Branch("deepHWW_probHwwevqq_b",&deepHWW_probHwwevqq_b,"deepHWW_probHwwevqq_b/F");
-   Extree->Branch("deepHWW_probHwwmvqq_b",&deepHWW_probHwwmvqq_b,"deepHWW_probHwwmvqq_b/F");
-   Extree->Branch("deepHWW_probHwwhadtauvqq_b",&deepHWW_probHwwhadtauvqq_b,"deepHWW_probHwwhadtauvqq_b/F");
-   Extree->Branch("deepHWW_probHwwleptauevqq_b",&deepHWW_probHwwleptauevqq_b,"deepHWW_probHwwleptauevqq_b/F");
-   Extree->Branch("deepHWW_probHwwleptaumvqq_b",&deepHWW_probHwwleptaumvqq_b,"deepHWW_probHwwleptaumvqq_b/F");
-   Extree->Branch("deepHWW_probQCDb_b",&deepHWW_probQCDb_b,"deepHWW_probQCDb_b/F");
-   Extree->Branch("deepHWW_probQCDbb_b",&deepHWW_probQCDbb_b,"deepHWW_probQCDbb_b/F");
-   Extree->Branch("deepHWW_probQCDc_b",&deepHWW_probQCDc_b,"deepHWW_probQCDc_b/F");
-   Extree->Branch("deepHWW_probQCDcc_b",&deepHWW_probQCDcc_b,"deepHWW_probQCDcc_b/F");
-   Extree->Branch("deepHWW_probQCDothers_b",&deepHWW_probQCDothers_b,"deepHWW_probQCDothers_b/F");
-   Extree->Branch("deepHWW_H4q_b",&deepHWW_H4q_b,"deepHWW_H4q_b/F");
+   ExTree->Branch("deepHWW_probHww3q_b",&deepHWW_probHww3q_b,"deepHWW_probHww3q_b/F");
+   ExTree->Branch("deepHWW_probHww4q_b",&deepHWW_probHww4q_b,"deepHWW_probHww4q_b/F");
+   ExTree->Branch("deepHWW_probHww4q3qvsQCD_b",&deepHWW_probHww4q3qvsQCD_b,"deepHWW_probHww4q3qvsQCD_b/F");
+   ExTree->Branch("deepHWW_probHww4qvsQCD_b",&deepHWW_probHww4qvsQCD_b,"deepHWW_probHww4qvsQCD_b/F");
+   ExTree->Branch("deepHWW_probHwwevqq_b",&deepHWW_probHwwevqq_b,"deepHWW_probHwwevqq_b/F");
+   ExTree->Branch("deepHWW_probHwwmvqq_b",&deepHWW_probHwwmvqq_b,"deepHWW_probHwwmvqq_b/F");
+   ExTree->Branch("deepHWW_probHwwhadtauvqq_b",&deepHWW_probHwwhadtauvqq_b,"deepHWW_probHwwhadtauvqq_b/F");
+   ExTree->Branch("deepHWW_probHwwleptauevqq_b",&deepHWW_probHwwleptauevqq_b,"deepHWW_probHwwleptauevqq_b/F");
+   ExTree->Branch("deepHWW_probHwwleptaumvqq_b",&deepHWW_probHwwleptaumvqq_b,"deepHWW_probHwwleptaumvqq_b/F");
+   ExTree->Branch("deepHWW_probQCDb_b",&deepHWW_probQCDb_b,"deepHWW_probQCDb_b/F");
+   ExTree->Branch("deepHWW_probQCDbb_b",&deepHWW_probQCDbb_b,"deepHWW_probQCDbb_b/F");
+   ExTree->Branch("deepHWW_probQCDc_b",&deepHWW_probQCDc_b,"deepHWW_probQCDc_b/F");
+   ExTree->Branch("deepHWW_probQCDcc_b",&deepHWW_probQCDcc_b,"deepHWW_probQCDcc_b/F");
+   ExTree->Branch("deepHWW_probQCDothers_b",&deepHWW_probQCDothers_b,"deepHWW_probQCDothers_b/F");
+   ExTree->Branch("deepHWW_H4q_b",&deepHWW_H4q_b,"deepHWW_H4q_b/F");
 
-   Extree->Branch("deepHWW_probHww3q_c",&deepHWW_probHww3q_c,"deepHWW_probHww3q_c/F");
-   Extree->Branch("deepHWW_probHww4q_c",&deepHWW_probHww4q_c,"deepHWW_probHww4q_c/F");
-   Extree->Branch("deepHWW_probHww4q3qvsQCD_c",&deepHWW_probHww4q3qvsQCD_c,"deepHWW_probHww4q3qvsQCD_c/F");
-   Extree->Branch("deepHWW_probHww4qvsQCD_c",&deepHWW_probHww4qvsQCD_c,"deepHWW_probHww4qvsQCD_c/F");
-   Extree->Branch("deepHWW_probHwwevqq_c",&deepHWW_probHwwevqq_c,"deepHWW_probHwwevqq_c/F");
-   Extree->Branch("deepHWW_probHwwmvqq_c",&deepHWW_probHwwmvqq_c,"deepHWW_probHwwmvqq_c/F");
-   Extree->Branch("deepHWW_probHwwhadtauvqq_c",&deepHWW_probHwwhadtauvqq_c,"deepHWW_probHwwhadtauvqq_c/F");
-   Extree->Branch("deepHWW_probHwwleptauevqq_c",&deepHWW_probHwwleptauevqq_c,"deepHWW_probHwwleptauevqq_c/F");
-   Extree->Branch("deepHWW_probHwwleptaumvqq_c",&deepHWW_probHwwleptaumvqq_c,"deepHWW_probHwwleptaumvqq_c/F");
-   Extree->Branch("deepHWW_probQCDb_c",&deepHWW_probQCDb_c,"deepHWW_probQCDb_c/F");
-   Extree->Branch("deepHWW_probQCDbb_c",&deepHWW_probQCDbb_c,"deepHWW_probQCDbb_c/F");
-   Extree->Branch("deepHWW_probQCDc_c",&deepHWW_probQCDc_c,"deepHWW_probQCDc_c/F");
-   Extree->Branch("deepHWW_probQCDcc_c",&deepHWW_probQCDcc_c,"deepHWW_probQCDcc_c/F");
-   Extree->Branch("deepHWW_probQCDothers_c",&deepHWW_probQCDothers_c,"deepHWW_probQCDothers_c/F");
-   Extree->Branch("deepHWW_H4q_c",&deepHWW_H4q_c,"deepHWW_H4q_c/F");
+   ExTree->Branch("deepHWW_probHww3q_c",&deepHWW_probHww3q_c,"deepHWW_probHww3q_c/F");
+   ExTree->Branch("deepHWW_probHww4q_c",&deepHWW_probHww4q_c,"deepHWW_probHww4q_c/F");
+   ExTree->Branch("deepHWW_probHww4q3qvsQCD_c",&deepHWW_probHww4q3qvsQCD_c,"deepHWW_probHww4q3qvsQCD_c/F");
+   ExTree->Branch("deepHWW_probHww4qvsQCD_c",&deepHWW_probHww4qvsQCD_c,"deepHWW_probHww4qvsQCD_c/F");
+   ExTree->Branch("deepHWW_probHwwevqq_c",&deepHWW_probHwwevqq_c,"deepHWW_probHwwevqq_c/F");
+   ExTree->Branch("deepHWW_probHwwmvqq_c",&deepHWW_probHwwmvqq_c,"deepHWW_probHwwmvqq_c/F");
+   ExTree->Branch("deepHWW_probHwwhadtauvqq_c",&deepHWW_probHwwhadtauvqq_c,"deepHWW_probHwwhadtauvqq_c/F");
+   ExTree->Branch("deepHWW_probHwwleptauevqq_c",&deepHWW_probHwwleptauevqq_c,"deepHWW_probHwwleptauevqq_c/F");
+   ExTree->Branch("deepHWW_probHwwleptaumvqq_c",&deepHWW_probHwwleptaumvqq_c,"deepHWW_probHwwleptaumvqq_c/F");
+   ExTree->Branch("deepHWW_probQCDb_c",&deepHWW_probQCDb_c,"deepHWW_probQCDb_c/F");
+   ExTree->Branch("deepHWW_probQCDbb_c",&deepHWW_probQCDbb_c,"deepHWW_probQCDbb_c/F");
+   ExTree->Branch("deepHWW_probQCDc_c",&deepHWW_probQCDc_c,"deepHWW_probQCDc_c/F");
+   ExTree->Branch("deepHWW_probQCDcc_c",&deepHWW_probQCDcc_c,"deepHWW_probQCDcc_c/F");
+   ExTree->Branch("deepHWW_probQCDothers_c",&deepHWW_probQCDothers_c,"deepHWW_probQCDothers_c/F");
+   ExTree->Branch("deepHWW_H4q_c",&deepHWW_H4q_c,"deepHWW_H4q_c/F");
 
-   Extree->Branch("Mj_HWWa",&Mj_HWWa,"Mj_HWWa/F");
-   Extree->Branch("Mj_HWWb",&Mj_HWWb,"Mj_HWWb/F");
-   Extree->Branch("Mj_HWWc",&Mj_HWWc,"Mj_HWWc/F");
+   ExTree->Branch("Mj_HWWa",&Mj_HWWa,"Mj_HWWa/F");
+   ExTree->Branch("Mj_HWWb",&Mj_HWWb,"Mj_HWWb/F");
+   ExTree->Branch("Mj_HWWc",&Mj_HWWc,"Mj_HWWc/F");
 
-   Extree->Branch("PTj_HWWa",&PTj_HWWa,"PTj_HWWa/F");
-   Extree->Branch("PTj_HWWb",&PTj_HWWb,"PTj_HWWb/F");
-   Extree->Branch("PTj_HWWc",&PTj_HWWc,"PTj_HWWc/F");
+   ExTree->Branch("PTj_HWWa",&PTj_HWWa,"PTj_HWWa/F");
+   ExTree->Branch("PTj_HWWb",&PTj_HWWb,"PTj_HWWb/F");
+   ExTree->Branch("PTj_HWWc",&PTj_HWWc,"PTj_HWWc/F");
 
-   Extree->Branch("Etaj_HWWa",&Etaj_HWWa,"Etaj_HWWa/F");
-   Extree->Branch("Etaj_HWWb",&Etaj_HWWb,"Etaj_HWWb/F");
-   Extree->Branch("Etaj_HWWc",&Etaj_HWWc,"Etaj_HWWc/F");
+   ExTree->Branch("Etaj_HWWa",&Etaj_HWWa,"Etaj_HWWa/F");
+   ExTree->Branch("Etaj_HWWb",&Etaj_HWWb,"Etaj_HWWb/F");
+   ExTree->Branch("Etaj_HWWc",&Etaj_HWWc,"Etaj_HWWc/F");
 
-   Extree->Branch("Phij_HWWa",&Phij_HWWa,"Phij_HWWa/F");
-   Extree->Branch("Phij_HWWb",&Phij_HWWb,"Phij_HWWb/F");
-   Extree->Branch("Phij_HWWc",&Phij_HWWc,"Phij_HWWc/F");
+   ExTree->Branch("Phij_HWWa",&Phij_HWWa,"Phij_HWWa/F");
+   ExTree->Branch("Phij_HWWb",&Phij_HWWb,"Phij_HWWb/F");
+   ExTree->Branch("Phij_HWWc",&Phij_HWWc,"Phij_HWWc/F");
 
-   Extree->Branch("deepHWWMDV1_H4qvsQCD_a",&deepHWWMDV1_H4qvsQCD_a,"deepHWWMDV1_H4qvsQCD_a/F");
-   Extree->Branch("deepHWWMDV1_H4q3qvsQCD_a",&deepHWWMDV1_H4q3qvsQCD_a,"deepHWWMDV1_H4q3qvsQCD_a/F");
-   Extree->Branch("deepHWWMDV1_HevqqvsQCD_a",&deepHWWMDV1_HevqqvsQCD_a,"deepHWWMDV1_HevqqvsQCD_a/F");
-   Extree->Branch("deepHWWMDV1_HmvqqvsQCD_a",&deepHWWMDV1_HmvqqvsQCD_a,"deepHWWMDV1_HmvqqvsQCD_a/F");
-   Extree->Branch("deepHWWMDV1_HtauevqqvsQCD_a",&deepHWWMDV1_HtauevqqvsQCD_a,"deepHWWMDV1_HtauevqqvsQCD_a/F");
-   Extree->Branch("deepHWWMDV1_HtaumvqqvsQCD_a",&deepHWWMDV1_HtaumvqqvsQCD_a,"deepHWWMDV1_HtaumvqqvsQCD_a/F");
-   Extree->Branch("deepHWWMDV1_HhadtauvqqvsQCD_a",&deepHWWMDV1_HhadtauvqqvsQCD_a,"deepHWWMDV1_HhadtauvqqvsQCD_a/F");
+   ExTree->Branch("deepHWWMDV1_H4qvsQCD_a",&deepHWWMDV1_H4qvsQCD_a,"deepHWWMDV1_H4qvsQCD_a/F");
+   ExTree->Branch("deepHWWMDV1_H4q3qvsQCD_a",&deepHWWMDV1_H4q3qvsQCD_a,"deepHWWMDV1_H4q3qvsQCD_a/F");
+   ExTree->Branch("deepHWWMDV1_HevqqvsQCD_a",&deepHWWMDV1_HevqqvsQCD_a,"deepHWWMDV1_HevqqvsQCD_a/F");
+   ExTree->Branch("deepHWWMDV1_HmvqqvsQCD_a",&deepHWWMDV1_HmvqqvsQCD_a,"deepHWWMDV1_HmvqqvsQCD_a/F");
+   ExTree->Branch("deepHWWMDV1_HtauevqqvsQCD_a",&deepHWWMDV1_HtauevqqvsQCD_a,"deepHWWMDV1_HtauevqqvsQCD_a/F");
+   ExTree->Branch("deepHWWMDV1_HtaumvqqvsQCD_a",&deepHWWMDV1_HtaumvqqvsQCD_a,"deepHWWMDV1_HtaumvqqvsQCD_a/F");
+   ExTree->Branch("deepHWWMDV1_HhadtauvqqvsQCD_a",&deepHWWMDV1_HhadtauvqqvsQCD_a,"deepHWWMDV1_HhadtauvqqvsQCD_a/F");
 
-   Extree->Branch("deepHWWMDV1_H4qvsQCD_b",&deepHWWMDV1_H4qvsQCD_b,"deepHWWMDV1_H4qvsQCD_b/F");
-   Extree->Branch("deepHWWMDV1_H4q3qvsQCD_b",&deepHWWMDV1_H4q3qvsQCD_b,"deepHWWMDV1_H4q3qvsQCD_b/F");
-   Extree->Branch("deepHWWMDV1_HevqqvsQCD_b",&deepHWWMDV1_HevqqvsQCD_b,"deepHWWMDV1_HevqqvsQCD_b/F");
-   Extree->Branch("deepHWWMDV1_HmvqqvsQCD_b",&deepHWWMDV1_HmvqqvsQCD_b,"deepHWWMDV1_HmvqqvsQCD_b/F");
-   Extree->Branch("deepHWWMDV1_HtauevqqvsQCD_b",&deepHWWMDV1_HtauevqqvsQCD_b,"deepHWWMDV1_HtauevqqvsQCD_b/F");
-   Extree->Branch("deepHWWMDV1_HtaumvqqvsQCD_b",&deepHWWMDV1_HtaumvqqvsQCD_b,"deepHWWMDV1_HtaumvqqvsQCD_b/F");
-   Extree->Branch("deepHWWMDV1_HhadtauvqqvsQCD_b",&deepHWWMDV1_HhadtauvqqvsQCD_b,"deepHWWMDV1_HhadtauvqqvsQCD_b/F");
+   ExTree->Branch("deepHWWMDV1_H4qvsQCD_b",&deepHWWMDV1_H4qvsQCD_b,"deepHWWMDV1_H4qvsQCD_b/F");
+   ExTree->Branch("deepHWWMDV1_H4q3qvsQCD_b",&deepHWWMDV1_H4q3qvsQCD_b,"deepHWWMDV1_H4q3qvsQCD_b/F");
+   ExTree->Branch("deepHWWMDV1_HevqqvsQCD_b",&deepHWWMDV1_HevqqvsQCD_b,"deepHWWMDV1_HevqqvsQCD_b/F");
+   ExTree->Branch("deepHWWMDV1_HmvqqvsQCD_b",&deepHWWMDV1_HmvqqvsQCD_b,"deepHWWMDV1_HmvqqvsQCD_b/F");
+   ExTree->Branch("deepHWWMDV1_HtauevqqvsQCD_b",&deepHWWMDV1_HtauevqqvsQCD_b,"deepHWWMDV1_HtauevqqvsQCD_b/F");
+   ExTree->Branch("deepHWWMDV1_HtaumvqqvsQCD_b",&deepHWWMDV1_HtaumvqqvsQCD_b,"deepHWWMDV1_HtaumvqqvsQCD_b/F");
+   ExTree->Branch("deepHWWMDV1_HhadtauvqqvsQCD_b",&deepHWWMDV1_HhadtauvqqvsQCD_b,"deepHWWMDV1_HhadtauvqqvsQCD_b/F");
 
-   Extree->Branch("deepHWWMDV1_H4qvsQCD_c",&deepHWWMDV1_H4qvsQCD_c,"deepHWWMDV1_H4qvsQCD_c/F");
-   Extree->Branch("deepHWWMDV1_H4q3qvsQCD_c",&deepHWWMDV1_H4q3qvsQCD_c,"deepHWWMDV1_H4q3qvsQCD_c/F");
-   Extree->Branch("deepHWWMDV1_HevqqvsQCD_c",&deepHWWMDV1_HevqqvsQCD_c,"deepHWWMDV1_HevqqvsQCD_c/F");
-   Extree->Branch("deepHWWMDV1_HmvqqvsQCD_c",&deepHWWMDV1_HmvqqvsQCD_c,"deepHWWMDV1_HmvqqvsQCD_c/F");
-   Extree->Branch("deepHWWMDV1_HtauevqqvsQCD_c",&deepHWWMDV1_HtauevqqvsQCD_c,"deepHWWMDV1_HtauevqqvsQCD_c/F");
-   Extree->Branch("deepHWWMDV1_HtaumvqqvsQCD_c",&deepHWWMDV1_HtaumvqqvsQCD_c,"deepHWWMDV1_HtaumvqqvsQCD_c/F");
-   Extree->Branch("deepHWWMDV1_HhadtauvqqvsQCD_c",&deepHWWMDV1_HhadtauvqqvsQCD_c,"deepHWWMDV1_HhadtauvqqvsQCD_c/F");
+   ExTree->Branch("deepHWWMDV1_H4qvsQCD_c",&deepHWWMDV1_H4qvsQCD_c,"deepHWWMDV1_H4qvsQCD_c/F");
+   ExTree->Branch("deepHWWMDV1_H4q3qvsQCD_c",&deepHWWMDV1_H4q3qvsQCD_c,"deepHWWMDV1_H4q3qvsQCD_c/F");
+   ExTree->Branch("deepHWWMDV1_HevqqvsQCD_c",&deepHWWMDV1_HevqqvsQCD_c,"deepHWWMDV1_HevqqvsQCD_c/F");
+   ExTree->Branch("deepHWWMDV1_HmvqqvsQCD_c",&deepHWWMDV1_HmvqqvsQCD_c,"deepHWWMDV1_HmvqqvsQCD_c/F");
+   ExTree->Branch("deepHWWMDV1_HtauevqqvsQCD_c",&deepHWWMDV1_HtauevqqvsQCD_c,"deepHWWMDV1_HtauevqqvsQCD_c/F");
+   ExTree->Branch("deepHWWMDV1_HtaumvqqvsQCD_c",&deepHWWMDV1_HtaumvqqvsQCD_c,"deepHWWMDV1_HtaumvqqvsQCD_c/F");
+   ExTree->Branch("deepHWWMDV1_HhadtauvqqvsQCD_c",&deepHWWMDV1_HhadtauvqqvsQCD_c,"deepHWWMDV1_HhadtauvqqvsQCD_c/F");
 
  
  
@@ -1349,7 +1349,7 @@ void EDBR2PKUTree::OutputBranches_HWW() {
 
 
    
-   // define Extree for HWW output.
+   // define ExTree for HWW output.
 
    ExTree->Branch("MET_phi_NoXYCorr",&MET_phi_NoXYCorr,"MET_phi_NoXYCorr/F");
    ExTree->Branch("MET_et_NoXYCorr",&MET_et_NoXYCorr,"MET_et_NoXYCorr/F");

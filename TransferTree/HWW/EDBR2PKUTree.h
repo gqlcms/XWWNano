@@ -64,8 +64,8 @@ class EDBR2PKUTree {
    void FatJets_P4_DEEP_MD_W_Order_2016();
    void FatJets_P4_PNet_MD_W_Order_2016();
    void FatJets_P4_HWWH4q_Order_2016();
-   void FatJets_P4_HWW4q_Order();
-   void FatJets_HWW4q_Order();
+   void FatJets_P4_HWWH4q_Order();
+   void FatJets_HWWH4q_Order();
    void METf_2016();
 
    void GKK_process_1(Long64_t jentry, TString YEAR);

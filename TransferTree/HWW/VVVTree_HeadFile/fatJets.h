@@ -108,7 +108,7 @@ struct FatJet_P
     vector<float>* v_FatJet_deepHWWMDV1_probHwwleptauevqq_;
     vector<float>* v_FatJet_deepHWWMDV1_probHwwleptaumvqq_;
     vector<float>* v_FatJet_deepHWWMDV1_probQCDb_;
-    vector<float>* v_FatJet_deepHWWMDV1_probQCDcc_;
+    vector<float>* v_FatJet_deepHWWMDV1_probQCDbb_;
     vector<float>* v_FatJet_deepHWWMDV1_probQCDc_;
     vector<float>* v_FatJet_deepHWWMDV1_probQCDcc_;
     vector<float>* v_FatJet_deepHWWMDV1_probQCDothers_;
@@ -208,9 +208,9 @@ class FatJet_Collection {
     vector<float>* v_FatJet_deepHWWMDV1_probHwwleptaumvqq_;
     vector<float>* v_FatJet_deepHWWMDV1_probQCDb_;
     vector<float>* v_FatJet_deepHWWMDV1_probQCDbb_;
-    vector<float>* v_FatJet_deepHWWMDV1_probQCDbb_;
+    vector<float>* v_FatJet_deepHWWMDV1_probQCDc_;
     vector<float>* v_FatJet_deepHWWMDV1_probQCDcc_;
-    vector<float>* v_FatJet_deepHWWMDV1_probQCDcc_;
+    vector<float>* v_FatJet_deepHWWMDV1_probQCDothers_;
 
     // filtered branches
     vector<float> FatJet_pt;
