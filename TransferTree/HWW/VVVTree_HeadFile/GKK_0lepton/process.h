@@ -367,15 +367,15 @@ void EDBR2PKUTree::FatJets_P4_HWWH4q_Order() {
 }
 
 void EDBR2PKUTree::FatJets_HWWH4q_Order(){
-    deepHWW_probHww3q_a         = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHww3q",0) 
-    deepHWW_probHww4q_a         = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHww4q",0)
-    deepHWW_probHww4q3qvsQCD_a  = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHww4q3qvsQCD",0)
-    deepHWW_probHww4qvsQCD_a    = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHww4qvsQCD",0)
-    deepHWW_probHwwevqq_a       = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHwwevqq",0)
-    deepHWW_probHwwmvqq_a       = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHwwmvqq",0)
-    deepHWW_probHwwhadtauvqq_a  = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHwwhadtauvqq",0)
-    deepHWW_probHwwleptauevqq_a = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHwwleptauevqq",0)
-    deepHWW_probHwwleptaumvqq_a = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHwwleptaumvqq",0)
+    deepHWW_probHww3q_a         = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHww3q",0); 
+    deepHWW_probHww4q_a         = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHww4q",0);
+    deepHWW_probHww4q3qvsQCD_a  = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHww4q3qvsQCD",0);
+    deepHWW_probHww4qvsQCD_a    = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHww4qvsQCD",0);
+    deepHWW_probHwwevqq_a       = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHwwevqq",0);
+    deepHWW_probHwwmvqq_a       = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHwwmvqq",0);
+    deepHWW_probHwwhadtauvqq_a  = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHwwhadtauvqq",0);
+    deepHWW_probHwwleptauevqq_a = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHwwleptauevqq",0);
+    deepHWW_probHwwleptaumvqq_a = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHwwleptaumvqq",0);
     deepHWW_probQCDc_a          = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probQCDc",0)
     deepHWW_probQCDcc_a         = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probQCDcc",0)
     deepHWW_probQCDb_a          = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probQCDb",0)
