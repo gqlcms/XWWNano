@@ -90,8 +90,8 @@ if __name__ == '__main__':
         "deepHWWMDV1_HevqqvsQCD_a","deepHWWMDV1_HevqqvsQCD_b","deepHWWMDV1_HevqqvsQCD_c", 
         "deepHWWMDV1_HmvqqvsQCD_a","deepHWWMDV1_HmvqqvsQCD_b","deepHWWMDV1_HmvqqvsQCD_c", 
         "deepHWWMDV1_HhadtauvqqvsQCD_a","deepHWWMDV1_HhadtauvqqvsQCD_b","deepHWWMDV1_HhadtauvqqvsQCD_c", 
-        "deepHWWMDV1_HleptauevqqvsQCD_a","deepHWWMDV1_HleptauevqqvsQCD_b","deepHWWMDV1_Hleptauevqq_c", 
-        "deepHWWMDV1_HleptaumvqqvsQCD_a","deepHWWMDV1_HleptaumvqqvsQCD_b","deepHWWMDV1_Hleptaumvqq_c", 
+        "deepHWWMDV1_HtauevqqvsQCD_a","deepHWWMDV1_HtauevqqvsQCD_b","deepHWWMDV1_Htauevqq_c", 
+        "deepHWWMDV1_HtaumvqqvsQCD_a","deepHWWMDV1_HtaumvqqvsQCD_b","deepHWWMDV1_Htaumvqq_c", 
 
 
         "FatJet_tau1_Pneta","FatJet_tau2_Pneta","FatJet_tau3_Pneta","FatJet_tau4_Pneta","FatJet_tau1_Pnetb","FatJet_tau2_Pnetb","FatJet_tau3_Pnetb","FatJet_tau4_Pnetb","FatJet_tau1_Pnetc","FatJet_tau2_Pnetc","FatJet_tau3_Pnetc","FatJet_tau4_Pnetc",
