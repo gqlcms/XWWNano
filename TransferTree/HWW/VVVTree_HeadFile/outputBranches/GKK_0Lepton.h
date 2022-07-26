@@ -645,7 +645,7 @@ void EDBR2PKUTree::OutputBranches_GKK_0Lepton() {
 
 
 void EDBR2PKUTree::OutputBranches_HWW() {
-   if (IsData > 0){
+   if (IsData > 100){
       ExTree->Branch("matchingt_a", &matchingt_a, "matchingt_a/I");
       ExTree->Branch("matchingW_a", &matchingW_a, "matchingW_a/I");
       ExTree->Branch("matchingg_a", &matchingg_a, "matchingg_a/I");
