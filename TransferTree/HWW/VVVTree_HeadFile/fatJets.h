@@ -589,7 +589,17 @@ void FatJet_Collection::brances_Added(){
         Branch.push_back(HWWMD_Hhadtau);
     }
     FatJet_Branches["deepHWWMDV1_HhadtauvqqvsQCD"] = Branch;
-    Branch.clear(); 
+    Branch.clear();
+
+
+
+    for (int iFJ = 0; iFJ != int(FatJet_pt.size()); ++iFJ ){
+        float HWWMD_Hall = (FatJet_deepHWWMDV1_probHww4q[iFJ]+FatJet_deepHWWMDV1_probHww3q[iFJ]+ FatJet_deepHWWMDV1_probHwwevqq[iFJ]+FatJet_deepHWWMDV1_probHwwmvqq[iFJ]+FatJet_deepHWWMDV1_probHwwleptauevqq[iFJ]+FatJet_deepHWWMDV1_probHwwleptaumvqq[iFJ]+FatJet_deepHWWMDV1_probHwwhadtauvqq[iFJ])/(FatJet_deepHWWMDV1_probHww4q[iFJ]+FatJet_deepHWWMDV1_probHww3q[iFJ]+ FatJet_deepHWWMDV1_probHwwevqq[iFJ]+FatJet_deepHWWMDV1_probHwwmvqq[iFJ]+FatJet_deepHWWMDV1_probHwwleptauevqq[iFJ]+FatJet_deepHWWMDV1_probHwwleptaumvqq[iFJ]+FatJet_deepHWWMDV1_probHwwhadtauvqq[iFJ]+FatJet_deepHWWMDV1_probQCDb[iFJ]+FatJet_deepHWWMDV1_probQCDbb[iFJ]+FatJet_deepHWWMDV1_probQCDc[iFJ]+FatJet_deepHWWMDV1_probQCDcc[iFJ]+FatJet_deepHWWMDV1_probQCDothers[iFJ]);
+        Branch.push_back(HWWMD_Hall);
+    }
+    FatJet_Branches["deepHWWMDV1_HallvsQCD"] = Branch;
+    Branch.clear();
+ 
 
 
 
@@ -1123,9 +1133,9 @@ void FatJet_Collection::Order_5(){
 }
 
 void FatJet_Collection::Order_6(){
-    // paricle-net W MD ordered
+    //General Higgs tagger ordered
     vector<float> OrderBranch;
-    OrderBranch = FatJet_Branches["deepHWWMDV1_H4qvsQCD"];
+    OrderBranch = FatJet_Branches["deepHWWMDV1_HallvsQCD"];
 
     vector<int> FJorder;
     vector<int> FJorder_tmp = sort_indexes(OrderBranch);

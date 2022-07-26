@@ -1319,6 +1319,7 @@ void EDBR2PKUTree::OutputBranches_HWW() {
    ExTree->Branch("Phij_HWWc",&Phij_HWWc,"Phij_HWWc/F");
 
    ExTree->Branch("deepHWWMDV1_H4qvsQCD_a",&deepHWWMDV1_H4qvsQCD_a,"deepHWWMDV1_H4qvsQCD_a/F");
+   ExTree->Branch("deepHWWMDV1_HallvsQCD_a",&deepHWWMDV1_HallvsQCD_a,"deepHWWMDV1_HallvsQCD_a/F");
    ExTree->Branch("deepHWWMDV1_H4q3qvsQCD_a",&deepHWWMDV1_H4q3qvsQCD_a,"deepHWWMDV1_H4q3qvsQCD_a/F");
    ExTree->Branch("deepHWWMDV1_HevqqvsQCD_a",&deepHWWMDV1_HevqqvsQCD_a,"deepHWWMDV1_HevqqvsQCD_a/F");
    ExTree->Branch("deepHWWMDV1_HmvqqvsQCD_a",&deepHWWMDV1_HmvqqvsQCD_a,"deepHWWMDV1_HmvqqvsQCD_a/F");
@@ -1326,6 +1327,7 @@ void EDBR2PKUTree::OutputBranches_HWW() {
    ExTree->Branch("deepHWWMDV1_HtaumvqqvsQCD_a",&deepHWWMDV1_HtaumvqqvsQCD_a,"deepHWWMDV1_HtaumvqqvsQCD_a/F");
    ExTree->Branch("deepHWWMDV1_HhadtauvqqvsQCD_a",&deepHWWMDV1_HhadtauvqqvsQCD_a,"deepHWWMDV1_HhadtauvqqvsQCD_a/F");
 
+   ExTree->Branch("deepHWWMDV1_HallvsQCD_b",&deepHWWMDV1_HallvsQCD_b,"deepHWWMDV1_HallvsQCD_b/F");
    ExTree->Branch("deepHWWMDV1_H4qvsQCD_b",&deepHWWMDV1_H4qvsQCD_b,"deepHWWMDV1_H4qvsQCD_b/F");
    ExTree->Branch("deepHWWMDV1_H4q3qvsQCD_b",&deepHWWMDV1_H4q3qvsQCD_b,"deepHWWMDV1_H4q3qvsQCD_b/F");
    ExTree->Branch("deepHWWMDV1_HevqqvsQCD_b",&deepHWWMDV1_HevqqvsQCD_b,"deepHWWMDV1_HevqqvsQCD_b/F");
@@ -1334,6 +1336,7 @@ void EDBR2PKUTree::OutputBranches_HWW() {
    ExTree->Branch("deepHWWMDV1_HtaumvqqvsQCD_b",&deepHWWMDV1_HtaumvqqvsQCD_b,"deepHWWMDV1_HtaumvqqvsQCD_b/F");
    ExTree->Branch("deepHWWMDV1_HhadtauvqqvsQCD_b",&deepHWWMDV1_HhadtauvqqvsQCD_b,"deepHWWMDV1_HhadtauvqqvsQCD_b/F");
 
+   ExTree->Branch("deepHWWMDV1_HallvsQCD_c",&deepHWWMDV1_HallvsQCD_c,"deepHWWMDV1_HallvsQCD_c/F");
    ExTree->Branch("deepHWWMDV1_H4qvsQCD_c",&deepHWWMDV1_H4qvsQCD_c,"deepHWWMDV1_H4qvsQCD_c/F");
    ExTree->Branch("deepHWWMDV1_H4q3qvsQCD_c",&deepHWWMDV1_H4q3qvsQCD_c,"deepHWWMDV1_H4q3qvsQCD_c/F");
    ExTree->Branch("deepHWWMDV1_HevqqvsQCD_c",&deepHWWMDV1_HevqqvsQCD_c,"deepHWWMDV1_HevqqvsQCD_c/F");

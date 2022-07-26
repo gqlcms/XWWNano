@@ -92,6 +92,7 @@ if __name__ == '__main__':
         "deepHWWMDV1_HhadtauvqqvsQCD_a","deepHWWMDV1_HhadtauvqqvsQCD_b","deepHWWMDV1_HhadtauvqqvsQCD_c", 
         "deepHWWMDV1_HtauevqqvsQCD_a","deepHWWMDV1_HtauevqqvsQCD_b","deepHWWMDV1_HtauevqqvsQCD_c", 
         "deepHWWMDV1_HtaumvqqvsQCD_a","deepHWWMDV1_HtaumvqqvsQCD_b","deepHWWMDV1_HtaumvqqvsQCD_c", 
+        "deepHWWMDV1_HallvsQCD_a","deepHWWMDV1_HallvsQCD_b","deepHWWMDV1_HallvsQCD_c",
 
 
         "FatJet_tau1_Pneta","FatJet_tau2_Pneta","FatJet_tau3_Pneta","FatJet_tau4_Pneta","FatJet_tau1_Pnetb","FatJet_tau2_Pnetb","FatJet_tau3_Pnetb","FatJet_tau4_Pnetb","FatJet_tau1_Pnetc","FatJet_tau2_Pnetc","FatJet_tau3_Pnetc","FatJet_tau4_Pnetc",

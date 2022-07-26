@@ -386,6 +386,7 @@ void EDBR2PKUTree::FatJets_HWWH4q_Order(){
     FatJet_tau2_HWW_a           = FatJets.Get("HWW-H4q-MD","tau2",0);
     FatJet_tau3_HWW_a           = FatJets.Get("HWW-H4q-MD","tau3",0);
     FatJet_tau4_HWW_a           = FatJets.Get("HWW-H4q-MD","tau4",0);
+    deepHWWMDV1_HallvsQCD_a       = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_HallvsQCD",0); 
  
 
     deepHWW_probHww3q_b         = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHww3q",1); 
@@ -407,6 +408,7 @@ void EDBR2PKUTree::FatJets_HWWH4q_Order(){
     FatJet_tau2_HWW_b           = FatJets.Get("HWW-H4q-MD","tau2",1);
     FatJet_tau3_HWW_b           = FatJets.Get("HWW-H4q-MD","tau3",1);
     FatJet_tau4_HWW_b           = FatJets.Get("HWW-H4q-MD","tau4",1);
+    deepHWWMDV1_HallvsQCD_b       = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_HallvsQCD",1); 
 
 
     deepHWW_probHww3q_c         = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHww3q",2); 
@@ -428,6 +430,8 @@ void EDBR2PKUTree::FatJets_HWWH4q_Order(){
     FatJet_tau2_HWW_c           = FatJets.Get("HWW-H4q-MD","tau1",2);
     FatJet_tau3_HWW_c           = FatJets.Get("HWW-H4q-MD","tau1",2);
     FatJet_tau4_HWW_c           = FatJets.Get("HWW-H4q-MD","tau1",2);
+    deepHWWMDV1_HallvsQCD_c       = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_HallvsQCD",2); 
+
 
     deepHWWMDV1_H4qvsQCD_a      = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_H4qvsQCD",0);
     deepHWWMDV1_H4q3qvsQCD_a    = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_H4q3qvsQCD",0);
