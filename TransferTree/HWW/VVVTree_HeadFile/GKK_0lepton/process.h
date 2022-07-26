@@ -376,11 +376,11 @@ void EDBR2PKUTree::FatJets_HWWH4q_Order(){
     deepHWW_probHwwhadtauvqq_a  = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHwwhadtauvqq",0);
     deepHWW_probHwwleptauevqq_a = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHwwleptauevqq",0);
     deepHWW_probHwwleptaumvqq_a = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probHwwleptaumvqq",0);
-    deepHWW_probQCDc_a          = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probQCDc",0)
-    deepHWW_probQCDcc_a         = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probQCDcc",0)
-    deepHWW_probQCDb_a          = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probQCDb",0)
-    deepHWW_probQCDbb_a         = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probQCDbb",0)
-    deepHWW_probQCDothers_a     = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probQCDothers",0)
+    deepHWW_probQCDc_a          = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probQCDc",0);
+    deepHWW_probQCDcc_a         = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probQCDcc",0);
+    deepHWW_probQCDb_a          = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probQCDb",0);
+    deepHWW_probQCDbb_a         = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probQCDbb",0);
+    deepHWW_probQCDothers_a     = FatJets.Get("HWW-H4q-MD","deepHWWMDV1_probQCDothers",0);
     deepHWW_H4q_a               = FatJets.Get("HWW-H4q-MD","particleNetMD_WvsQCD", 0);
     FatJet_tau1_HWW_a           = FatJets.Get("HWW-H4q-MD","tau1",0);
     FatJet_tau2_HWW_a           = FatJets.Get("HWW-H4q-MD","tau2",0);
