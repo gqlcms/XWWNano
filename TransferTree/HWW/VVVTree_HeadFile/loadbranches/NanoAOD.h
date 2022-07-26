@@ -53,7 +53,7 @@ void EDBR2PKUTree::loadVectorBranches_Muon() {
     fChain->SetBranchAddress("Muon_tkRelIso",Muon_tkRelIso_,&b_Muon_tkRelIso_);
 }
 
-void EDBR2PKUTree::loadVectorBranches_FatJets() {
+void EDBR2PKUTree::loadVectorBranches_FatJets_HWW() {
 
     b_FatJet_msoftdrop_raw_ = fChain->GetBranch("FatJet_msoftdrop_raw");
     if (b_FatJet_msoftdrop_raw_) { b_FatJet_msoftdrop_raw_->SetAddress(&FatJet_msoftdrop_raw_);}
