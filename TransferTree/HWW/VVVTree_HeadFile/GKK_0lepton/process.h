@@ -522,6 +522,10 @@ bool EDBR2PKUTree::Filter_Events_HWW(TString YEAR, Int_t IS_Data) {
     if ( !( Mj_max >= 50 ) ){ 
         Fill = false; 
     }
+
+    if ( !( Mj_HWWa >= 50 ) ){ 
+        Fill = false; 
+    } 
     // if ( !( HT >= 1100 ) ){ 
     //     Fill = false; 
     // }
