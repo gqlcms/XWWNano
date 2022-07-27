@@ -189,39 +189,39 @@ void EDBR2PKUTree::GenParticles() {
         }
         
         
-        // Higgs
-        if ( abs(v_GenPart_pdgId_[ik]) == 25 ){
-            int Hlid = GenParticles_Lastcopy(ik);
-            gen_H_pt   = v_GenPart_pt_[Hlid];
-            gen_H_eta  = v_GenPart_eta_[Hlid];
-            gen_H_phi  = v_GenPart_phi_[Hlid];
-            vector<size_t> H_daughter_index = GenParticles_Daughterindex(Hlid);
-            int NH_daughter = H_daughter_index.size();
-            if ( NH_daughter == 2){
+        // Radion
+        if ( abs(v_GenPart_pdgId_[ik]) == 9000025 ){
+            int Rlid = GenParticles_Lastcopy(ik);
+            gen_rad_pt   = v_GenPart_pt_[Rlid];
+            gen_rad_eta  = v_GenPart_eta_[Rlid];
+            gen_rad_phi  = v_GenPart_phi_[Rlid];
+            vector<size_t> R_daughter_index = GenParticles_Daughterindex(Rlid);
+            int NR_daughter = R_daughter_index.size();
+            if ( NR_daughter == 2){
                 // W1
-                int W1lid = GenParticles_Lastcopy(H_daughter_index[0]);
-                vector<size_t> H_W1_daughter_index = GenParticles_Daughterindex(W1lid);
-                int NH_W1_daughter = H_W1_daughter_index.size();
-                if ( NH_W1_daughter == 2){
-                    ptq21   = v_GenPart_pt_[H_W1_daughter_index[0]];
-                    etaq21  = v_GenPart_eta_[H_W1_daughter_index[0]];
-                    phiq21  = v_GenPart_phi_[H_W1_daughter_index[0]];
-                    massq21 = v_GenPart_mass_[H_W1_daughter_index[0]];
+                int W1lid = GenParticles_Lastcopy(R_daughter_index[0]);
+                vector<size_t> R_W1_daughter_index = GenParticles_Daughterindex(W1lid);
+                int NR_W1_daughter = R_W1_daughter_index.size();
+                if ( NR_W1_daughter == 2){
+                    ptq21   = v_GenPart_pt_[R_W1_daughter_index[0]];
+                    etaq21  = v_GenPart_eta_[R_W1_daughter_index[0]];
+                    phiq21  = v_GenPart_phi_[R_W1_daughter_index[0]];
+                    massq21 = v_GenPart_mass_[R_W1_daughter_index[0]];
 
-                    ptq22   = v_GenPart_pt_[H_W1_daughter_index[1]];
-                    etaq22  = v_GenPart_eta_[H_W1_daughter_index[1]];
-                    phiq22  = v_GenPart_phi_[H_W1_daughter_index[1]];
-                    massq22 = v_GenPart_mass_[H_W1_daughter_index[1]];
+                    ptq22   = v_GenPart_pt_[R_W1_daughter_index[1]];
+                    etaq22  = v_GenPart_eta_[R_W1_daughter_index[1]];
+                    phiq22  = v_GenPart_phi_[R_W1_daughter_index[1]];
+                    massq22 = v_GenPart_mass_[R_W1_daughter_index[1]];
 
-                    if ( abs(v_GenPart_pdgId_[H_W1_daughter_index[0]]) == 11 ){
+                    if ( abs(v_GenPart_pdgId_[R_W1_daughter_index[0]]) == 11 ){
                         status_2 = 1;
                     }
-                    if ( abs(v_GenPart_pdgId_[H_W1_daughter_index[0]]) == 13 ){
+                    if ( abs(v_GenPart_pdgId_[R_W1_daughter_index[0]]) == 13 ){
                         status_2 = 2;
                     }
-                    if ( abs(v_GenPart_pdgId_[H_W1_daughter_index[0]]) == 15 ){
+                    if ( abs(v_GenPart_pdgId_[R_W1_daughter_index[0]]) == 15 ){
                         status_2 = 3;
-                        int taulid = GenParticles_Lastcopy(H_W1_daughter_index[0]);
+                        int taulid = GenParticles_Lastcopy(R_W1_daughter_index[0]);
                         vector<size_t> tau_daughter_index = GenParticles_Daughterindex(taulid);
                         int Ntau_daughter = tau_daughter_index.size();
                         for(size_t itaudaughter = 0;itaudaughter < tau_daughter_index.size();itaudaughter++){
@@ -230,35 +230,35 @@ void EDBR2PKUTree::GenParticles() {
                             }
                         }
                     }
-                    if ( abs(v_GenPart_pdgId_[H_W1_daughter_index[0]]) > 0 && abs(v_GenPart_pdgId_[H_W1_daughter_index[0]]) <= 5 ){
+                    if ( abs(v_GenPart_pdgId_[R_W1_daughter_index[0]]) > 0 && abs(v_GenPart_pdgId_[R_W1_daughter_index[0]]) <= 5 ){
                         status_2 = 4;
                     }
                 }
                 // W2
-                int W2lid = GenParticles_Lastcopy(H_daughter_index[1]);
-                vector<size_t> H_W2_daughter_index = GenParticles_Daughterindex(W2lid);
-                int NH_W2_daughter = H_W2_daughter_index.size();
-                if ( NH_W2_daughter == 2){
-                    ptq31   = v_GenPart_pt_[H_W2_daughter_index[0]];
-                    etaq31  = v_GenPart_eta_[H_W2_daughter_index[0]];
-                    phiq31  = v_GenPart_phi_[H_W2_daughter_index[0]];
-                    massq31 = v_GenPart_mass_[H_W2_daughter_index[0]];
+                int W2lid = GenParticles_Lastcopy(R_daughter_index[1]);
+                vector<size_t> R_W2_daughter_index = GenParticles_Daughterindex(W2lid);
+                int NR_W2_daughter = R_W2_daughter_index.size();
+                if ( NR_W2_daughter == 2){
+                    ptq31   = v_GenPart_pt_[R_W2_daughter_index[0]];
+                    etaq31  = v_GenPart_eta_[R_W2_daughter_index[0]];
+                    phiq31  = v_GenPart_phi_[R_W2_daughter_index[0]];
+                    massq31 = v_GenPart_mass_[R_W2_daughter_index[0]];
 
-                    ptq32   = v_GenPart_pt_[H_W2_daughter_index[1]];
-                    etaq32  = v_GenPart_eta_[H_W2_daughter_index[1]];
-                    phiq32  = v_GenPart_phi_[H_W2_daughter_index[1]];
-                    massq32 = v_GenPart_mass_[H_W2_daughter_index[1]];
+                    ptq32   = v_GenPart_pt_[R_W2_daughter_index[1]];
+                    etaq32  = v_GenPart_eta_[R_W2_daughter_index[1]];
+                    phiq32  = v_GenPart_phi_[R_W2_daughter_index[1]];
+                    massq32 = v_GenPart_mass_[R_W2_daughter_index[1]];
 
-                    if ( abs(v_GenPart_pdgId_[H_W2_daughter_index[0]]) == 11 ){
+                    if ( abs(v_GenPart_pdgId_[R_W2_daughter_index[0]]) == 11 ){
                         status_3 = 1;
                     }
-                    if ( abs(v_GenPart_pdgId_[H_W2_daughter_index[0]]) == 13 ){
+                    if ( abs(v_GenPart_pdgId_[R_W2_daughter_index[0]]) == 13 ){
                         status_3 = 2;
                     }
-                    if ( abs(v_GenPart_pdgId_[H_W2_daughter_index[0]]) == 15 ){
+                    if ( abs(v_GenPart_pdgId_[R_W2_daughter_index[0]]) == 15 ){
                         status_3 = 3;
 
-                        int taulid = GenParticles_Lastcopy(H_W2_daughter_index[0]);
+                        int taulid = GenParticles_Lastcopy(R_W2_daughter_index[0]);
                         vector<size_t> tau_daughter_index = GenParticles_Daughterindex(taulid);
                         int Ntau_daughter = tau_daughter_index.size();
                         for(size_t itaudaughter = 0; itaudaughter < tau_daughter_index.size();itaudaughter++){
@@ -267,23 +267,24 @@ void EDBR2PKUTree::GenParticles() {
                             }
                         }
                     }
-                    if ( abs(v_GenPart_pdgId_[H_W2_daughter_index[0]]) > 0 && abs(v_GenPart_pdgId_[H_W2_daughter_index[0]]) <= 5 ){
+                    if ( abs(v_GenPart_pdgId_[R_W2_daughter_index[0]]) > 0 && abs(v_GenPart_pdgId_[R_W2_daughter_index[0]]) <= 5 ){
                         status_3 = 4;
                     }
                 }
 
             }
         }
-    
-        //Run the matching code again, directly modifid the Radion to Higgs, and delete the gluon matching decaying from gKK.
-        
-
-
-
-
-
-
-
+        // gluon from gKK decay
+        if ( abs(v_GenPart_pdgId_[ik]) == 21 ){
+            if (v_GenPart_genPartIdxMother_[ik] > 0){
+                if ( abs(v_GenPart_pdgId_[v_GenPart_genPartIdxMother_[ik]]) == 9000021 ){
+                    gen_gKK_g_pt_f = v_GenPart_pt_[ik];
+                    gen_gKK_g_eta_f = v_GenPart_eta_[ik];
+                    gen_gKK_g_phi_f = v_GenPart_phi_[ik];
+                    gen_gKK_g_mass_f = v_GenPart_mass_[ik];
+                }
+            }
+        }
     }
 
     TLorentzVector AK8_a, AK8_b, AK8_c;

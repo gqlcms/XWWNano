@@ -1,23 +1,12 @@
 #ifndef _VVVTree_AK8_Pt_Order_
 #define _VVVTree_AK8_Pt_Order_
 
-/*
-jetAK8puppi_pt_2
-*/
-
 void EDBR2PKUTree::AK8_Pt_Ordered(Long64_t jentry) {
     AK8_Pt_Ordered_p4_flatVector(jentry);
-    //AK8_Nsubjetness_Init(jentry);
+    AK8_Nsubjetness_Init(jentry);
     AK8_Pt_Ordered_p4();
-  //  std::cout<<"Pt Order p4 done."<<std::endl;
- 
-    //std::cout<<"Flat vector done."<<std::endl;
-
-   // AK8_Pt_Ordered_RawScore_flatVector(jentry);
-
+    AK8_Pt_Ordered_RawScore_flatVector(jentry);
     AK8_Pt_Ordered_PnScore_flatVector(jentry);
-   // std::cout<<"New tagger done."<<std::endl;
-
     AK8_Pt_Ordered_RawScore_swtich();
 }
 
@@ -86,6 +75,8 @@ void EDBR2PKUTree::AK8_Pt_Ordered_p4_flatVector(Long64_t jentry){
         FatJet_pt_4 = -99;
     }
 
+    int bytes_FatJet_jetId = b_FatJet_jetId_->GetEntry(jentry);
+    v_FatJet_jetId_ = vector<int>(FatJet_jetId_,FatJet_jetId_+bytes_FatJet_jetId/sizeof(FatJet_jetId_[0]));
     
     int bytes_FatJet_eta = b_FatJet_eta_->GetEntry(jentry);
     v_FatJet_eta_ = vector<float>(FatJet_eta_,FatJet_eta_+bytes_FatJet_eta/sizeof(FatJet_eta_[0]));
@@ -172,358 +163,291 @@ void EDBR2PKUTree::AK8_Pt_Ordered_p4_flatVector(Long64_t jentry){
     else{
         FatJet_msoftdrop_4 = -99;
     }
-  //  std::cout<<"Flat vector done."<<std::endl;
+
 }
 
 void EDBR2PKUTree::AK8_Pt_Ordered_PnScore_flatVector(Long64_t jentry){
     
+    int bytes_FatJet_particleNetMD_QCD = b_FatJet_particleNetMD_QCD_->GetEntry(jentry);
+    v_FatJet_particleNetMD_QCD_ = vector<float>(FatJet_particleNetMD_QCD_,FatJet_particleNetMD_QCD_+bytes_FatJet_particleNetMD_QCD/sizeof(FatJet_particleNetMD_QCD_[0]));
+    size_t nFatJet_particleNetMD_QCD = v_FatJet_particleNetMD_QCD_.size();
+    if(nFatJet_particleNetMD_QCD > size_t(0)){
+        FatJet_particleNetMD_QCD_1 = v_FatJet_particleNetMD_QCD_.at(0);
+    }
+    else{
+        FatJet_particleNetMD_QCD_1 = -99;
+    }
+    if(nFatJet_particleNetMD_QCD > size_t(1)){
+        FatJet_particleNetMD_QCD_2 = v_FatJet_particleNetMD_QCD_.at(1);
+    }
+    else{
+        FatJet_particleNetMD_QCD_2 = -99;
+    }
+    if(nFatJet_particleNetMD_QCD > size_t(2)){
+        FatJet_particleNetMD_QCD_3 = v_FatJet_particleNetMD_QCD_.at(2);
+    }
+    else{
+        FatJet_particleNetMD_QCD_3 = -99;
+    }
 
-
-
-    //New tagger part
-    int bytes_FatJet_deepHWWMDV1_probHww3q = b_FatJet_deepHWWMDV1_probHww3q_->GetEntry(jentry);
-    v_FatJet_deepHWWMDV1_probHww3q_ = vector<float>(FatJet_deepHWWMDV1_probHww3q_,FatJet_deepHWWMDV1_probHww3q_+bytes_FatJet_deepHWWMDV1_probHww3q/sizeof(FatJet_deepHWWMDV1_probHww3q_[0]));
-    size_t nFatJet_deepHWWMDV1_probHww3q = v_FatJet_deepHWWMDV1_probHww3q_.size();
     
-    if( nFatJet_deepHWWMDV1_probHww3q > size_t(0)){
-        FatJet_deepHWWMDV1_probHww3q_1 = v_FatJet_deepHWWMDV1_probHww3q_.at(0);
-        
+    int bytes_FatJet_particleNetMD_Xbb = b_FatJet_particleNetMD_Xbb_->GetEntry(jentry);
+    v_FatJet_particleNetMD_Xbb_ = vector<float>(FatJet_particleNetMD_Xbb_,FatJet_particleNetMD_Xbb_+bytes_FatJet_particleNetMD_Xbb/sizeof(FatJet_particleNetMD_Xbb_[0]));
+    size_t nFatJet_particleNetMD_Xbb = v_FatJet_particleNetMD_Xbb_.size();
+    if(nFatJet_particleNetMD_Xbb > size_t(0)){
+        FatJet_particleNetMD_Xbb_1 = v_FatJet_particleNetMD_Xbb_.at(0);
     }
     else{
-        FatJet_deepHWWMDV1_probHww3q_1 = -99;
+        FatJet_particleNetMD_Xbb_1 = -99;
     }
-    if(nFatJet_deepHWWMDV1_probHww3q > size_t(1)){
-        FatJet_deepHWWMDV1_probHww3q_2 = v_FatJet_deepHWWMDV1_probHww3q_.at(1);
-    }
-    else{
-        FatJet_deepHWWMDV1_probHww3q_2 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probHww3q > size_t(2)){
-        FatJet_deepHWWMDV1_probHww3q_3 = v_FatJet_deepHWWMDV1_probHww3q_.at(2);
+    if(nFatJet_particleNetMD_Xbb > size_t(1)){
+        FatJet_particleNetMD_Xbb_2 = v_FatJet_particleNetMD_Xbb_.at(1);
     }
     else{
-        FatJet_deepHWWMDV1_probHww3q_3 = -99;
+        FatJet_particleNetMD_Xbb_2 = -99;
+    }
+    if(nFatJet_particleNetMD_Xbb > size_t(2)){
+        FatJet_particleNetMD_Xbb_3 = v_FatJet_particleNetMD_Xbb_.at(2);
+    }
+    else{
+        FatJet_particleNetMD_Xbb_3 = -99;
     }
 
-
-    int bytes_FatJet_deepHWWMDV1_probHww4q = b_FatJet_deepHWWMDV1_probHww4q_->GetEntry(jentry);
-    v_FatJet_deepHWWMDV1_probHww4q_ = vector<float>(FatJet_deepHWWMDV1_probHww4q_,FatJet_deepHWWMDV1_probHww4q_+bytes_FatJet_deepHWWMDV1_probHww4q/sizeof(FatJet_deepHWWMDV1_probHww4q_[0]));
-    size_t nFatJet_deepHWWMDV1_probHww4q = v_FatJet_deepHWWMDV1_probHww4q_.size();
     
-    if( nFatJet_deepHWWMDV1_probHww4q > size_t(0)){
-        FatJet_deepHWWMDV1_probHww4q_1 = v_FatJet_deepHWWMDV1_probHww4q_.at(0);
+    int bytes_FatJet_particleNetMD_Xcc = b_FatJet_particleNetMD_Xcc_->GetEntry(jentry);
+    v_FatJet_particleNetMD_Xcc_ = vector<float>(FatJet_particleNetMD_Xcc_,FatJet_particleNetMD_Xcc_+bytes_FatJet_particleNetMD_Xcc/sizeof(FatJet_particleNetMD_Xcc_[0]));
+    size_t nFatJet_particleNetMD_Xcc = v_FatJet_particleNetMD_Xcc_.size();
+    if(nFatJet_particleNetMD_Xcc > size_t(0)){
+        FatJet_particleNetMD_Xcc_1 = v_FatJet_particleNetMD_Xcc_.at(0);
     }
     else{
-        FatJet_deepHWWMDV1_probHww4q_1 = -99;
+        FatJet_particleNetMD_Xcc_1 = -99;
     }
-    if(nFatJet_deepHWWMDV1_probHww4q > size_t(1)){
-        FatJet_deepHWWMDV1_probHww4q_2 = v_FatJet_deepHWWMDV1_probHww4q_.at(1);
-    }
-    else{
-        FatJet_deepHWWMDV1_probHww4q_2 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probHww4q > size_t(2)){
-        FatJet_deepHWWMDV1_probHww4q_3 = v_FatJet_deepHWWMDV1_probHww4q_.at(2);
+    if(nFatJet_particleNetMD_Xcc > size_t(1)){
+        FatJet_particleNetMD_Xcc_2 = v_FatJet_particleNetMD_Xcc_.at(1);
     }
     else{
-        FatJet_deepHWWMDV1_probHww4q_3 = -99;
+        FatJet_particleNetMD_Xcc_2 = -99;
+    }
+    if(nFatJet_particleNetMD_Xcc > size_t(2)){
+        FatJet_particleNetMD_Xcc_3 = v_FatJet_particleNetMD_Xcc_.at(2);
+    }
+    else{
+        FatJet_particleNetMD_Xcc_3 = -99;
     }
 
-    int bytes_FatJet_deepHWWMDV1_probHww4q3qvsQCD = b_FatJet_deepHWWMDV1_probHww4q3qvsQCD_->GetEntry(jentry);
-    v_FatJet_deepHWWMDV1_probHww4q3qvsQCD_ = vector<float>(FatJet_deepHWWMDV1_probHww4q3qvsQCD_,FatJet_deepHWWMDV1_probHww4q3qvsQCD_+bytes_FatJet_deepHWWMDV1_probHww4q3qvsQCD/sizeof(FatJet_deepHWWMDV1_probHww4q3qvsQCD_[0]));
-    size_t nFatJet_deepHWWMDV1_probHww4q3qvsQCD = v_FatJet_deepHWWMDV1_probHww4q3qvsQCD_.size();
     
-    if( nFatJet_deepHWWMDV1_probHww4q3qvsQCD > size_t(0)){
-        FatJet_deepHWWMDV1_probHww4q3qvsQCD_1 = v_FatJet_deepHWWMDV1_probHww4q3qvsQCD_.at(0);
+    int bytes_FatJet_particleNetMD_Xqq = b_FatJet_particleNetMD_Xqq_->GetEntry(jentry);
+    v_FatJet_particleNetMD_Xqq_ = vector<float>(FatJet_particleNetMD_Xqq_,FatJet_particleNetMD_Xqq_+bytes_FatJet_particleNetMD_Xqq/sizeof(FatJet_particleNetMD_Xqq_[0]));
+    size_t nFatJet_particleNetMD_Xqq = v_FatJet_particleNetMD_Xqq_.size();
+    if(nFatJet_particleNetMD_Xqq > size_t(0)){
+        FatJet_particleNetMD_Xqq_1 = v_FatJet_particleNetMD_Xqq_.at(0);
     }
     else{
-        FatJet_deepHWWMDV1_probHww4q3qvsQCD_1 = -99;
+        FatJet_particleNetMD_Xqq_1 = -99;
     }
-    if(nFatJet_deepHWWMDV1_probHww4q3qvsQCD > size_t(1)){
-        FatJet_deepHWWMDV1_probHww4q3qvsQCD_2 = v_FatJet_deepHWWMDV1_probHww4q3qvsQCD_.at(1);
-    }
-    else{
-        FatJet_deepHWWMDV1_probHww4q3qvsQCD_2 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probHww4q3qvsQCD > size_t(2)){
-        FatJet_deepHWWMDV1_probHww4q3qvsQCD_3 = v_FatJet_deepHWWMDV1_probHww4q3qvsQCD_.at(2);
+    if(nFatJet_particleNetMD_Xqq > size_t(1)){
+        FatJet_particleNetMD_Xqq_2 = v_FatJet_particleNetMD_Xqq_.at(1);
     }
     else{
-        FatJet_deepHWWMDV1_probHww4q3qvsQCD_3 = -99;
+        FatJet_particleNetMD_Xqq_2 = -99;
+    }
+    if(nFatJet_particleNetMD_Xqq > size_t(2)){
+        FatJet_particleNetMD_Xqq_3 = v_FatJet_particleNetMD_Xqq_.at(2);
+    }
+    else{
+        FatJet_particleNetMD_Xqq_3 = -99;
     }
 
-    int bytes_FatJet_deepHWWMDV1_probHww4qvsQCD = b_FatJet_deepHWWMDV1_probHww4qvsQCD_->GetEntry(jentry);
-    v_FatJet_deepHWWMDV1_probHww4qvsQCD_ = vector<float>(FatJet_deepHWWMDV1_probHww4qvsQCD_,FatJet_deepHWWMDV1_probHww4qvsQCD_+bytes_FatJet_deepHWWMDV1_probHww4qvsQCD/sizeof(FatJet_deepHWWMDV1_probHww4qvsQCD_[0]));
-    size_t nFatJet_deepHWWMDV1_probHww4qvsQCD = v_FatJet_deepHWWMDV1_probHww4qvsQCD_.size();
     
-    if( nFatJet_deepHWWMDV1_probHww4qvsQCD > size_t(0)){
-        FatJet_deepHWWMDV1_probHww4qvsQCD_1 = v_FatJet_deepHWWMDV1_probHww4qvsQCD_.at(0);
+    int bytes_FatJet_particleNet_H4qvsQCD = b_FatJet_particleNet_H4qvsQCD_->GetEntry(jentry);
+    v_FatJet_particleNet_H4qvsQCD_ = vector<float>(FatJet_particleNet_H4qvsQCD_,FatJet_particleNet_H4qvsQCD_+bytes_FatJet_particleNet_H4qvsQCD/sizeof(FatJet_particleNet_H4qvsQCD_[0]));
+    size_t nFatJet_particleNet_H4qvsQCD = v_FatJet_particleNet_H4qvsQCD_.size();
+    if(nFatJet_particleNet_H4qvsQCD > size_t(0)){
+        FatJet_particleNet_H4qvsQCD_1 = v_FatJet_particleNet_H4qvsQCD_.at(0);
     }
     else{
-        FatJet_deepHWWMDV1_probHww4qvsQCD_1 = -99;
+        FatJet_particleNet_H4qvsQCD_1 = -99;
     }
-    if(nFatJet_deepHWWMDV1_probHww4qvsQCD > size_t(1)){
-        FatJet_deepHWWMDV1_probHww4qvsQCD_2 = v_FatJet_deepHWWMDV1_probHww4qvsQCD_.at(1);
-    }
-    else{
-        FatJet_deepHWWMDV1_probHww4qvsQCD_2 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probHww4qvsQCD > size_t(2)){
-        FatJet_deepHWWMDV1_probHww4qvsQCD_3 = v_FatJet_deepHWWMDV1_probHww4qvsQCD_.at(2);
+    if(nFatJet_particleNet_H4qvsQCD > size_t(1)){
+        FatJet_particleNet_H4qvsQCD_2 = v_FatJet_particleNet_H4qvsQCD_.at(1);
     }
     else{
-        FatJet_deepHWWMDV1_probHww4qvsQCD_3 = -99;
+        FatJet_particleNet_H4qvsQCD_2 = -99;
+    }
+    if(nFatJet_particleNet_H4qvsQCD > size_t(2)){
+        FatJet_particleNet_H4qvsQCD_3 = v_FatJet_particleNet_H4qvsQCD_.at(2);
+    }
+    else{
+        FatJet_particleNet_H4qvsQCD_3 = -99;
     }
 
-    int bytes_FatJet_deepHWWMDV1_probHwwevqq = b_FatJet_deepHWWMDV1_probHwwevqq_->GetEntry(jentry);
-    v_FatJet_deepHWWMDV1_probHwwevqq_ = vector<float>(FatJet_deepHWWMDV1_probHwwevqq_,FatJet_deepHWWMDV1_probHwwevqq_+bytes_FatJet_deepHWWMDV1_probHwwevqq/sizeof(FatJet_deepHWWMDV1_probHwwevqq_[0]));
-    size_t nFatJet_deepHWWMDV1_probHwwevqq = v_FatJet_deepHWWMDV1_probHwwevqq_.size();
     
-    if( nFatJet_deepHWWMDV1_probHwwevqq > size_t(0)){
-        FatJet_deepHWWMDV1_probHwwevqq_1 = v_FatJet_deepHWWMDV1_probHwwevqq_.at(0);
+    int bytes_FatJet_particleNet_HbbvsQCD = b_FatJet_particleNet_HbbvsQCD_->GetEntry(jentry);
+    v_FatJet_particleNet_HbbvsQCD_ = vector<float>(FatJet_particleNet_HbbvsQCD_,FatJet_particleNet_HbbvsQCD_+bytes_FatJet_particleNet_HbbvsQCD/sizeof(FatJet_particleNet_HbbvsQCD_[0]));
+    size_t nFatJet_particleNet_HbbvsQCD = v_FatJet_particleNet_HbbvsQCD_.size();
+    if(nFatJet_particleNet_HbbvsQCD > size_t(0)){
+        FatJet_particleNet_HbbvsQCD_1 = v_FatJet_particleNet_HbbvsQCD_.at(0);
     }
     else{
-        FatJet_deepHWWMDV1_probHwwevqq_1 = -99;
+        FatJet_particleNet_HbbvsQCD_1 = -99;
     }
-    if(nFatJet_deepHWWMDV1_probHwwevqq > size_t(1)){
-        FatJet_deepHWWMDV1_probHwwevqq_2 = v_FatJet_deepHWWMDV1_probHwwevqq_.at(1);
-    }
-    else{
-        FatJet_deepHWWMDV1_probHwwevqq_2 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probHwwevqq > size_t(2)){
-        FatJet_deepHWWMDV1_probHwwevqq_3 = v_FatJet_deepHWWMDV1_probHwwevqq_.at(2);
+    if(nFatJet_particleNet_HbbvsQCD > size_t(1)){
+        FatJet_particleNet_HbbvsQCD_2 = v_FatJet_particleNet_HbbvsQCD_.at(1);
     }
     else{
-        FatJet_deepHWWMDV1_probHwwevqq_3 = -99;
+        FatJet_particleNet_HbbvsQCD_2 = -99;
     }
+    if(nFatJet_particleNet_HbbvsQCD > size_t(2)){
+        FatJet_particleNet_HbbvsQCD_3 = v_FatJet_particleNet_HbbvsQCD_.at(2);
+    }
+    else{
+        FatJet_particleNet_HbbvsQCD_3 = -99;
+    }
+
     
+    int bytes_FatJet_particleNet_HccvsQCD = b_FatJet_particleNet_HccvsQCD_->GetEntry(jentry);
+    v_FatJet_particleNet_HccvsQCD_ = vector<float>(FatJet_particleNet_HccvsQCD_,FatJet_particleNet_HccvsQCD_+bytes_FatJet_particleNet_HccvsQCD/sizeof(FatJet_particleNet_HccvsQCD_[0]));
+    size_t nFatJet_particleNet_HccvsQCD = v_FatJet_particleNet_HccvsQCD_.size();
+    if(nFatJet_particleNet_HccvsQCD > size_t(0)){
+        FatJet_particleNet_HccvsQCD_1 = v_FatJet_particleNet_HccvsQCD_.at(0);
+    }
+    else{
+        FatJet_particleNet_HccvsQCD_1 = -99;
+    }
+    if(nFatJet_particleNet_HccvsQCD > size_t(1)){
+        FatJet_particleNet_HccvsQCD_2 = v_FatJet_particleNet_HccvsQCD_.at(1);
+    }
+    else{
+        FatJet_particleNet_HccvsQCD_2 = -99;
+    }
+    if(nFatJet_particleNet_HccvsQCD > size_t(2)){
+        FatJet_particleNet_HccvsQCD_3 = v_FatJet_particleNet_HccvsQCD_.at(2);
+    }
+    else{
+        FatJet_particleNet_HccvsQCD_3 = -99;
+    }
+
     
-    int bytes_FatJet_deepHWWMDV1_probHwwmvqq = b_FatJet_deepHWWMDV1_probHwwmvqq_->GetEntry(jentry);
-    v_FatJet_deepHWWMDV1_probHwwmvqq_ = vector<float>(FatJet_deepHWWMDV1_probHwwmvqq_,FatJet_deepHWWMDV1_probHwwmvqq_+bytes_FatJet_deepHWWMDV1_probHwwmvqq/sizeof(FatJet_deepHWWMDV1_probHwwmvqq_[0]));
-    size_t nFatJet_deepHWWMDV1_probHwwmvqq = v_FatJet_deepHWWMDV1_probHwwmvqq_.size();
+    int bytes_FatJet_particleNet_QCD = b_FatJet_particleNet_QCD_->GetEntry(jentry);
+    v_FatJet_particleNet_QCD_ = vector<float>(FatJet_particleNet_QCD_,FatJet_particleNet_QCD_+bytes_FatJet_particleNet_QCD/sizeof(FatJet_particleNet_QCD_[0]));
+    size_t nFatJet_particleNet_QCD = v_FatJet_particleNet_QCD_.size();
+    if(nFatJet_particleNet_QCD > size_t(0)){
+        FatJet_particleNet_QCD_1 = v_FatJet_particleNet_QCD_.at(0);
+    }
+    else{
+        FatJet_particleNet_QCD_1 = -99;
+    }
+    if(nFatJet_particleNet_QCD > size_t(1)){
+        FatJet_particleNet_QCD_2 = v_FatJet_particleNet_QCD_.at(1);
+    }
+    else{
+        FatJet_particleNet_QCD_2 = -99;
+    }
+    if(nFatJet_particleNet_QCD > size_t(2)){
+        FatJet_particleNet_QCD_3 = v_FatJet_particleNet_QCD_.at(2);
+    }
+    else{
+        FatJet_particleNet_QCD_3 = -99;
+    }
+
     
-    if( nFatJet_deepHWWMDV1_probHwwmvqq > size_t(0)){
-        FatJet_deepHWWMDV1_probHwwmvqq_1 = v_FatJet_deepHWWMDV1_probHwwmvqq_.at(0);
+    int bytes_FatJet_particleNet_TvsQCD = b_FatJet_particleNet_TvsQCD_->GetEntry(jentry);
+    v_FatJet_particleNet_TvsQCD_ = vector<float>(FatJet_particleNet_TvsQCD_,FatJet_particleNet_TvsQCD_+bytes_FatJet_particleNet_TvsQCD/sizeof(FatJet_particleNet_TvsQCD_[0]));
+    size_t nFatJet_particleNet_TvsQCD = v_FatJet_particleNet_TvsQCD_.size();
+    if(nFatJet_particleNet_TvsQCD > size_t(0)){
+        FatJet_particleNet_TvsQCD_1 = v_FatJet_particleNet_TvsQCD_.at(0);
     }
     else{
-        FatJet_deepHWWMDV1_probHwwmvqq_1 = -99;
+        FatJet_particleNet_TvsQCD_1 = -99;
     }
-    if(nFatJet_deepHWWMDV1_probHwwmvqq > size_t(1)){
-        FatJet_deepHWWMDV1_probHwwmvqq_2 = v_FatJet_deepHWWMDV1_probHwwmvqq_.at(1);
-    }
-    else{
-        FatJet_deepHWWMDV1_probHwwmvqq_2 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probHwwmvqq > size_t(2)){
-        FatJet_deepHWWMDV1_probHwwmvqq_3 = v_FatJet_deepHWWMDV1_probHwwmvqq_.at(2);
+    if(nFatJet_particleNet_TvsQCD > size_t(1)){
+        FatJet_particleNet_TvsQCD_2 = v_FatJet_particleNet_TvsQCD_.at(1);
     }
     else{
-        FatJet_deepHWWMDV1_probHwwmvqq_3 = -99;
+        FatJet_particleNet_TvsQCD_2 = -99;
+    }
+    if(nFatJet_particleNet_TvsQCD > size_t(2)){
+        FatJet_particleNet_TvsQCD_3 = v_FatJet_particleNet_TvsQCD_.at(2);
+    }
+    else{
+        FatJet_particleNet_TvsQCD_3 = -99;
     }
 
-
-    int bytes_FatJet_deepHWWMDV1_probHwwhadtauvqq = b_FatJet_deepHWWMDV1_probHwwhadtauvqq_->GetEntry(jentry);
-    v_FatJet_deepHWWMDV1_probHwwhadtauvqq_ = vector<float>(FatJet_deepHWWMDV1_probHwwhadtauvqq_,FatJet_deepHWWMDV1_probHwwhadtauvqq_+bytes_FatJet_deepHWWMDV1_probHwwhadtauvqq/sizeof(FatJet_deepHWWMDV1_probHwwhadtauvqq_[0]));
-    size_t nFatJet_deepHWWMDV1_probHwwhadtauvqq = v_FatJet_deepHWWMDV1_probHwwhadtauvqq_.size();
     
-    if( nFatJet_deepHWWMDV1_probHwwhadtauvqq > size_t(0)){
-        FatJet_deepHWWMDV1_probHwwhadtauvqq_1 = v_FatJet_deepHWWMDV1_probHwwhadtauvqq_.at(0);
+    int bytes_FatJet_particleNet_WvsQCD = b_FatJet_particleNet_WvsQCD_->GetEntry(jentry);
+    v_FatJet_particleNet_WvsQCD_ = vector<float>(FatJet_particleNet_WvsQCD_,FatJet_particleNet_WvsQCD_+bytes_FatJet_particleNet_WvsQCD/sizeof(FatJet_particleNet_WvsQCD_[0]));
+    size_t nFatJet_particleNet_WvsQCD = v_FatJet_particleNet_WvsQCD_.size();
+    if(nFatJet_particleNet_WvsQCD > size_t(0)){
+        FatJet_particleNet_WvsQCD_1 = v_FatJet_particleNet_WvsQCD_.at(0);
     }
     else{
-        FatJet_deepHWWMDV1_probHwwhadtauvqq_1 = -99;
+        FatJet_particleNet_WvsQCD_1 = -99;
     }
-    if(nFatJet_deepHWWMDV1_probHwwhadtauvqq > size_t(1)){
-        FatJet_deepHWWMDV1_probHwwhadtauvqq_2 = v_FatJet_deepHWWMDV1_probHwwhadtauvqq_.at(1);
-    }
-    else{
-        FatJet_deepHWWMDV1_probHwwhadtauvqq_2 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probHwwhadtauvqq > size_t(2)){
-        FatJet_deepHWWMDV1_probHwwhadtauvqq_3 = v_FatJet_deepHWWMDV1_probHwwhadtauvqq_.at(2);
+    if(nFatJet_particleNet_WvsQCD > size_t(1)){
+        FatJet_particleNet_WvsQCD_2 = v_FatJet_particleNet_WvsQCD_.at(1);
     }
     else{
-        FatJet_deepHWWMDV1_probHwwhadtauvqq_3 = -99;
+        FatJet_particleNet_WvsQCD_2 = -99;
+    }
+    if(nFatJet_particleNet_WvsQCD > size_t(2)){
+        FatJet_particleNet_WvsQCD_3 = v_FatJet_particleNet_WvsQCD_.at(2);
+    }
+    else{
+        FatJet_particleNet_WvsQCD_3 = -99;
     }
 
-
-    int bytes_FatJet_deepHWWMDV1_probHwwleptauevqq = b_FatJet_deepHWWMDV1_probHwwleptauevqq_->GetEntry(jentry);
-    v_FatJet_deepHWWMDV1_probHwwleptauevqq_ = vector<float>(FatJet_deepHWWMDV1_probHwwleptauevqq_,FatJet_deepHWWMDV1_probHwwleptauevqq_+bytes_FatJet_deepHWWMDV1_probHwwleptauevqq/sizeof(FatJet_deepHWWMDV1_probHwwleptauevqq_[0]));
-    size_t nFatJet_deepHWWMDV1_probHwwleptauevqq = v_FatJet_deepHWWMDV1_probHwwleptauevqq_.size();
     
-    if( nFatJet_deepHWWMDV1_probHwwleptauevqq > size_t(0)){
-        FatJet_deepHWWMDV1_probHwwleptauevqq_1 = v_FatJet_deepHWWMDV1_probHwwleptauevqq_.at(0);
+    int bytes_FatJet_particleNet_ZvsQCD = b_FatJet_particleNet_ZvsQCD_->GetEntry(jentry);
+    v_FatJet_particleNet_ZvsQCD_ = vector<float>(FatJet_particleNet_ZvsQCD_,FatJet_particleNet_ZvsQCD_+bytes_FatJet_particleNet_ZvsQCD/sizeof(FatJet_particleNet_ZvsQCD_[0]));
+    size_t nFatJet_particleNet_ZvsQCD = v_FatJet_particleNet_ZvsQCD_.size();
+    if(nFatJet_particleNet_ZvsQCD > size_t(0)){
+        FatJet_particleNet_ZvsQCD_1 = v_FatJet_particleNet_ZvsQCD_.at(0);
     }
     else{
-        FatJet_deepHWWMDV1_probHwwleptauevqq_1 = -99;
+        FatJet_particleNet_ZvsQCD_1 = -99;
     }
-    if(nFatJet_deepHWWMDV1_probHwwleptauevqq > size_t(1)){
-        FatJet_deepHWWMDV1_probHwwleptauevqq_2 = v_FatJet_deepHWWMDV1_probHwwleptauevqq_.at(1);
-    }
-    else{
-        FatJet_deepHWWMDV1_probHwwleptauevqq_2 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probHwwleptauevqq > size_t(2)){
-        FatJet_deepHWWMDV1_probHwwleptauevqq_3 = v_FatJet_deepHWWMDV1_probHwwleptauevqq_.at(2);
+    if(nFatJet_particleNet_ZvsQCD > size_t(1)){
+        FatJet_particleNet_ZvsQCD_2 = v_FatJet_particleNet_ZvsQCD_.at(1);
     }
     else{
-        FatJet_deepHWWMDV1_probHwwleptauevqq_3 = -99;
+        FatJet_particleNet_ZvsQCD_2 = -99;
+    }
+    if(nFatJet_particleNet_ZvsQCD > size_t(2)){
+        FatJet_particleNet_ZvsQCD_3 = v_FatJet_particleNet_ZvsQCD_.at(2);
+    }
+    else{
+        FatJet_particleNet_ZvsQCD_3 = -99;
     }
 
-
- 
-
-    int bytes_FatJet_deepHWWMDV1_probHwwleptaumvqq = b_FatJet_deepHWWMDV1_probHwwleptaumvqq_->GetEntry(jentry);
-    v_FatJet_deepHWWMDV1_probHwwleptaumvqq_ = vector<float>(FatJet_deepHWWMDV1_probHwwleptaumvqq_,FatJet_deepHWWMDV1_probHwwleptaumvqq_+bytes_FatJet_deepHWWMDV1_probHwwleptaumvqq/sizeof(FatJet_deepHWWMDV1_probHwwleptaumvqq_[0]));
-    size_t nFatJet_deepHWWMDV1_probHwwleptaumvqq = v_FatJet_deepHWWMDV1_probHwwleptaumvqq_.size();
-    
-    if( nFatJet_deepHWWMDV1_probHwwleptaumvqq > size_t(0)){
-        FatJet_deepHWWMDV1_probHwwleptaumvqq_1 = v_FatJet_deepHWWMDV1_probHwwleptaumvqq_.at(0);
+    if(b_FatJet_particleNet_mass_){
+        int bytes_FatJet_particleNet_mass = b_FatJet_particleNet_mass_->GetEntry(jentry);
+        v_FatJet_particleNet_mass_ = vector<float>(FatJet_particleNet_mass_,FatJet_particleNet_mass_+bytes_FatJet_particleNet_mass/sizeof(FatJet_particleNet_mass_[0]));
+        size_t nFatJet_particleNet_mass = v_FatJet_particleNet_mass_.size();
+        if(nFatJet_particleNet_mass > size_t(0)){
+            FatJet_particleNet_mass_1 = v_FatJet_particleNet_mass_.at(0);
+        }
+        else{
+            FatJet_particleNet_mass_1 = -99;
+        }
+        if(nFatJet_particleNet_mass > size_t(1)){
+            FatJet_particleNet_mass_2 = v_FatJet_particleNet_mass_.at(1);
+        }
+        else{
+            FatJet_particleNet_mass_2 = -99;
+        }
+        if(nFatJet_particleNet_mass > size_t(2)){
+            FatJet_particleNet_mass_3 = v_FatJet_particleNet_mass_.at(2);
+        }
+        else{
+            FatJet_particleNet_mass_3 = -99;
+        }
     }
-    else{
-        FatJet_deepHWWMDV1_probHwwleptaumvqq_1 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probHwwleptaumvqq > size_t(1)){
-        FatJet_deepHWWMDV1_probHwwleptaumvqq_2 = v_FatJet_deepHWWMDV1_probHwwleptaumvqq_.at(1);
-    }
-    else{
-        FatJet_deepHWWMDV1_probHwwleptaumvqq_2 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probHwwleptaumvqq > size_t(2)){
-        FatJet_deepHWWMDV1_probHwwleptaumvqq_3 = v_FatJet_deepHWWMDV1_probHwwleptaumvqq_.at(2);
-    }
-    else{
-        FatJet_deepHWWMDV1_probHwwleptaumvqq_3 = -99;
-    }
-
-
-    int bytes_FatJet_deepHWWMDV1_probQCDb = b_FatJet_deepHWWMDV1_probQCDb_->GetEntry(jentry);
-    v_FatJet_deepHWWMDV1_probQCDb_ = vector<float>(FatJet_deepHWWMDV1_probQCDb_,FatJet_deepHWWMDV1_probQCDb_+bytes_FatJet_deepHWWMDV1_probQCDb/sizeof(FatJet_deepHWWMDV1_probQCDb_[0]));
-    size_t nFatJet_deepHWWMDV1_probQCDb = v_FatJet_deepHWWMDV1_probQCDb_.size();
-    
-    if( nFatJet_deepHWWMDV1_probQCDb > size_t(0)){
-        FatJet_deepHWWMDV1_probQCDb_1 = v_FatJet_deepHWWMDV1_probQCDb_.at(0);
-    }
-    else{
-        FatJet_deepHWWMDV1_probQCDb_1 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probQCDb > size_t(1)){
-        FatJet_deepHWWMDV1_probQCDb_2 = v_FatJet_deepHWWMDV1_probQCDb_.at(1);
-    }
-    else{
-        FatJet_deepHWWMDV1_probQCDb_2 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probQCDb > size_t(2)){
-        FatJet_deepHWWMDV1_probQCDb_3 = v_FatJet_deepHWWMDV1_probQCDb_.at(2);
-    }
-    else{
-        FatJet_deepHWWMDV1_probQCDb_3 = -99;
-    }
-
-    int bytes_FatJet_deepHWWMDV1_probQCDbb = b_FatJet_deepHWWMDV1_probQCDbb_->GetEntry(jentry);
-    v_FatJet_deepHWWMDV1_probQCDbb_ = vector<float>(FatJet_deepHWWMDV1_probQCDbb_,FatJet_deepHWWMDV1_probQCDbb_+bytes_FatJet_deepHWWMDV1_probQCDbb/sizeof(FatJet_deepHWWMDV1_probQCDbb_[0]));
-    size_t nFatJet_deepHWWMDV1_probQCDbb = v_FatJet_deepHWWMDV1_probQCDbb_.size();
-    
-    if( nFatJet_deepHWWMDV1_probQCDbb > size_t(0)){
-        FatJet_deepHWWMDV1_probQCDbb_1 = v_FatJet_deepHWWMDV1_probQCDbb_.at(0);
-    }
-    else{
-        FatJet_deepHWWMDV1_probQCDbb_1 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probQCDbb > size_t(1)){
-        FatJet_deepHWWMDV1_probQCDbb_2 = v_FatJet_deepHWWMDV1_probQCDbb_.at(1);
-    }
-    else{
-        FatJet_deepHWWMDV1_probQCDbb_2 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probQCDbb > size_t(2)){
-        FatJet_deepHWWMDV1_probQCDbb_3 = v_FatJet_deepHWWMDV1_probQCDbb_.at(2);
-    }
-    else{
-        FatJet_deepHWWMDV1_probQCDbb_3 = -99;
-    }
-
-
-    int bytes_FatJet_deepHWWMDV1_probQCDc = b_FatJet_deepHWWMDV1_probQCDc_->GetEntry(jentry);
-    v_FatJet_deepHWWMDV1_probQCDc_ = vector<float>(FatJet_deepHWWMDV1_probQCDc_,FatJet_deepHWWMDV1_probQCDc_+bytes_FatJet_deepHWWMDV1_probQCDc/sizeof(FatJet_deepHWWMDV1_probQCDc_[0]));
-    size_t nFatJet_deepHWWMDV1_probQCDc = v_FatJet_deepHWWMDV1_probQCDc_.size();
-    
-    if( nFatJet_deepHWWMDV1_probQCDc > size_t(0)){
-        FatJet_deepHWWMDV1_probQCDc_1 = v_FatJet_deepHWWMDV1_probQCDc_.at(0);
-    }
-    else{
-        FatJet_deepHWWMDV1_probQCDc_1 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probQCDc > size_t(1)){
-        FatJet_deepHWWMDV1_probQCDc_2 = v_FatJet_deepHWWMDV1_probQCDc_.at(1);
-    }
-    else{
-        FatJet_deepHWWMDV1_probQCDc_2 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probQCDc > size_t(2)){
-        FatJet_deepHWWMDV1_probQCDc_3 = v_FatJet_deepHWWMDV1_probQCDc_.at(2);
-    }
-    else{
-        FatJet_deepHWWMDV1_probQCDc_3 = -99;
-    }
-
-   int bytes_FatJet_deepHWWMDV1_probQCDcc = b_FatJet_deepHWWMDV1_probQCDcc_->GetEntry(jentry);
-    v_FatJet_deepHWWMDV1_probQCDcc_ = vector<float>(FatJet_deepHWWMDV1_probQCDcc_,FatJet_deepHWWMDV1_probQCDcc_+bytes_FatJet_deepHWWMDV1_probQCDcc/sizeof(FatJet_deepHWWMDV1_probQCDcc_[0]));
-    size_t nFatJet_deepHWWMDV1_probQCDcc = v_FatJet_deepHWWMDV1_probQCDcc_.size();
-    
-    if( nFatJet_deepHWWMDV1_probQCDcc > size_t(0)){
-        FatJet_deepHWWMDV1_probQCDcc_1 = v_FatJet_deepHWWMDV1_probQCDcc_.at(0);
-   //     std::cout<<"Now the FatJet_deepHWWMDV1_probQCDcc_1 is "<<FatJet_deepHWWMDV1_probQCDcc_1<<std::endl;
-    }
-    else{
-        FatJet_deepHWWMDV1_probQCDcc_1 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probQCDcc > size_t(1)){
-        FatJet_deepHWWMDV1_probQCDcc_2 = v_FatJet_deepHWWMDV1_probQCDcc_.at(1);
-    }
-    else{
-        FatJet_deepHWWMDV1_probQCDcc_2 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probQCDcc > size_t(2)){
-        FatJet_deepHWWMDV1_probQCDcc_3 = v_FatJet_deepHWWMDV1_probQCDcc_.at(2);
-    }
-    else{
-        FatJet_deepHWWMDV1_probQCDcc_3 = -99;
-    }
-
-    int bytes_FatJet_deepHWWMDV1_probQCDothers = b_FatJet_deepHWWMDV1_probQCDothers_->GetEntry(jentry);
-    v_FatJet_deepHWWMDV1_probQCDothers_ = vector<float>(FatJet_deepHWWMDV1_probQCDothers_,FatJet_deepHWWMDV1_probQCDothers_+bytes_FatJet_deepHWWMDV1_probQCDothers/sizeof(FatJet_deepHWWMDV1_probQCDothers_[0]));
-    size_t nFatJet_deepHWWMDV1_probQCDothers = v_FatJet_deepHWWMDV1_probQCDothers_.size();
-    
-    if( nFatJet_deepHWWMDV1_probQCDothers > size_t(0)){
-        FatJet_deepHWWMDV1_probQCDothers_1 = v_FatJet_deepHWWMDV1_probQCDothers_.at(0);
-    }
-    else{
-        FatJet_deepHWWMDV1_probQCDothers_1 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probQCDothers > size_t(1)){
-        FatJet_deepHWWMDV1_probQCDothers_2 = v_FatJet_deepHWWMDV1_probQCDothers_.at(1);
-    }
-    else{
-        FatJet_deepHWWMDV1_probQCDothers_2 = -99;
-    }
-    if(nFatJet_deepHWWMDV1_probQCDothers > size_t(2)){
-        FatJet_deepHWWMDV1_probQCDothers_3 = v_FatJet_deepHWWMDV1_probQCDothers_.at(2);
-    }
-    else{
-        FatJet_deepHWWMDV1_probQCDothers_3 = -99;
-    }
-    //New tagger part end.
-
 
     
 }
 
 void EDBR2PKUTree::AK8_Pt_Ordered_RawScore_flatVector(Long64_t jentry){
-
-
-
-
 
     int bytes_FatJet_deepTagMD_probHbb = b_FatJet_deepTagMD_probHbb_->GetEntry(jentry);
     v_FatJet_deepTagMD_probHbb_ = vector<float>(FatJet_deepTagMD_probHbb_,FatJet_deepTagMD_probHbb_+bytes_FatJet_deepTagMD_probHbb/sizeof(FatJet_deepTagMD_probHbb_[0]));
@@ -1308,105 +1232,143 @@ void EDBR2PKUTree::AK8_Pt_Ordered_RawScore_flatVector(Long64_t jentry){
 
     
 }
-//The main function above is to order the score, either Particle net or deepAk.
+
 void EDBR2PKUTree::AK8_Pt_Ordered_RawScore_swtich(){
+    
+    jetAK8puppi_dnn_probHbb = FatJet_deepTag_probHbb_1;
+    jetAK8puppi_dnnDecorr_probHbb = FatJet_deepTagMD_probHbb_1;
+    jetAK8puppi_dnn_probHbb_2 = FatJet_deepTag_probHbb_2;
+    jetAK8puppi_dnnDecorr_probHbb_2 = FatJet_deepTagMD_probHbb_2;
+    jetAK8puppi_dnn_probHbb_3 = FatJet_deepTag_probHbb_3;
+    jetAK8puppi_dnnDecorr_probHbb_3 = FatJet_deepTagMD_probHbb_3;
 
+        
+    jetAK8puppi_dnn_probHcc = FatJet_deepTag_probHcc_1;
+    jetAK8puppi_dnnDecorr_probHcc = FatJet_deepTagMD_probHcc_1;
+    jetAK8puppi_dnn_probHcc_2 = FatJet_deepTag_probHcc_2;
+    jetAK8puppi_dnnDecorr_probHcc_2 = FatJet_deepTagMD_probHcc_2;
+    jetAK8puppi_dnn_probHcc_3 = FatJet_deepTag_probHcc_3;
+    jetAK8puppi_dnnDecorr_probHcc_3 = FatJet_deepTagMD_probHcc_3;
 
-    //New tagger part.
-    jetAK8puppi_V1_probHww3q = FatJet_deepHWWMDV1_probHww3q_1;
-  //  std::cout<<"jetAK8puppi_V1_probHww3q ="<<jetAK8puppi_V1_probHww3q<<std::endl;
-    jetAK8puppi_V1_probHww3q_2 = FatJet_deepHWWMDV1_probHww3q_2;
-    jetAK8puppi_V1_probHww3q_3 = FatJet_deepHWWMDV1_probHww3q_3;
+        
+    jetAK8puppi_dnn_probHqqqq = FatJet_deepTag_probHqqqq_1;
+    jetAK8puppi_dnnDecorr_probHqqqq = FatJet_deepTagMD_probHqqqq_1;
+    jetAK8puppi_dnn_probHqqqq_2 = FatJet_deepTag_probHqqqq_2;
+    jetAK8puppi_dnnDecorr_probHqqqq_2 = FatJet_deepTagMD_probHqqqq_2;
+    jetAK8puppi_dnn_probHqqqq_3 = FatJet_deepTag_probHqqqq_3;
+    jetAK8puppi_dnnDecorr_probHqqqq_3 = FatJet_deepTagMD_probHqqqq_3;
 
-    jetAK8puppi_V1_probHww4q = FatJet_deepHWWMDV1_probHww4q_1;
-    jetAK8puppi_V1_probHww4q_2 = FatJet_deepHWWMDV1_probHww4q_2;
-    jetAK8puppi_V1_probHww4q_3 = FatJet_deepHWWMDV1_probHww4q_3;
+        
+    jetAK8puppi_dnn_probQCDb = FatJet_deepTag_probQCDb_1;
+    jetAK8puppi_dnnDecorr_probQCDb = FatJet_deepTagMD_probQCDb_1;
+    jetAK8puppi_dnn_probQCDb_2 = FatJet_deepTag_probQCDb_2;
+    jetAK8puppi_dnnDecorr_probQCDb_2 = FatJet_deepTagMD_probQCDb_2;
+    jetAK8puppi_dnn_probQCDb_3 = FatJet_deepTag_probQCDb_3;
+    jetAK8puppi_dnnDecorr_probQCDb_3 = FatJet_deepTagMD_probQCDb_3;
 
-    jetAK8puppi_V1_probHww4q3qvsQCD = FatJet_deepHWWMDV1_probHww4q3qvsQCD_1;
-    jetAK8puppi_V1_probHww4q3qvsQCD_2 = FatJet_deepHWWMDV1_probHww4q3qvsQCD_2;
-    jetAK8puppi_V1_probHww4q3qvsQCD_3 = FatJet_deepHWWMDV1_probHww4q3qvsQCD_3;
+        
+    jetAK8puppi_dnn_probQCDbb = FatJet_deepTag_probQCDbb_1;
+    jetAK8puppi_dnnDecorr_probQCDbb = FatJet_deepTagMD_probQCDbb_1;
+    jetAK8puppi_dnn_probQCDbb_2 = FatJet_deepTag_probQCDbb_2;
+    jetAK8puppi_dnnDecorr_probQCDbb_2 = FatJet_deepTagMD_probQCDbb_2;
+    jetAK8puppi_dnn_probQCDbb_3 = FatJet_deepTag_probQCDbb_3;
+    jetAK8puppi_dnnDecorr_probQCDbb_3 = FatJet_deepTagMD_probQCDbb_3;
 
-    jetAK8puppi_V1_probHww4qvsQCD = FatJet_deepHWWMDV1_probHww4qvsQCD_1;
-    jetAK8puppi_V1_probHww4qvsQCD_2 = FatJet_deepHWWMDV1_probHww4qvsQCD_2;
-    jetAK8puppi_V1_probHww4qvsQCD_3 = FatJet_deepHWWMDV1_probHww4qvsQCD_3;
-  //  std::cout<<"jetAK8puppi_V1_probHww4qvsQCD ="<<jetAK8puppi_V1_probHww4qvsQCD<<std::endl;
+        
+    jetAK8puppi_dnn_probQCDc = FatJet_deepTag_probQCDc_1;
+    jetAK8puppi_dnnDecorr_probQCDc = FatJet_deepTagMD_probQCDc_1;
+    jetAK8puppi_dnn_probQCDc_2 = FatJet_deepTag_probQCDc_2;
+    jetAK8puppi_dnnDecorr_probQCDc_2 = FatJet_deepTagMD_probQCDc_2;
+    jetAK8puppi_dnn_probQCDc_3 = FatJet_deepTag_probQCDc_3;
+    jetAK8puppi_dnnDecorr_probQCDc_3 = FatJet_deepTagMD_probQCDc_3;
 
+        
+    jetAK8puppi_dnn_probQCDcc = FatJet_deepTag_probQCDcc_1;
+    jetAK8puppi_dnnDecorr_probQCDcc = FatJet_deepTagMD_probQCDcc_1;
+    jetAK8puppi_dnn_probQCDcc_2 = FatJet_deepTag_probQCDcc_2;
+    jetAK8puppi_dnnDecorr_probQCDcc_2 = FatJet_deepTagMD_probQCDcc_2;
+    jetAK8puppi_dnn_probQCDcc_3 = FatJet_deepTag_probQCDcc_3;
+    jetAK8puppi_dnnDecorr_probQCDcc_3 = FatJet_deepTagMD_probQCDcc_3;
 
-    jetAK8puppi_V1_probHwwevqq = FatJet_deepHWWMDV1_probHwwevqq_1;
-    jetAK8puppi_V1_probHwwevqq_2 = FatJet_deepHWWMDV1_probHwwevqq_2;
-    jetAK8puppi_V1_probHwwevqq_3 = FatJet_deepHWWMDV1_probHwwevqq_3;
+        
+    jetAK8puppi_dnn_probQCDothers = FatJet_deepTag_probQCDothers_1;
+    jetAK8puppi_dnnDecorr_probQCDothers = FatJet_deepTagMD_probQCDothers_1;
+    jetAK8puppi_dnn_probQCDothers_2 = FatJet_deepTag_probQCDothers_2;
+    jetAK8puppi_dnnDecorr_probQCDothers_2 = FatJet_deepTagMD_probQCDothers_2;
+    jetAK8puppi_dnn_probQCDothers_3 = FatJet_deepTag_probQCDothers_3;
+    jetAK8puppi_dnnDecorr_probQCDothers_3 = FatJet_deepTagMD_probQCDothers_3;
 
-    jetAK8puppi_V1_probHwwmvqq = FatJet_deepHWWMDV1_probHwwmvqq_1;
-    jetAK8puppi_V1_probHwwmvqq_2 = FatJet_deepHWWMDV1_probHwwmvqq_2;
-    jetAK8puppi_V1_probHwwmvqq_3 = FatJet_deepHWWMDV1_probHwwmvqq_3;
+        
+    jetAK8puppi_dnn_probTbc = FatJet_deepTag_probTbc_1;
+    jetAK8puppi_dnnDecorr_probTbc = FatJet_deepTagMD_probTbc_1;
+    jetAK8puppi_dnn_probTbc_2 = FatJet_deepTag_probTbc_2;
+    jetAK8puppi_dnnDecorr_probTbc_2 = FatJet_deepTagMD_probTbc_2;
+    jetAK8puppi_dnn_probTbc_3 = FatJet_deepTag_probTbc_3;
+    jetAK8puppi_dnnDecorr_probTbc_3 = FatJet_deepTagMD_probTbc_3;
 
-    jetAK8puppi_V1_probHwwhadtauvqq = FatJet_deepHWWMDV1_probHwwhadtauvqq_1;
-    jetAK8puppi_V1_probHwwhadtauvqq_2 = FatJet_deepHWWMDV1_probHwwhadtauvqq_2;
-    jetAK8puppi_V1_probHwwhadtauvqq_3 = FatJet_deepHWWMDV1_probHwwhadtauvqq_3;
+        
+    jetAK8puppi_dnn_probTbcq = FatJet_deepTag_probTbcq_1;
+    jetAK8puppi_dnnDecorr_probTbcq = FatJet_deepTagMD_probTbcq_1;
+    jetAK8puppi_dnn_probTbcq_2 = FatJet_deepTag_probTbcq_2;
+    jetAK8puppi_dnnDecorr_probTbcq_2 = FatJet_deepTagMD_probTbcq_2;
+    jetAK8puppi_dnn_probTbcq_3 = FatJet_deepTag_probTbcq_3;
+    jetAK8puppi_dnnDecorr_probTbcq_3 = FatJet_deepTagMD_probTbcq_3;
 
-    jetAK8puppi_V1_probHwwleptauevqq = FatJet_deepHWWMDV1_probHwwleptauevqq_1;
-    jetAK8puppi_V1_probHwwleptauevqq_2 = FatJet_deepHWWMDV1_probHwwleptauevqq_2;
-    jetAK8puppi_V1_probHwwleptauevqq_3 = FatJet_deepHWWMDV1_probHwwleptauevqq_3;
+        
+    jetAK8puppi_dnn_probTbq = FatJet_deepTag_probTbq_1;
+    jetAK8puppi_dnnDecorr_probTbq = FatJet_deepTagMD_probTbq_1;
+    jetAK8puppi_dnn_probTbq_2 = FatJet_deepTag_probTbq_2;
+    jetAK8puppi_dnnDecorr_probTbq_2 = FatJet_deepTagMD_probTbq_2;
+    jetAK8puppi_dnn_probTbq_3 = FatJet_deepTag_probTbq_3;
+    jetAK8puppi_dnnDecorr_probTbq_3 = FatJet_deepTagMD_probTbq_3;
 
-    jetAK8puppi_V1_probHwwleptaumvqq = FatJet_deepHWWMDV1_probHwwleptaumvqq_1;
-    jetAK8puppi_V1_probHwwleptaumvqq_2 = FatJet_deepHWWMDV1_probHwwleptaumvqq_2;
-    jetAK8puppi_V1_probHwwleptaumvqq_3 = FatJet_deepHWWMDV1_probHwwleptaumvqq_3;
+        
+    jetAK8puppi_dnn_probTbqq = FatJet_deepTag_probTbqq_1;
+    jetAK8puppi_dnnDecorr_probTbqq = FatJet_deepTagMD_probTbqq_1;
+    jetAK8puppi_dnn_probTbqq_2 = FatJet_deepTag_probTbqq_2;
+    jetAK8puppi_dnnDecorr_probTbqq_2 = FatJet_deepTagMD_probTbqq_2;
+    jetAK8puppi_dnn_probTbqq_3 = FatJet_deepTag_probTbqq_3;
+    jetAK8puppi_dnnDecorr_probTbqq_3 = FatJet_deepTagMD_probTbqq_3;
 
-    jetAK8puppi_V1_probQCDb = FatJet_deepHWWMDV1_probQCDb_1;
-    jetAK8puppi_V1_probQCDb_2 = FatJet_deepHWWMDV1_probQCDb_2;
-    jetAK8puppi_V1_probQCDb_3 = FatJet_deepHWWMDV1_probQCDb_3;
+        
+    jetAK8puppi_dnn_probWcq = FatJet_deepTag_probWcq_1;
+    jetAK8puppi_dnnDecorr_probWcq = FatJet_deepTagMD_probWcq_1;
+    jetAK8puppi_dnn_probWcq_2 = FatJet_deepTag_probWcq_2;
+    jetAK8puppi_dnnDecorr_probWcq_2 = FatJet_deepTagMD_probWcq_2;
+    jetAK8puppi_dnn_probWcq_3 = FatJet_deepTag_probWcq_3;
+    jetAK8puppi_dnnDecorr_probWcq_3 = FatJet_deepTagMD_probWcq_3;
 
-    jetAK8puppi_V1_probQCDbb = FatJet_deepHWWMDV1_probQCDbb_1;
-    jetAK8puppi_V1_probQCDbb_2 = FatJet_deepHWWMDV1_probQCDbb_2;
-    jetAK8puppi_V1_probQCDbb_3 = FatJet_deepHWWMDV1_probQCDbb_3;
+        
+    jetAK8puppi_dnn_probWqq = FatJet_deepTag_probWqq_1;
+    jetAK8puppi_dnnDecorr_probWqq = FatJet_deepTagMD_probWqq_1;
+    jetAK8puppi_dnn_probWqq_2 = FatJet_deepTag_probWqq_2;
+    jetAK8puppi_dnnDecorr_probWqq_2 = FatJet_deepTagMD_probWqq_2;
+    jetAK8puppi_dnn_probWqq_3 = FatJet_deepTag_probWqq_3;
+    jetAK8puppi_dnnDecorr_probWqq_3 = FatJet_deepTagMD_probWqq_3;
 
-    jetAK8puppi_V1_probQCDc = FatJet_deepHWWMDV1_probQCDc_1;
-    jetAK8puppi_V1_probQCDc_2 = FatJet_deepHWWMDV1_probQCDc_2;
-    jetAK8puppi_V1_probQCDc_3 = FatJet_deepHWWMDV1_probQCDc_3;
+        
+    jetAK8puppi_dnn_probZbb = FatJet_deepTag_probZbb_1;
+    jetAK8puppi_dnnDecorr_probZbb = FatJet_deepTagMD_probZbb_1;
+    jetAK8puppi_dnn_probZbb_2 = FatJet_deepTag_probZbb_2;
+    jetAK8puppi_dnnDecorr_probZbb_2 = FatJet_deepTagMD_probZbb_2;
+    jetAK8puppi_dnn_probZbb_3 = FatJet_deepTag_probZbb_3;
+    jetAK8puppi_dnnDecorr_probZbb_3 = FatJet_deepTagMD_probZbb_3;
 
-    jetAK8puppi_V1_probQCDcc = FatJet_deepHWWMDV1_probQCDcc_1;
-    jetAK8puppi_V1_probQCDcc_2 = FatJet_deepHWWMDV1_probQCDcc_2;
-    jetAK8puppi_V1_probQCDcc_3 = FatJet_deepHWWMDV1_probQCDcc_3;
+        
+    jetAK8puppi_dnn_probZcc = FatJet_deepTag_probZcc_1;
+    jetAK8puppi_dnnDecorr_probZcc = FatJet_deepTagMD_probZcc_1;
+    jetAK8puppi_dnn_probZcc_2 = FatJet_deepTag_probZcc_2;
+    jetAK8puppi_dnnDecorr_probZcc_2 = FatJet_deepTagMD_probZcc_2;
+    jetAK8puppi_dnn_probZcc_3 = FatJet_deepTag_probZcc_3;
+    jetAK8puppi_dnnDecorr_probZcc_3 = FatJet_deepTagMD_probZcc_3;
 
-    jetAK8puppi_V1_probQCDothers = FatJet_deepHWWMDV1_probQCDothers_1;
-    jetAK8puppi_V1_probQCDothers_2 = FatJet_deepHWWMDV1_probQCDothers_2;
-    jetAK8puppi_V1_probQCDothers_3 = FatJet_deepHWWMDV1_probQCDothers_3;
-
-   Double_t probQCDAll_1 =jetAK8puppi_V1_probQCDb + jetAK8puppi_V1_probQCDbb + jetAK8puppi_V1_probQCDc + jetAK8puppi_V1_probQCDcc + jetAK8puppi_V1_probQCDothers;
-   Double_t probQCDAll_2 =jetAK8puppi_V1_probQCDb_2 + jetAK8puppi_V1_probQCDbb_2 + jetAK8puppi_V1_probQCDc_2 + jetAK8puppi_V1_probQCDcc_2 + jetAK8puppi_V1_probQCDothers_2;
-   Double_t probQCDAll_3 =jetAK8puppi_V1_probQCDb_3 + jetAK8puppi_V1_probQCDbb_3 + jetAK8puppi_V1_probQCDc_3 + jetAK8puppi_V1_probQCDcc_3 + jetAK8puppi_V1_probQCDothers_3;
-
-  V1_evqqvsQCD_1=(jetAK8puppi_V1_probHwwevqq)/(jetAK8puppi_V1_probHwwevqq+probQCDAll_1);
-  V1_evqqvsQCD_2=(jetAK8puppi_V1_probHwwevqq_2)/(jetAK8puppi_V1_probHwwevqq_2+probQCDAll_2);
-  V1_evqqvsQCD_3=(jetAK8puppi_V1_probHwwevqq_3)/(jetAK8puppi_V1_probHwwevqq_3+probQCDAll_3);
-
- // std::cout<<"V1_evqq tagger_1 ="<<V1_evqqvsQCD_1<<std::endl;
-
-  V1_mvqqvsQCD_1=(jetAK8puppi_V1_probHwwmvqq)/(jetAK8puppi_V1_probHwwmvqq+probQCDAll_1);
-  V1_mvqqvsQCD_2=(jetAK8puppi_V1_probHwwmvqq_2)/(jetAK8puppi_V1_probHwwmvqq_2+probQCDAll_2);
-  V1_mvqqvsQCD_3=(jetAK8puppi_V1_probHwwmvqq_3)/(jetAK8puppi_V1_probHwwmvqq_3+probQCDAll_3);
-
-  V1_emvqqvsQCD_1=(jetAK8puppi_V1_probHwwevqq+jetAK8puppi_V1_probHwwmvqq)/(jetAK8puppi_V1_probHwwevqq+jetAK8puppi_V1_probHwwmvqq+probQCDAll_1);
-  V1_emvqqvsQCD_2=(jetAK8puppi_V1_probHwwevqq_2+jetAK8puppi_V1_probHwwmvqq_2)/(jetAK8puppi_V1_probHwwevqq_2+jetAK8puppi_V1_probHwwmvqq_2+probQCDAll_2);
-  V1_emvqqvsQCD_3=(jetAK8puppi_V1_probHwwevqq_3+jetAK8puppi_V1_probHwwmvqq_3)/(jetAK8puppi_V1_probHwwevqq_3+jetAK8puppi_V1_probHwwmvqq_3+probQCDAll_3);
-
-  V1_hadtauvqqvsQCD_1=(jetAK8puppi_V1_probHwwhadtauvqq)/(jetAK8puppi_V1_probHwwhadtauvqq+probQCDAll_1);
-  V1_hadtauvqqvsQCD_2=(jetAK8puppi_V1_probHwwhadtauvqq_2)/(jetAK8puppi_V1_probHwwhadtauvqq_2+probQCDAll_2);
-  V1_hadtauvqqvsQCD_3=(jetAK8puppi_V1_probHwwhadtauvqq_3)/(jetAK8puppi_V1_probHwwhadtauvqq_3+probQCDAll_3);
-
-  V1_leptauevqqvsQCD_1=(jetAK8puppi_V1_probHwwleptauevqq)/(jetAK8puppi_V1_probHwwleptauevqq+probQCDAll_1);
-  V1_leptauevqqvsQCD_2=(jetAK8puppi_V1_probHwwleptauevqq_2)/(jetAK8puppi_V1_probHwwleptauevqq_2+probQCDAll_2);
-  V1_leptauevqqvsQCD_3=(jetAK8puppi_V1_probHwwleptauevqq_3)/(jetAK8puppi_V1_probHwwleptauevqq_3+probQCDAll_3);
-
-  V1_leptaumvqqvsQCD_1=(jetAK8puppi_V1_probHwwleptaumvqq)/(jetAK8puppi_V1_probHwwleptaumvqq+probQCDAll_1);
-  V1_leptaumvqqvsQCD_2=(jetAK8puppi_V1_probHwwleptaumvqq_2)/(jetAK8puppi_V1_probHwwleptaumvqq_2+probQCDAll_2);
-  V1_leptaumvqqvsQCD_3=(jetAK8puppi_V1_probHwwleptaumvqq_3)/(jetAK8puppi_V1_probHwwleptaumvqq_3+probQCDAll_3);
-
-
-
-    //New tagger end.
- 
-
+        
+    jetAK8puppi_dnn_probZqq = FatJet_deepTag_probZqq_1;
+    jetAK8puppi_dnnDecorr_probZqq = FatJet_deepTagMD_probZqq_1;
+    jetAK8puppi_dnn_probZqq_2 = FatJet_deepTag_probZqq_2;
+    jetAK8puppi_dnnDecorr_probZqq_2 = FatJet_deepTagMD_probZqq_2;
+    jetAK8puppi_dnn_probZqq_3 = FatJet_deepTag_probZqq_3;
+    jetAK8puppi_dnnDecorr_probZqq_3 = FatJet_deepTagMD_probZqq_3;
 
 }
 
