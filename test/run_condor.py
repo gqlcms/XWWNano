@@ -82,7 +82,7 @@ def main():
 
 
     if opt.year == "2016post":
-      p = PostProcessor(opt.output, opt.inputs.rstrip(",").split(","), modules=[countHistogramsModule(),puAutoWeight_2016(),PrefCorrUL16_postVFP(),muonIDISOSF2016post(),muonScaleRes2016b(),eleRECOSF2016post(),eleIDSF2016post(),jmeCorrections(),jetmetCorrector(),jetmetCorrector(),btagSFUL2016Post(),VVV2016(opt.MODE)], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),outputbranchsel="keep_and_drop.txt")
+      p = PostProcessor(opt.output, opt.inputs.rstrip(",").split(","), modules=[countHistogramsModule(),puAutoWeight_2016(),PrefCorrUL16_postVFP(),muonIDISOSF2016post(),muonScaleRes2016b(),eleRECOSF2016post(),eleIDSF2016post(),jmeCorrections(),jetmetCorrector(),btagSFUL2016Post(),VVV2016(opt.MODE)], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),outputbranchsel="keep_and_drop.txt")
     if opt.year == "2016pre":
       p = PostProcessor(opt.output, opt.inputs.rstrip(",").split(","), modules=[countHistogramsModule(),puAutoWeight_2016(),PrefCorrUL16_preVFP(),muonIDISOSF2016pre(),muonScaleRes2016a(),eleRECOSF2016pre(),eleIDSF2016pre(),jmeCorrections(),jetmetCorrector(),btagSFUL2016Pre(),VVV2016(opt.MODE)], provenance=True,fwkJobReport=True, jsonInput=runsAndLumis(),outputbranchsel="keep_and_drop.txt")
     if opt.year == "2017":
@@ -100,7 +100,7 @@ def main():
     if opt.year in ["UL2016_preVFPB","UL2016_preVFPC","UL2016_preVFPD","UL2016_preVFPE","UL2016_preVFPF"]:
       p = PostProcessor(opt.output, [opt.inputs], modules=[muonScaleRes2016a(),jetmetCorrector(),jmeCorrections(),VVV2016()], provenance=True,fwkJobReport=True, jsonInput=jsoninput)
 
-    if opt.year in ["UL2016_preVFPB","UL2016_preVFPC","UL2016_preVFPD","UL2016_preVFPE","UL2016_preVFPF"]:
+    if opt.year in ["UL2016F","UL2016G","UL2016H"]:
       p = PostProcessor(opt.output, [opt.inputs], modules=[muonScaleRes2016b(),jetmetCorrector(),jmeCorrections(),VVV2016()], provenance=True,fwkJobReport=True, jsonInput=jsoninput)
     
     if opt.year in ['UL2017B','UL2017C','UL2017D','UL2017E','UL2017F',]:
